@@ -10,18 +10,15 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 public class BaseRobot {
     // Drivetrain Reference
-    SampleMecanumDrive drive;
+    public SampleMecanumDrive drive;
 
-    // Intake Motor
-    public DcMotor intake;
-    // Carousel Motor
-    public DcMotor carousel;
-    // Linear Slider Motor
-    public DcMotor slider;
+    // Left Slider Motor
+    public DcMotor leftSlider;
+    // Right Slider Motor
+    public DcMotor rightSlider;
     // Linear Slider Deposit Bucket Servo
-    public Servo bucket;
-    public Servo intakeBar;
-    public Servo capstoneArm;
+    public Servo leftSliderServo;
+    public Servo rightSliderServo;
 
     // Local OpMode members
     HardwareMap hwMap;
@@ -40,7 +37,7 @@ public class BaseRobot {
     }
 
     // Initialize Standard Hardware Interfaces
-    public void init(HardwareMap ahwMap, boolean RUN_USING_ENCODERS) {
+    public void init(HardwareMap ahwMap/*, boolean RUN_USING_ENCODERS*/) {
         // Save Reference to Hardware map
         hwMap = ahwMap;
 
@@ -48,15 +45,10 @@ public class BaseRobot {
         drive = new SampleMecanumDrive(hwMap);
 
         // Define and Initialize Motors.  Assign Names that match the setup on the RC Phone
-        carousel = hwMap.dcMotor.get("carousel");
-        intake = hwMap.dcMotor.get("intake");
-        slider = hwMap.dcMotor.get("slider");
-        bucket = hwMap.servo.get("bucket");
-        intakeBar = hwMap.servo.get("intakeBar");
-        capstoneArm = hwMap.servo.get("capstone");
-        intake.setDirection(DcMotor.Direction.FORWARD);
-        carousel.setDirection(DcMotor.Direction.FORWARD);
-        slider.setDirection(DcMotor.Direction.FORWARD);
+        leftSlider = hwMap.dcMotor.get("leftSlider");
+        rightSlider = hwMap.dcMotor.get("rightSlider");
+        //leftSliderServo = hwMap.servo.get("leftSliderServo");
+        //rightSliderServo = hwMap.servo.get("rightSliderServo");
 
         // Initialize IMU
         imu = hwMap.get(BNO055IMU.class, "imu");
@@ -67,7 +59,7 @@ public class BaseRobot {
         imu.initialize(imuParameters);
 
         // Enable Slider for Arm Run Code
-        slider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftSlider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightSlider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }

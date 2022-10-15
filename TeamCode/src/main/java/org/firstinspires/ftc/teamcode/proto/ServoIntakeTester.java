@@ -34,13 +34,13 @@ public class ServoIntakeTester extends LinearOpMode {
                 armMotorPower = -0.4;
                 armPos -= gamepad1.left_trigger * 3;
             }
-            robot.slider1.setTargetPosition(armPos);
-            robot.slider1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.slider1.setPower(0.7);
+            robot.rightSlider.setTargetPosition(armPos);
+            robot.rightSlider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.rightSlider.setPower(0.7);
 
-            robot.slider2.setTargetPosition(armPos);
-            robot.slider2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.slider2.setPower(0.7);
+            robot.leftSlider.setTargetPosition(armPos);
+            robot.leftSlider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.leftSlider.setPower(0.7);
         }
     }
 }

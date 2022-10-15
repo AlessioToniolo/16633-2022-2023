@@ -5,9 +5,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+
 public class BaseRobot {
-    public DcMotor slider1;
-    public DcMotor slider2;
+    public DcMotor rightSlider;
+    public DcMotor leftSlider;
 
     /*
     public CRServo intakeTester1;
@@ -16,6 +18,7 @@ public class BaseRobot {
 
     // Local OpMode members
     HardwareMap hwMap;
+    SampleMecanumDrive drive;
 
     // Constructor - leave this blank
     public BaseRobot() {
@@ -26,10 +29,12 @@ public class BaseRobot {
         // Save Reference to Hardware map
         hwMap = ahwMap;
 
+        drive = new SampleMecanumDrive(hwMap);
+
 
         // Define and Initialize Motors.  Assign Names that match the setup on the RC Phone
-        slider1 = hwMap.dcMotor.get("slider1");
-        slider2 = hwMap.dcMotor.get("slider2");
+        rightSlider = hwMap.dcMotor.get("rightSlider");
+        leftSlider = hwMap.dcMotor.get("leftSlider");
         /*
         intakeTester1 = hwMap.crservo.get("intakeTester1");
         intakeTester2 = hwMap.crservo.get("intakeTester2");
@@ -41,10 +46,10 @@ public class BaseRobot {
          */
 
         // Enable Slider for Arm Run Code
-        slider1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slider1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightSlider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightSlider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        slider2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slider2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftSlider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftSlider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }

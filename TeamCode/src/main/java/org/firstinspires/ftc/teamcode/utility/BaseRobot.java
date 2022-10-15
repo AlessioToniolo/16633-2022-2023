@@ -16,6 +16,9 @@ public class BaseRobot {
     public DcMotor leftSlider;
     // Right Slider Motor
     public DcMotor rightSlider;
+
+    public DcMotor rightFront, rightRear, leftFront, leftRear;
+
     // Linear Slider Deposit Bucket Servo
     public Servo leftSliderServo;
     public Servo rightSliderServo;
@@ -47,6 +50,11 @@ public class BaseRobot {
         // Define and Initialize Motors.  Assign Names that match the setup on the RC Phone
         leftSlider = hwMap.dcMotor.get("leftSlider");
         rightSlider = hwMap.dcMotor.get("rightSlider");
+
+        leftFront = hwMap.dcMotor.get("leftFront");
+        rightFront = hwMap.dcMotor.get("rightFront");
+        leftRear = hwMap.dcMotor.get("leftRear");
+        rightRear = hwMap.dcMotor.get("rightRear");
         //leftSliderServo = hwMap.servo.get("leftSliderServo");
         //rightSliderServo = hwMap.servo.get("rightSliderServo");
 

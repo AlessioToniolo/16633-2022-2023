@@ -16,6 +16,8 @@ public class BaseRobot {
     public DcMotor leftSlider;
     // Right Slider Motor
     public DcMotor rightSlider;
+    //both sliders combined
+    public DualSlider dualSlider;
 
     public DcMotor rightFront, rightRear, leftFront, leftRear;
 
@@ -50,11 +52,13 @@ public class BaseRobot {
         // Define and Initialize Motors.  Assign Names that match the setup on the RC Phone
         leftSlider = hwMap.dcMotor.get("leftSlider");
         rightSlider = hwMap.dcMotor.get("rightSlider");
+        dualSlider = new DualSlider(rightSlider,leftSlider);
 
-        leftFront = hwMap.dcMotor.get("leftFront");
+        /**leftFront = hwMap.dcMotor.get("leftFront");
         rightFront = hwMap.dcMotor.get("rightFront");
         leftRear = hwMap.dcMotor.get("leftRear");
-        rightRear = hwMap.dcMotor.get("rightRear");
+        rightRear = hwMap.dcMotor.get("rightRear");**/
+
         //leftSliderServo = hwMap.servo.get("leftSliderServo");
         //rightSliderServo = hwMap.servo.get("rightSliderServo");
 
@@ -67,7 +71,8 @@ public class BaseRobot {
         imu.initialize(imuParameters);
 
         // Enable Slider for Arm Run Code
-        leftSlider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightSlider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        dualSlider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        dualSlider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
 }

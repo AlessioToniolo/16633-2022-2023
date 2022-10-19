@@ -11,10 +11,20 @@ import org.firstinspires.ftc.teamcode.utility.BaseRobot;
 @TeleOp
 public class Teleop extends LinearOpMode {
 
+    BaseRobot robot = new BaseRobot();
+    //dpad stuff
+    boolean prevDUp = false;
+    boolean prevDDown = false;
+    boolean prevDRight = false;
+    boolean prevDLeft = false;
+
+
+
     @Override
     public void runOpMode() throws InterruptedException {
-        BaseRobot robot = new BaseRobot();
+
         robot.init(hardwareMap);
+        robot.drive.setPoseEstimate(new Pose2d(12,12));
         waitForStart();
         while (!isStopRequested() && opModeIsActive()) {
 
@@ -36,7 +46,42 @@ public class Teleop extends LinearOpMode {
                             input.getY(),
                             -gamepad1.right_stick_x
                     ));
+            robot.drive.update();//updates the drive if it is follwing a path async
+
+
+            checkDPads();
         }
+
+
+    }
+    public void checkDPads(){
+        if(gamepad1.dpad_up&&gamepad1.dpad_up!=prevDUp){
+            robot.drive.followTrajectoryAsync(robot.drive.trajectoryBuilder(robot.drive.getPoseEstimate())
+                    .forward(24)
+                    .build());
+            prevDUp= gamepad1.dpad_up;
+        }
+        if(gamepad1.dpad_down&&gamepad1.dpad_down!=prevDDown){
+            robot.drive.followTrajectoryAsync(robot.drive.trajectoryBuilder(robot.drive.getPoseEstimate())
+                    .back(24)
+                    .build());
+            prevDDown= gamepad1.dpad_down;
+        }
+        if(gamepad1.dpad_right&&gamepad1.dpad_right!=prevDRight){
+            robot.drive.followTrajectoryAsync(robot.drive.trajectoryBuilder(robot.drive.getPoseEstimate())
+                    .strafeRight(24)
+                    .build());
+            prevDRight= gamepad1.dpad_right;
+        }
+        if(gamepad1.dpad_left&&gamepad1.dpad_left!=prevDLeft){
+            robot.drive.followTrajectoryAsync(robot.drive.trajectoryBuilder(robot.drive.getPoseEstimate())
+                    .strafeLeft(24)
+                    .build());
+            prevDLeft= gamepad1.dpad_left;
+        }
+    }
+    public void doTelemetry() {
+        telemetry.addLine("Positon:" + robot.drive.getPoseEstimate());
 
     }
 }

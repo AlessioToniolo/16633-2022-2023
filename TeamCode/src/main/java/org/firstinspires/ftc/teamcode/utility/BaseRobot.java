@@ -52,6 +52,9 @@ public class BaseRobot {
         // Define and Initialize Motors.  Assign Names that match the setup on the RC Phone
         leftSlider = hwMap.dcMotor.get("leftSlider");
         rightSlider = hwMap.dcMotor.get("rightSlider");
+        rightSlider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftSlider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         dualSlider = new DualSlider(rightSlider,leftSlider);
 
         /**leftFront = hwMap.dcMotor.get("leftFront");

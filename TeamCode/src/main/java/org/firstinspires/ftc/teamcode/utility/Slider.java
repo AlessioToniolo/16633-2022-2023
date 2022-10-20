@@ -1,12 +1,25 @@
 package org.firstinspires.ftc.teamcode.utility;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 
-public class DualSlider {
+public class Slider {
+    public static final int CONEPICKUP = 0;
+    public static final int STACKPICKUP = 1;
+    public static final int GROUND = 2;
+    public static final int LOW = 3;
+    public static final int MIDDLE = 4;
+    public static final int HIGH = 5;
+
+
+
+
     private DcMotor right;
     private DcMotor left;
-    private boolean loopActive = true;
+    private Servo rightServo;
+    private Servo leftServo;
+    private boolean loopActive = false;
     private int targetPosition = 0;
 
     /**
@@ -15,10 +28,52 @@ public class DualSlider {
      * @param right
      * @param left
      */
-    public DualSlider(DcMotor right, DcMotor left){
+    public Slider(DcMotor right, DcMotor left,Servo rightServo, Servo leftServo){
         this.right = right;
         this.left = left;
     }
+
+    public void goToPos(int pos){
+        if(pos == Slider.CONEPICKUP){
+            armPickup();
+            setTargetPosition(Fields.conePickUp);
+        }
+        else if(pos == Slider.STACKPICKUP){
+            armPickup();
+            setTargetPosition(Fields.stackPickUp);
+        }
+        else if(pos == Slider.GROUND){
+            setTargetPosition(Fields.ground);
+            armPickup();
+        }
+        else if(pos == Slider.LOW){
+            setTargetPosition(Fields.low);
+            armDeliver();
+        }
+        else if(pos == Slider.MIDDLE){
+            setTargetPosition(Fields.middle);
+            armDeliver();
+        }
+        else if(pos == Slider.HIGH){
+            setTargetPosition(Fields.high);
+            armDeliver();
+        }
+        if(!loopActive){
+            setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            setPower(1);
+        }
+
+    }
+
+    public void armDeliver(){
+        rightServo.setPosition(Fields.deliver);
+        leftServo.setPosition(Fields.deliver);
+    }
+    public void armPickup(){
+        rightServo.setPosition(Fields.rest);
+        leftServo.setPosition(Fields.rest);
+    }
+
 
     /**
      * RunTo-given a target position, this method will run the motors to that target position
@@ -26,9 +81,10 @@ public class DualSlider {
      */
     public void runTo(int position){
         loopActive = false;
-        setMode(DcMotor.RunMode.RUN_TO_POSITION);
         right.setTargetPosition(position);
         left.setTargetPosition(position);
+        setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         setPower(1);
 
     }
@@ -41,7 +97,7 @@ public class DualSlider {
     public void runAsync(){
         if(!loopActive){//only start the slider loop if it isnt already running
         Thread sliderThread = new Thread(this::sliderLoop);//create a new thread which runs the sliderLoop method
-        sliderThread.run();}//start the new Thread
+        sliderThread.start();}//start the new Thread
 
     }
 
@@ -58,13 +114,14 @@ public class DualSlider {
      * When loopActive becomes false the loop will end and turn the motors off.
      */
     private void sliderLoop(){
+        loopActive=true;
+        setTargetPosition(targetPosition);
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         while(loopActive){
             setPower(1);
         }
-        right.setPower(0);
-        left.setPower(0);
+        setPower(0);
     }
 
     //methods to that do normal motor stuff

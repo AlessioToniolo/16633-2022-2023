@@ -21,11 +21,11 @@ public class SliderTest extends LinearOpMode{
         robot.rightSlider.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         while(!isStopRequested() && opModeIsActive()){
 
-            if(gamepad1.right_trigger>1)robot.rightSlider.setPower(.2);
+            if(gamepad1.right_trigger>0)robot.rightSlider.setPower(.2);
             else robot.rightSlider.setPower(0);
-             if(gamepad1.left_trigger >1)robot.leftSlider.setPower(.2);
+             if(gamepad1.left_trigger >0)robot.leftSlider.setPower(.2);
              else robot.leftSlider.setPower(0);
-            if(gamepad1.a && gamepad1.a != prevA){
+            if(gamepad1.a && gamepad1.a != prevA)
                 robot.dualSlider.runTo(0);
 
                 prevA = gamepad1.a;
@@ -34,6 +34,7 @@ public class SliderTest extends LinearOpMode{
             telemetry.addLine("Left Slider: "+robot.leftSlider.getCurrentPosition());
             telemetry.addLine("Right Trigger: "+gamepad1.right_trigger);
             telemetry.addLine("Left Trigger: "+gamepad1.left_trigger);
+            telemetry.update();
 
 
         }
@@ -41,4 +42,4 @@ public class SliderTest extends LinearOpMode{
     }
 
 
-}
+

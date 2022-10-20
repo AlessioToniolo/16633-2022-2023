@@ -17,9 +17,7 @@ public class BaseRobot {
     // Right Slider Motor
     public DcMotor rightSlider;
     //both sliders combined
-    public DualSlider dualSlider;
-
-    public DcMotor rightFront, rightRear, leftFront, leftRear;
+    public Slider dualSlider;
 
     // Linear Slider Deposit Bucket Servo
     public Servo leftSliderServo;
@@ -29,8 +27,8 @@ public class BaseRobot {
     HardwareMap hwMap;
 
     //IMU Fields
-    BNO055IMU imu;
-    BNO055IMU.Parameters imuParameters;
+    public  BNO055IMU imu;
+    public BNO055IMU.Parameters imuParameters;
     double previousHeading = 0;
     double integratedHeading = 0;
     private final ElapsedTime period = new ElapsedTime();
@@ -49,18 +47,27 @@ public class BaseRobot {
         // Initialize RoadRunner Sample Mecanum Drive
         drive = new SampleMecanumDrive(hwMap);
 
+        /**
+        leftFront = hwMap.dcMotor.get("leftFront");
+        rightFront = hwMap.dcMotor.get("rightFront");
+        leftRear = hwMap.dcMotor.get("leftRear");
+        rightRear = hwMap.dcMotor.get("rightRear");
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);**/
+
+
+
         // Define and Initialize Motors.  Assign Names that match the setup on the RC Phone
         leftSlider = hwMap.dcMotor.get("leftSlider");
         rightSlider = hwMap.dcMotor.get("rightSlider");
-        rightSlider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftSlider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        dualSlider = new DualSlider(rightSlider,leftSlider);
+        rightSliderServo = hwMap.servo.get("left");
+        leftSliderServo = hwMap.servo.get("right");
 
-        /**leftFront = hwMap.dcMotor.get("leftFront");
-        rightFront = hwMap.dcMotor.get("rightFront");
-        leftRear = hwMap.dcMotor.get("leftRear");
-        rightRear = hwMap.dcMotor.get("rightRear");**/
+
+        dualSlider = new Slider(rightSlider,leftSlider, rightSliderServo, leftSliderServo);
+
+
 
         //leftSliderServo = hwMap.servo.get("leftSliderServo");
         //rightSliderServo = hwMap.servo.get("rightSliderServo");

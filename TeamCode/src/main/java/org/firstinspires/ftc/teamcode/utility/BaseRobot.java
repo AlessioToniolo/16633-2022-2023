@@ -61,8 +61,8 @@ public class BaseRobot {
         leftSlider = hwMap.dcMotor.get("leftSlider");
         rightSlider = hwMap.dcMotor.get("rightSlider");
 
-        rightSliderServo = hwMap.servo.get("left");
-        leftSliderServo = hwMap.servo.get("right");
+        rightSliderServo = hwMap.servo.get("right");
+        leftSliderServo = hwMap.servo.get("left");
 
 
         dualSlider = new Slider(rightSlider,leftSlider, rightSliderServo, leftSliderServo);

@@ -4,9 +4,12 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.utility.BaseRobot;
 import org.firstinspires.ftc.teamcode.utility.Fields;
+
+import java.lang.reflect.Field;
 
 @TeleOp
 public class Teleop extends LinearOpMode {
@@ -24,12 +27,13 @@ public class Teleop extends LinearOpMode {
     double triggerSpeedModifier = 1;
     boolean prevRBumper=false;
     boolean prevLBumper = false;
-    boolean prevRStickButton = false;
-    boolean prevLStickButton = false;
 
     //slider vars
     int sliderState = 0;
     boolean prevA=false;
+    double armTargetPos = 0;
+    double sliderTargetPos = 0;
+    boolean closed = false;
 
     //IMU
     // IMU Fields
@@ -41,76 +45,84 @@ public class Teleop extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         FtcDashboard dashboard = FtcDashboard.getInstance();
-
         robot.init(hardwareMap);
 
-        //robot.drive.setPoseEstimate(new Pose2d(12,12));
-
-        robot.dualSlider.runAsync();
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imuParameters = new BNO055IMU.Parameters();
         imuParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imuParameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         imuParameters.loggingEnabled = false;
         imu.initialize(imuParameters);
+        robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //robot.leftClaw.setPosition(1);
+        //robot.rightClaw.setPosition(1);
+        robot.arm.setTargetPosition(-100);
+        robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.arm.setPower(.5);
 
         waitForStart();
 
         while (!isStopRequested() && opModeIsActive()) {
 
-            //runSliderServo();
             checkDrive();
-            //checkDPads();
             checkSlider();
             doTelemetry();
         }
-        robot.dualSlider.stopAsync();
+
+
+    }
+
+    public void checkSlider(){
+
+        if(gamepad1.left_bumper) {
+            sliderTargetPos+=10;
+        }
+        if(gamepad1.right_bumper) {
+            sliderTargetPos-=10;
+        }
+        if(gamepad1.left_trigger > 0) {
+            armTargetPos+=.2;
+
+        } else if(gamepad1.right_trigger>0) {
+            armTargetPos-=.2;
+
+        }
+
+        if(gamepad1.a && gamepad1.a != prevA){
+            if(closed) {
+                closed= false;
+                robot.rightClaw.setPosition(1);
+                robot.leftClaw.setPosition(1);
+            }
+            else{
+                closed = true;
+                robot.rightClaw.setPosition(0);
+                robot.leftClaw.setPosition(0);
+            }
+
+        }
+        prevA = gamepad1.a;
+
+        if(armTargetPos < Fields.armMinimumTarget)armTargetPos = Fields.armMinimumTarget;
+        else if(armTargetPos > Fields.armMaximumTarget)armTargetPos = Fields.armMaximumTarget;
+        if(sliderTargetPos < Fields.sliderMinimumTarget)sliderTargetPos = Fields.sliderMinimumTarget;
+        else if(sliderTargetPos > Fields.sliderMaximumTarget)sliderTargetPos = Fields.sliderMaximumTarget;
+        robot.arm.setTargetPosition((int)armTargetPos);
+        robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.arm.setPower(.5);
+        robot.slider.setTargetPosition((int)sliderTargetPos);
+        robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.slider.setPower(1);
+        telemetry.addLine("armTargetPos: "+armTargetPos);
+        telemetry.addLine("armEstimatedPos: "+robot.arm.getTargetPosition());
+
+        telemetry.addLine("SliderTargetPOs: "+sliderTargetPos);
+        telemetry.addLine("SliderEstimatePOs: "+robot.slider.getTargetPosition());
 
 
     }
 
     /*
-    public void runSliderServo() {
-        /*
-        if(gamepad1.a){
-            robot.dualSlider.setServoPower(1);
-        }
-        else if(gamepad1.y){
-            robot.dualSlider.setServoPower(-1);
-        }
-        else{
-            robot.dualSlider.setServoPower(0);
-        }
-         *//*
-        if (gamepad2.left_bumper) {
-            // Depositing
-            pos(Fields.servoDeposit);
-        } else if (gamepad2.right_bumper) {
-            pos(Fields.servoResting);
-        }
-    }
-
-
-        private void pos(double value)  {
-            telemetry.addLine(String.valueOf(value));
-            robot.leftSliderServo.setPosition(-value);
-            robot.rightSliderServo.setPosition(value);
-        }
-        */
-
-    public void checkSlider(){
-        if(gamepad1.right_trigger > 0)robot.dualSlider.setTargetPosition(robot.dualSlider.getTargetPosition()+10);
-        else if(gamepad1.left_trigger>0) robot.dualSlider.setTargetPosition(robot.dualSlider.getTargetPosition()-10);
-
-        /**if(gamepad1.a && gamepad1.a!=prevA){
-            robot.dualSlider.goToPos(sliderState);
-            sliderState++;
-        }
-        prevA=gamepad1.a;**/
-
-
-    }
-
     public void checkDPads(){
         if(gamepad1.dpad_up&&gamepad1.dpad_up!=prevDUp){
             robot.drive.followTrajectoryAsync(robot.drive.trajectoryBuilder(robot.drive.getPoseEstimate())
@@ -141,6 +153,8 @@ public class Teleop extends LinearOpMode {
         prevDLeft= gamepad1.dpad_left;
 
     }
+     */
+
     public void checkDrive(){
 
         if(gamepad1.right_bumper&& gamepad1.right_bumper!=prevRBumper){//increases base speed
@@ -187,7 +201,7 @@ public class Teleop extends LinearOpMode {
     }
     public void doTelemetry() {
         //telemetry.addLine("Positon:" + robot.drive.getPoseEstimate());
-        telemetry.addLine("SliderPos:" + robot.dualSlider.getTargetPosition());
+        telemetry.addLine("SliderPos:" + robot.slider.getTargetPosition());
         telemetry.addLine("BaseSpeed: "+baseSpeed);
         telemetry.addLine("speedModifier: "+triggerSpeedModifier);
         telemetry.addLine("Speed: "+speed);

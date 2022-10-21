@@ -13,16 +13,13 @@ public class BaseRobot {
     // Drivetrain Reference
     public SampleMecanumDrive drive;
 
-    // Left Slider Motor
-    public DcMotor leftSlider;
-    // Right Slider Motor
-    public DcMotor rightSlider;
-    //both sliders combined
-    public Slider dualSlider;
+    // Linear Slider Motor
+    public DcMotor slider;
 
-    // Linear Slider Deposit Bucket Servo
-    public Servo leftSliderServo;
-    public Servo rightSliderServo;
+    // Virtual Four Bar Motor;
+    public DcMotor arm;
+    public Servo leftClaw;
+    public Servo rightClaw;
 
     // Local OpMode members
     HardwareMap hwMap;
@@ -48,31 +45,15 @@ public class BaseRobot {
         // Initialize RoadRunner Sample Mecanum Drive
         drive = new SampleMecanumDrive(hwMap);
 
-        /**
-        leftFront = hwMap.dcMotor.get("leftFront");
-        rightFront = hwMap.dcMotor.get("rightFront");
-        leftRear = hwMap.dcMotor.get("leftRear");
-        rightRear = hwMap.dcMotor.get("rightRear");
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);**/
-
-
-
         // Define and Initialize Motors.  Assign Names that match the setup on the RC Phone
-        leftSlider = hwMap.dcMotor.get("leftSlider");
-        rightSlider = hwMap.dcMotor.get("rightSlider");
+        slider = hwMap.dcMotor.get("slider");
+        arm = hwMap.dcMotor.get("arm");
 
-        rightSliderServo = hwMap.servo.get("right");
-        leftSliderServo = hwMap.servo.get("left");
+       // leftClaw = hwMap.servo.get("leftclaw");
+       // rightClaw = hwMap.servo.get("rightclaw");
+        leftClaw = null;
+        rightClaw=null;
 
-
-
-        dualSlider = new Slider(rightSlider,leftSlider, rightSliderServo, leftSliderServo);
-
-
-
-        //leftSliderServo = hwMap.servo.get("leftSliderServo");
-        //rightSliderServo = hwMap.servo.get("rightSliderServo");
 
         // Initialize IMU
         imu = hwMap.get(BNO055IMU.class, "imu");
@@ -82,9 +63,13 @@ public class BaseRobot {
         imuParameters.loggingEnabled = false;
         imu.initialize(imuParameters);
 
-        // Enable Slider for Arm Run Code
-        dualSlider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        dualSlider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // Enable Slider & V4B for Arm Run Code
+        slider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
+
+
 }

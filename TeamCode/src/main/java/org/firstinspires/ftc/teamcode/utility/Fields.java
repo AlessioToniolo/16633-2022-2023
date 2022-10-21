@@ -10,6 +10,9 @@ public class Fields {
     //Slider
     public static int sliderMinimumTarget = 0;
     public static int sliderMaximumTarget=5000;
+    public static int armMinimumTarget = -200;
+    public static int armMaximumTarget = -0;
+
     public static int ground;
     public static int low=290;//-300
     public static int middle = 1500;
@@ -17,7 +20,7 @@ public class Fields {
     public static int stackPickUp=0;
     public static int conePickUp=0;
 
-    public static double deliver = .7;
+    public static double deliver = 70;
     public static double rest = 0;
 
     // Servo

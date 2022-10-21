@@ -75,27 +75,38 @@ public class Teleop extends LinearOpMode {
     }
 
     public void runSliderServo() {
+        if(gamepad1.a){
+            robot.dualSlider.setServoPower(1);
+        }
+        else if(gamepad1.y){
+            robot.dualSlider.setServoPower(-1);
+        }
+        else{
+            robot.dualSlider.setServoPower(0);
+        }
+        /**
         if (gamepad2.left_bumper) {
             pos(0.3);
         } else if (gamepad2.right_bumper) {
             pos(-0.3);
-        }
+        }**/
     }
 
-    private void pos(double value)  {
+    /**private void pos(double value)  {
         robot.leftSliderServo.setPosition(-value);
         robot.rightSliderServo.setPosition(value);
-    }
+    }**/
 
     public void checkSlider(){
         if(gamepad1.right_trigger > 0)robot.dualSlider.setTargetPosition(robot.dualSlider.getTargetPosition()+10);
         else if(gamepad1.left_trigger>0) robot.dualSlider.setTargetPosition(robot.dualSlider.getTargetPosition()-10);
 
-        if(gamepad1.a && gamepad1.a!=prevA){
+        /**if(gamepad1.a && gamepad1.a!=prevA){
             robot.dualSlider.goToPos(sliderState);
             sliderState++;
         }
-        prevA=gamepad1.a;
+        prevA=gamepad1.a;**/
+
 
     }
 

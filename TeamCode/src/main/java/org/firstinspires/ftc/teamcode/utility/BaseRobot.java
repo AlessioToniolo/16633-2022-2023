@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.utility;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -20,8 +21,8 @@ public class BaseRobot {
     public Slider dualSlider;
 
     // Linear Slider Deposit Bucket Servo
-    public Servo leftSliderServo;
-    public Servo rightSliderServo;
+    public CRServo leftSliderServo;
+    public CRServo rightSliderServo;
 
     // Local OpMode members
     HardwareMap hwMap;
@@ -61,8 +62,9 @@ public class BaseRobot {
         leftSlider = hwMap.dcMotor.get("leftSlider");
         rightSlider = hwMap.dcMotor.get("rightSlider");
 
-        rightSliderServo = hwMap.servo.get("right");
-        leftSliderServo = hwMap.servo.get("left");
+        rightSliderServo = hwMap.crservo.get("left");
+        leftSliderServo = hwMap.crservo.get("right");
+        rightSliderServo.setDirection(CRServo.Direction.REVERSE);
 
 
         dualSlider = new Slider(rightSlider,leftSlider, rightSliderServo, leftSliderServo);

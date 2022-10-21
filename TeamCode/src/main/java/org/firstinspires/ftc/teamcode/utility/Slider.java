@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.utility;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -17,8 +18,8 @@ public class Slider {
 
     private DcMotor right;
     private DcMotor left;
-    private Servo rightServo;
-    private Servo leftServo;
+    private CRServo rightServo;
+    private CRServo leftServo;
     private boolean loopActive = false;
     private int targetPosition = 0;
 
@@ -28,12 +29,15 @@ public class Slider {
      * @param right
      * @param left
      */
-    public Slider(DcMotor right, DcMotor left,Servo rightServo, Servo leftServo){
+    public Slider(DcMotor right, DcMotor left, CRServo rightServo, CRServo leftServo){
         this.right = right;
         this.left = left;
+        this.rightServo=rightServo;
+        this.leftServo=leftServo;
     }
 
-    public void goToPos(int pos){
+
+    /**public void goToPos(int pos){
         if(pos == Slider.CONEPICKUP){
             armPickup();
             setTargetPosition(Fields.conePickUp);
@@ -63,16 +67,22 @@ public class Slider {
             setPower(1);
         }
 
-    }
+    }**/
 
-    public void armDeliver(){
+    /**public void armDeliver(){
         rightServo.setPosition(Fields.deliver);
         leftServo.setPosition(Fields.deliver);
     }
     public void armPickup(){
         rightServo.setPosition(Fields.rest);
         leftServo.setPosition(Fields.rest);
+    }**/
+
+    public void setServoPower(double power){
+        rightServo.setPower(power);
+        leftServo.setPower(power);
     }
+
 
 
     /**

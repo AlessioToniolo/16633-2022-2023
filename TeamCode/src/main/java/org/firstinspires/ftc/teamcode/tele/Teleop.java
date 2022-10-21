@@ -1,18 +1,12 @@
 package org.firstinspires.ftc.teamcode.tele;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.utility.BaseRobot;
+import org.firstinspires.ftc.teamcode.utility.Fields;
 
 @TeleOp
 public class Teleop extends LinearOpMode {
@@ -46,6 +40,7 @@ public class Teleop extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        FtcDashboard dashboard = FtcDashboard.getInstance();
 
         robot.init(hardwareMap);
 
@@ -63,7 +58,7 @@ public class Teleop extends LinearOpMode {
 
         while (!isStopRequested() && opModeIsActive()) {
 
-            runSliderServo();
+            //runSliderServo();
             checkDrive();
             //checkDPads();
             checkSlider();
@@ -74,6 +69,7 @@ public class Teleop extends LinearOpMode {
 
     }
 
+    /*
     public void runSliderServo() {
         /*
         if(gamepad1.a){
@@ -85,19 +81,22 @@ public class Teleop extends LinearOpMode {
         else{
             robot.dualSlider.setServoPower(0);
         }
-         */
+         *//*
         if (gamepad2.left_bumper) {
-            pos(0.3);
+            // Depositing
+            pos(Fields.servoDeposit);
         } else if (gamepad2.right_bumper) {
-            pos(-0.3);
+            pos(Fields.servoResting);
         }
     }
 
 
         private void pos(double value)  {
+            telemetry.addLine(String.valueOf(value));
             robot.leftSliderServo.setPosition(-value);
             robot.rightSliderServo.setPosition(value);
         }
+        */
 
     public void checkSlider(){
         if(gamepad1.right_trigger > 0)robot.dualSlider.setTargetPosition(robot.dualSlider.getTargetPosition()+10);

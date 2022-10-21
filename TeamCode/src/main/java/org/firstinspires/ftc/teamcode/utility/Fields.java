@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.utility;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.FtcDashboard;
 
 @Config
 public class Fields {
@@ -18,4 +19,10 @@ public class Fields {
 
     public static double deliver = .7;
     public static double rest = 0;
+
+    // Servo
+    /*
+    public static double servoDeposit = 0.3;
+    public static double servoResting = 0.9;
+     */
 }

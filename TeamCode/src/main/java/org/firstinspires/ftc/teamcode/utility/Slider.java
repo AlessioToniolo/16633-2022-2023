@@ -18,8 +18,8 @@ public class Slider {
 
     private DcMotor right;
     private DcMotor left;
-    private CRServo rightServo;
-    private CRServo leftServo;
+    private Servo rightServo;
+    private Servo leftServo;
     private boolean loopActive = false;
     private int targetPosition = 0;
 
@@ -29,7 +29,7 @@ public class Slider {
      * @param right
      * @param left
      */
-    public Slider(DcMotor right, DcMotor left, CRServo rightServo, CRServo leftServo){
+    public Slider(DcMotor right, DcMotor left, Servo rightServo, Servo leftServo){
         this.right = right;
         this.left = left;
         this.rightServo=rightServo;
@@ -77,11 +77,14 @@ public class Slider {
         rightServo.setPosition(Fields.rest);
         leftServo.setPosition(Fields.rest);
     }**/
+    /*
 
     public void setServoPower(double power){
         rightServo.setPower(power);
         leftServo.setPower(power);
     }
+
+     */
 
 
 

@@ -21,8 +21,8 @@ public class BaseRobot {
     public Slider dualSlider;
 
     // Linear Slider Deposit Bucket Servo
-    public CRServo leftSliderServo;
-    public CRServo rightSliderServo;
+    public Servo leftSliderServo;
+    public Servo rightSliderServo;
 
     // Local OpMode members
     HardwareMap hwMap;
@@ -62,9 +62,9 @@ public class BaseRobot {
         leftSlider = hwMap.dcMotor.get("leftSlider");
         rightSlider = hwMap.dcMotor.get("rightSlider");
 
-        rightSliderServo = hwMap.crservo.get("left");
-        leftSliderServo = hwMap.crservo.get("right");
-        rightSliderServo.setDirection(CRServo.Direction.REVERSE);
+        rightSliderServo = hwMap.servo.get("right");
+        leftSliderServo = hwMap.servo.get("left");
+
 
 
         dualSlider = new Slider(rightSlider,leftSlider, rightSliderServo, leftSliderServo);

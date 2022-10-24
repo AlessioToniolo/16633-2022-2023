@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.tele;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -45,6 +47,12 @@ public class Teleop extends LinearOpMode {
     double robotDegree;
     double gamepadDegree;
 
+    //dpad
+    boolean prevDUp = false;
+    boolean prevDLeft = false;
+    boolean prevDRight = false;
+    boolean prevDDown = false;
+
 
 
     @Override
@@ -71,6 +79,9 @@ public class Teleop extends LinearOpMode {
         robot.drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         waitForStart();
 
+        // TODO RR
+        robot.drive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(0)));
+
         while (!isStopRequested() && opModeIsActive()) {
             checkSpeed();
             lockedFieldCentricDrive();
@@ -81,18 +92,42 @@ public class Teleop extends LinearOpMode {
 
     }
 
+    public void checkDriveRR() {
+        // Read pose
+        Pose2d poseEstimate = robot.drive.getPoseEstimate();
+
+        // Create a vector from the gamepad x/y inputs
+        // Then, rotate that vector by the inverse of that heading
+        Vector2d input = new Vector2d(
+            -gamepad1.left_stick_y,
+            -gamepad1.left_stick_x
+        ).rotated(-poseEstimate.getHeading());
+
+        // Pass in the rotated input + right stick value for rotation
+        // Rotation is not part of the rotated input thus must be passed in separately
+        robot.drive.setWeightedDrivePower(
+            new Pose2d(
+                    input.getX(),
+                    input.getY(),
+                    -gamepad1.right_stick_x
+            )
+        );
+
+        telemetry.addData("heading", /*poseEstimate.getHeading()*/robot.drive.getRawExternalHeading());
+    }
+
     public void checkSlider(){
         if(gamepad1.left_bumper) {
-            sliderTargetPos+=10;
-        }
-        if(gamepad1.right_bumper) {
             sliderTargetPos-=10;
         }
+        if(gamepad1.right_bumper) {
+            sliderTargetPos+=10;
+        }
         if(gamepad1.left_trigger > 0) {
-            armTargetPos+=.2;
+            armTargetPos+=1;
 
         } else if(gamepad1.right_trigger>0) {
-            armTargetPos-=.2;
+            armTargetPos-=1;
 
         }
         if(gamepad1.a && gamepad1.a != prevA){
@@ -141,14 +176,15 @@ public class Teleop extends LinearOpMode {
         prevDLeft= gamepad1.dpad_left;
         if(armTargetPos < Fields.armMinimumTarget)armTargetPos = Fields.armMinimumTarget;
         else if(armTargetPos > Fields.armMaximumTarget)armTargetPos = Fields.armMaximumTarget;
-        if(sliderTargetPos < Fields.sliderMinimumTarget)sliderTargetPos = Fields.sliderMinimumTarget;
-        else if(sliderTargetPos > Fields.sliderMaximumTarget)sliderTargetPos = Fields.sliderMaximumTarget;
+
         robot.arm.setTargetPosition((int)armTargetPos);
         robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.arm.setPower(.5);
         robot.slider.setTargetPosition((int)sliderTargetPos);
         robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.slider.setPower(1);
+        telemetry.addLine("SLIDER STUFF:" );
+        telemetry.addLine("__________________________________:" );
         telemetry.addLine("armTargetPos: "+armTargetPos);
         telemetry.addLine("armEstimatedPos: "+robot.arm.getTargetPosition());
 
@@ -161,7 +197,7 @@ public class Teleop extends LinearOpMode {
         }
         if(sliderTargetPos<=Fields.sliderMinimumTarget)
         {
-            sliderTargetPos<=Fields.sliderMinimumTarget;
+            sliderTargetPos=Fields.sliderMinimumTarget;
         }
     }
     public void lockedFieldCentricDrive(){
@@ -300,9 +336,15 @@ public class Teleop extends LinearOpMode {
         double turnDegrees = gamepadDegree-robotDegree;//determine what heading relative to the robot we want to drive
 
 
+
         //x and y are doubles in the range [-1,1] which are just the cos and sin of the angle you want to drive
         double x = round(Math.cos(Math.toRadians(turnDegrees)))*speed;//find x and y using cos and sin and then multiply them by the speed
         double y = round(Math.sin(Math.toRadians(turnDegrees)))*speed;
+
+        if(Math.abs(leftStickY) == 0 &&Math.abs(leftStickX)==0 ){//however if there is no joystick movement x and y are 0
+            x=0;
+            y=0;
+        }
 
 
         //calculate power; copied from the Nebomusc Macanum Quad with changes to match our motor directions
@@ -381,10 +423,13 @@ public class Teleop extends LinearOpMode {
     }
     public void doTelemetry() {
         //telemetry.addLine("Positon:" + robot.drive.getPoseEstimate());
-        telemetry.addLine("SliderPos:" + robot.slider.getTargetPosition());
         telemetry.addLine("BaseSpeed: "+baseSpeed);
         telemetry.addLine("speedModifier: "+triggerSpeedModifier);
         telemetry.addLine("Speed: "+speed);
+
+
+
+
         telemetry.update();
 
 

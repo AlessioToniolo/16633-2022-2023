@@ -10,8 +10,8 @@ public class Fields {
     //Slider
     public static int sliderMinimumTarget = 0;
     public static int sliderMaximumTarget=5000;
-    public static int armMinimumTarget = -200;
-    public static int armMaximumTarget = -0;
+    public static int armMinimumTarget = 0;
+    public static int armMaximumTarget = 5000;
     public static int armIntakeLevel=0;
     public static int armGroundJunctionLevel=0;
     public static int armLowJunctionLevel=0;

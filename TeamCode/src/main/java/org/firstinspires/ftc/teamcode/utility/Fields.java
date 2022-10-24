@@ -12,7 +12,16 @@ public class Fields {
     public static int sliderMaximumTarget=5000;
     public static int armMinimumTarget = -200;
     public static int armMaximumTarget = -0;
-
+    public static int armIntakeLevel=0;
+    public static int armGroundJunctionLevel=0;
+    public static int armLowJunctionLevel=0;
+    public static int armMidJunctionLevel=0;
+    public static int armHighJunctionLevel=0;
+    public static int sliderIntakeLevel=0;
+    public static int sliderGroundJunctionLevel=0;
+    public static int sliderLowJunctionLevel=0;
+    public static int sliderMidJunctionLevel=0;
+    public static int sliderHighJunctionLevel=0;
     public static int ground;
     public static int low=290;//-300
     public static int middle = 1500;

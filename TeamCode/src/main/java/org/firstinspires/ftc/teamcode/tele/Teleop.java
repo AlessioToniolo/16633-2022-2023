@@ -33,6 +33,7 @@ public class Teleop extends LinearOpMode {
     //slider vars
     int sliderState = 0;
     boolean prevA=false;
+    boolean prevB=false;
     double armTargetPos = 0;
     double sliderTargetPos = 0;
     boolean closed = false;
@@ -108,7 +109,36 @@ public class Teleop extends LinearOpMode {
 
         }
         prevA = gamepad1.a;
-
+        if(gamepad1.b&&gamepad1.b!=prevB)
+        {
+            armTargetPos=Fields.armIntakeLevel;
+            sliderTargetPos=Fields.sliderIntakeLevel;
+        }
+        prevB=gamepad1.b;
+        if(gamepad1.dpad_up&&gamepad1.dpad_up!=prevDUp)
+        {
+            armTargetPos=Fields.armHighJunctionLevel;
+            sliderTargetPos=Fields.sliderHighJunctionLevel;
+        }
+        prevDUp=gamepad1.dpad_up;
+        if(gamepad1.dpad_down&&gamepad1.dpad_down!=prevDDown)
+        {
+            armTargetPos=Fields.armGroundJunctionLevel;
+            sliderTargetPos=Fields.sliderGroundJunctionLevel;
+        }
+        prevDDown=gamepad1.dpad_down;
+        if(gamepad1.dpad_right&&gamepad1.dpad_right!=prevDRight)
+        {
+            armTargetPos=Fields.armMidJunctionLevel;
+            sliderTargetPos=Fields.sliderMidJunctionLevel;
+        }
+        prevDRight=gamepad1.dpad_right;
+        if(gamepad1.dpad_left&&gamepad1.dpad_left!=prevDLeft)
+        {
+            armTargetPos=Fields.armLowJunctionLevel;
+            sliderTargetPos=Fields.sliderLowJunctionLevel;
+        }
+        prevDLeft= gamepad1.dpad_left;
         if(armTargetPos < Fields.armMinimumTarget)armTargetPos = Fields.armMinimumTarget;
         else if(armTargetPos > Fields.armMaximumTarget)armTargetPos = Fields.armMaximumTarget;
         if(sliderTargetPos < Fields.sliderMinimumTarget)sliderTargetPos = Fields.sliderMinimumTarget;
@@ -125,7 +155,14 @@ public class Teleop extends LinearOpMode {
         telemetry.addLine("SliderTargetPOs: "+sliderTargetPos);
         telemetry.addLine("SliderEstimatePOs: "+robot.slider.getTargetPosition());
 
-
+        if(sliderTargetPos>=Fields.sliderMaximumTarget)
+        {
+            sliderTargetPos = Fields.sliderMaximumTarget;
+        }
+        if(sliderTargetPos<=Fields.sliderMinimumTarget)
+        {
+            sliderTargetPos<=Fields.sliderMinimumTarget;
+        }
     }
     public void lockedFieldCentricDrive(){
 

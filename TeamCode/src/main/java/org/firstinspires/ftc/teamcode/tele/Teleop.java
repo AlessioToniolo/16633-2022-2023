@@ -53,6 +53,9 @@ public class Teleop extends LinearOpMode {
     boolean prevDRight = false;
     boolean prevDDown = false;
 
+    //buttons booleand
+    boolean prevY = false;
+
 
 
     @Override
@@ -133,38 +136,10 @@ public class Teleop extends LinearOpMode {
         if(sliderTargetPos>Fields.sliderMaximumTarget) sliderTargetPos = Fields.sliderMaximumTarget;
         else if(sliderTargetPos<Fields.sliderMinimumTarget) sliderTargetPos=Fields.sliderMinimumTarget;
 
+        checkDUp();
+        checkDDown();
+        checkY();
 
-
-        if(gamepad2.b&&gamepad2.b!=prevB)
-        {
-            armTargetPos=Fields.armIntakeLevel;
-            sliderTargetPos=Fields.sliderIntakeLevel;
-        }
-        prevB=gamepad2.b;
-        if(gamepad2.dpad_up&&gamepad2.dpad_up!=prevDUp)
-        {
-            armTargetPos=Fields.armHighJunctionLevel;
-            sliderTargetPos=Fields.sliderHighJunctionLevel;
-        }
-        prevDUp=gamepad2.dpad_up;
-        if(gamepad2.dpad_down&&gamepad2.dpad_down!=prevDDown)
-        {
-            armTargetPos=Fields.armGroundJunctionLevel;
-            sliderTargetPos=Fields.sliderGroundJunctionLevel;
-        }
-        prevDDown=gamepad2.dpad_down;
-        if(gamepad2.dpad_right&&gamepad2.dpad_right!=prevDRight)
-        {
-            armTargetPos=Fields.armMidJunctionLevel;
-            sliderTargetPos=Fields.sliderMidJunctionLevel;
-        }
-        prevDRight=gamepad2.dpad_right;
-        if(gamepad2.dpad_left&&gamepad2.dpad_left!=prevDLeft)
-        {
-            armTargetPos=Fields.armLowJunctionLevel;
-            sliderTargetPos=Fields.sliderLowJunctionLevel;
-        }
-        prevDLeft= gamepad2.dpad_left;
 
 
         //motor functionality
@@ -226,6 +201,7 @@ public class Teleop extends LinearOpMode {
         if(rightStickX<0)rightStickX=-speed;
         else if(rightStickX>0)rightStickX=speed;
 
+        telemetry.addLine("DRIVE MODE: LOCKED FIELDCENTRIC");
 
 
 
@@ -316,6 +292,7 @@ public class Teleop extends LinearOpMode {
 
 
 
+        telemetry.addLine("DRIVE MODE: FIELDCENTRIC");
 
         //get degree of the robot from the imu
         robotDegree = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
@@ -359,7 +336,17 @@ public class Teleop extends LinearOpMode {
         telemetry.addData("rightRear", rightRearPower);
         telemetry.addData("rightFront", rightFrontPower);
 
-
+        /**if(gamepad1.y) {
+            robot.drive.leftFront.setPower(leftFrontPower);
+            robot.drive.leftRear.setPower(leftRearPower);
+            robot.drive.rightFront.setPower(rightFrontPower);
+            robot.drive.rightRear.setPower(rightRearPower);
+        }else{
+            robot.drive.leftFront.setPower(0);
+            robot.drive.leftRear.setPower(0);
+            robot.drive.rightFront.setPower(0);
+            robot.drive.rightRear.setPower(0);
+        }**/
         robot.drive.leftFront.setPower(leftFrontPower);
         robot.drive.leftRear.setPower(leftRearPower);
         robot.drive.rightFront.setPower(rightFrontPower);
@@ -406,6 +393,8 @@ public class Teleop extends LinearOpMode {
         double leftFrontPower = leftY + leftX - rightX;
         double rightRearPower = leftY + leftX + rightX;
         double rightFrontPower = leftY - leftX + rightX;
+        telemetry.addLine("DRIVE MODE: NORMAL");
+
         telemetry.addLine("");
         telemetry.addLine("DRIVE DATA");
         telemetry.addLine("______________________________________");
@@ -419,8 +408,72 @@ public class Teleop extends LinearOpMode {
         robot.drive.rightFront.setPower(rightFrontPower*speed);
         robot.drive.rightRear.setPower(rightRearPower*speed);
     }
+
+    public void checkDUp(){
+        if(gamepad2.dpad_up && gamepad2.dpad_up != prevDUp){
+            if(sliderState==Fields.referenceGroundPickup){
+                sliderTargetPos=Fields.sliderConeStackPickup;
+                sliderState=Fields.referenceConeStackPickup;
+            }
+            else if(sliderState==Fields.referenceConeStackPickup){
+                sliderTargetPos=Fields.sliderLowJunctionLevel;
+                sliderState=Fields.referenceLowJunction;
+            }
+            else if(sliderState==Fields.referenceLowJunction){
+                sliderTargetPos=Fields.sliderMidJunctionLevel;
+                sliderState=Fields.referenceMiddleJunction;
+            }
+            else if(sliderState ==Fields.referenceMiddleJunction){
+                sliderTargetPos=Fields.sliderHighJunctionLevel;
+                sliderState=Fields.referenceHighJunction;
+            }
+            else if(sliderState == Fields.referenceHighJunction)
+            {
+                sliderTargetPos=Fields.sliderGroundPickup;
+                sliderTargetPos=Fields.referenceGroundPickup;
+            }
+        }
+        prevDUp= gamepad2.dpad_up;
+    }
+    public void checkDDown(){
+        if(gamepad2.dpad_down && gamepad2.dpad_down != prevDDown){
+            if(sliderState==Fields.referenceGroundPickup){
+                sliderTargetPos=Fields.sliderHighJunctionLevel;
+                sliderState=Fields.referenceHighJunction;
+            }
+            else if(sliderState==Fields.referenceConeStackPickup){
+                sliderTargetPos=Fields.sliderGroundPickup;
+                sliderState=Fields.referenceGroundPickup;
+            }
+            else if(sliderState==Fields.referenceLowJunction){
+                sliderTargetPos=Fields.sliderConeStackPickup;
+                sliderState=Fields.referenceConeStackPickup;
+            }
+            else if(sliderState ==Fields.referenceMiddleJunction){
+                sliderTargetPos=Fields.sliderLowJunctionLevel;
+                sliderState=Fields.referenceLowJunction;
+            }
+            else if(sliderState == Fields.referenceHighJunction)
+            {
+                sliderTargetPos=Fields.sliderMidJunctionLevel;
+                sliderTargetPos=Fields.referenceMiddleJunction;
+            }
+        }
+        prevDDown= gamepad2.dpad_down;
+    }
+    public void checkY(){
+        if(gamepad2.y && gamepad2.y != prevY){
+            armRunTo(Fields.armPickup);
+            sliderRunTo(Fields.sliderGroundPickup);
+            sliderState = Fields.referenceGroundPickup;
+        }
+        prevY = gamepad2.y;
+    }
     public void doTelemetry() {
         //telemetry.addLine("Positon:" + robot.drive.getPoseEstimate());
+        telemetry.addLine("_____________: ");
+        telemetry.addLine("SPEED DATA:");
+
         telemetry.addLine("BaseSpeed: "+baseSpeed);
         telemetry.addLine("speedModifier: "+triggerSpeedModifier);
         telemetry.addLine("Speed: "+speed);
@@ -434,9 +487,12 @@ public class Teleop extends LinearOpMode {
     }
 
     public void armRunTo(int position){
+        armRunTo(position, 1);
+    }
+    public void armRunTo(int position, double power){
         robot.arm.setTargetPosition(position);
         robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.arm.setPower(1);
+        robot.arm.setPower(power);
     }
     public void sliderRunTo(int position){
         robot.slider.setTargetPosition(position);

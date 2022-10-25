@@ -37,5 +37,10 @@ public class Fields {
     public static int sliderLowJunctionLevel=0;
     public static int sliderMidJunctionLevel=0;
     public static int sliderHighJunctionLevel=0;
+    // Claw
+    public static double leftClawGrab = 1.0;
+    public static double leftClawRelease = 0;
+    public static double rightClawGrab = -1;
+    public static double rightClawRelease = 0;
 
 }

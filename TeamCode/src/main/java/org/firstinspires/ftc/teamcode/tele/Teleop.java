@@ -84,7 +84,7 @@ public class Teleop extends LinearOpMode {
 
         while (!isStopRequested() && opModeIsActive()) {
             checkSpeed();
-            lockedFieldCentricDrive();
+            fieldCentricDrive();
             checkSlider();
             doTelemetry();
         }
@@ -117,19 +117,71 @@ public class Teleop extends LinearOpMode {
     }
 
     public void checkSlider(){
-        if(gamepad1.left_bumper) {
+
+        if(gamepad2.left_trigger > 0) {
             sliderTargetPos-=10;
-        }
-        if(gamepad1.right_bumper) {
+
+        } else if(gamepad2.right_trigger>0) {
             sliderTargetPos+=10;
         }
-        if(gamepad1.left_trigger > 0) {
-            armTargetPos+=1;
+        armTargetPos+=10*-gamepad2.left_stick_y;//if pressed up then will add between 0 and positive 10 if pressed down will dubsttract between 0 and 10
 
-        } else if(gamepad1.right_trigger>0) {
-            armTargetPos-=1;
+        //safety
+        if(armTargetPos < Fields.armMinimumTarget)armTargetPos = Fields.armMinimumTarget;
+        else if(armTargetPos > Fields.armMaximumTarget)armTargetPos = Fields.armMaximumTarget;
 
+        if(sliderTargetPos>Fields.sliderMaximumTarget) sliderTargetPos = Fields.sliderMaximumTarget;
+        else if(sliderTargetPos<Fields.sliderMinimumTarget) sliderTargetPos=Fields.sliderMinimumTarget;
+
+
+
+        if(gamepad2.b&&gamepad2.b!=prevB)
+        {
+            armTargetPos=Fields.armIntakeLevel;
+            sliderTargetPos=Fields.sliderIntakeLevel;
         }
+        prevB=gamepad2.b;
+        if(gamepad2.dpad_up&&gamepad2.dpad_up!=prevDUp)
+        {
+            armTargetPos=Fields.armHighJunctionLevel;
+            sliderTargetPos=Fields.sliderHighJunctionLevel;
+        }
+        prevDUp=gamepad2.dpad_up;
+        if(gamepad2.dpad_down&&gamepad2.dpad_down!=prevDDown)
+        {
+            armTargetPos=Fields.armGroundJunctionLevel;
+            sliderTargetPos=Fields.sliderGroundJunctionLevel;
+        }
+        prevDDown=gamepad2.dpad_down;
+        if(gamepad2.dpad_right&&gamepad2.dpad_right!=prevDRight)
+        {
+            armTargetPos=Fields.armMidJunctionLevel;
+            sliderTargetPos=Fields.sliderMidJunctionLevel;
+        }
+        prevDRight=gamepad2.dpad_right;
+        if(gamepad2.dpad_left&&gamepad2.dpad_left!=prevDLeft)
+        {
+            armTargetPos=Fields.armLowJunctionLevel;
+            sliderTargetPos=Fields.sliderLowJunctionLevel;
+        }
+        prevDLeft= gamepad2.dpad_left;
+
+
+        //motor functionality
+        armRunTo((int)armTargetPos);
+        sliderRunTo((int)sliderTargetPos);
+        
+
+        telemetry.addLine("SLIDER STUFF:" );
+        telemetry.addLine("__________________________________:" );
+        telemetry.addLine("armTargetPos: "+armTargetPos);
+        telemetry.addLine("armEstimatedPos: "+robot.arm.getTargetPosition());
+
+        telemetry.addLine("SliderTargetPos: "+sliderTargetPos);
+        telemetry.addLine("SliderEstimatePos: "+robot.slider.getTargetPosition());
+
+
+        //claw stuff not yet implemented
         if(gamepad1.a && gamepad1.a != prevA){
             if(closed) {
                 closed= false;
@@ -144,61 +196,6 @@ public class Teleop extends LinearOpMode {
 
         }
         prevA = gamepad1.a;
-        if(gamepad1.b&&gamepad1.b!=prevB)
-        {
-            armTargetPos=Fields.armIntakeLevel;
-            sliderTargetPos=Fields.sliderIntakeLevel;
-        }
-        prevB=gamepad1.b;
-        if(gamepad1.dpad_up&&gamepad1.dpad_up!=prevDUp)
-        {
-            armTargetPos=Fields.armHighJunctionLevel;
-            sliderTargetPos=Fields.sliderHighJunctionLevel;
-        }
-        prevDUp=gamepad1.dpad_up;
-        if(gamepad1.dpad_down&&gamepad1.dpad_down!=prevDDown)
-        {
-            armTargetPos=Fields.armGroundJunctionLevel;
-            sliderTargetPos=Fields.sliderGroundJunctionLevel;
-        }
-        prevDDown=gamepad1.dpad_down;
-        if(gamepad1.dpad_right&&gamepad1.dpad_right!=prevDRight)
-        {
-            armTargetPos=Fields.armMidJunctionLevel;
-            sliderTargetPos=Fields.sliderMidJunctionLevel;
-        }
-        prevDRight=gamepad1.dpad_right;
-        if(gamepad1.dpad_left&&gamepad1.dpad_left!=prevDLeft)
-        {
-            armTargetPos=Fields.armLowJunctionLevel;
-            sliderTargetPos=Fields.sliderLowJunctionLevel;
-        }
-        prevDLeft= gamepad1.dpad_left;
-        if(armTargetPos < Fields.armMinimumTarget)armTargetPos = Fields.armMinimumTarget;
-        else if(armTargetPos > Fields.armMaximumTarget)armTargetPos = Fields.armMaximumTarget;
-
-        robot.arm.setTargetPosition((int)armTargetPos);
-        robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.arm.setPower(.5);
-        robot.slider.setTargetPosition((int)sliderTargetPos);
-        robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.slider.setPower(1);
-        telemetry.addLine("SLIDER STUFF:" );
-        telemetry.addLine("__________________________________:" );
-        telemetry.addLine("armTargetPos: "+armTargetPos);
-        telemetry.addLine("armEstimatedPos: "+robot.arm.getTargetPosition());
-
-        telemetry.addLine("SliderTargetPOs: "+sliderTargetPos);
-        telemetry.addLine("SliderEstimatePOs: "+robot.slider.getTargetPosition());
-
-        if(sliderTargetPos>=Fields.sliderMaximumTarget)
-        {
-            sliderTargetPos = Fields.sliderMaximumTarget;
-        }
-        if(sliderTargetPos<=Fields.sliderMinimumTarget)
-        {
-            sliderTargetPos=Fields.sliderMinimumTarget;
-        }
     }
     public void lockedFieldCentricDrive(){
 
@@ -265,7 +262,7 @@ public class Teleop extends LinearOpMode {
             x=0;
             y=0;
         }
-
+        rightStickX*=speed;//Experimental
         //calculate power; copied from the Nebomusc Macanum Quad with changes to match our motor directions
         double leftRearPower = y - x + rightStickX;
         double leftFrontPower = y + x + rightStickX;
@@ -327,8 +324,8 @@ public class Teleop extends LinearOpMode {
 
 
         //compute degree of joystick using atan of y/x
-        gamepadDegree = Math.atan2(leftStickY,leftStickX); //normal way of doing it
-
+        gamepadDegree = Math.atan2(Math.toRadians(leftStickY),Math.toRadians(leftStickX)); //normal way of doing it
+        gamepadDegree = Math.toDegrees(gamepadDegree);
 
         telemetry.addLine("Gamepad Degree: "+gamepadDegree);
 
@@ -346,6 +343,7 @@ public class Teleop extends LinearOpMode {
             y=0;
         }
 
+        rightStickX*=speed;//Experimental
 
         //calculate power; copied from the Nebomusc Macanum Quad with changes to match our motor directions
         double leftRearPower = y - x + rightStickX;
@@ -438,7 +436,12 @@ public class Teleop extends LinearOpMode {
     public void armRunTo(int position){
         robot.arm.setTargetPosition(position);
         robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.arm.setPower(.02);
+        robot.arm.setPower(1);
+    }
+    public void sliderRunTo(int position){
+        robot.slider.setTargetPosition(position);
+        robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.slider.setPower(1);
     }
     public static double round(double in){
         return ((int)(in*1000))/1000.0;

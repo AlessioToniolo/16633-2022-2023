@@ -39,6 +39,10 @@ public class Teleop extends LinearOpMode {
     double armTargetPos = 0;
     double sliderTargetPos = 0;
     boolean closed = false;
+    //claw vars
+    double leftClawPos = 0;
+    double rightClawPos = 0;
+
 
     //IMU
     // IMU Fields
@@ -56,17 +60,16 @@ public class Teleop extends LinearOpMode {
     //buttons booleand
     boolean prevY = false;
 
+    //arm state vars
+    int armState = 0;//0=pickup 1=forwardDeliver, 2 =backwardDeliver
+
 
 
     @Override
     public void runOpMode() throws InterruptedException {
         FtcDashboard dashboard = FtcDashboard.getInstance();
         robot.init(hardwareMap);
-        //robot.leftClaw.setPosition(1);
-        //robot.rightClaw.setPosition(1);
-//        robot.arm.setTargetPosition(-100);
-//        robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        robot.arm.setPower(.5);
+
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imuParameters = new BNO055IMU.Parameters();
@@ -80,6 +83,10 @@ public class Teleop extends LinearOpMode {
         imu.initialize(imuParameters);
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
         robot.drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        robot.rightClaw.setPosition(Fields.rightClawPickup);
+        robot.leftClaw.setPosition(Fields.leftClawOpen);
+
         waitForStart();
 
         // TODO RR
@@ -121,13 +128,8 @@ public class Teleop extends LinearOpMode {
 
     public void checkSlider(){
 
-        if(gamepad2.left_trigger > 0) {
-            sliderTargetPos-=10;
-
-        } else if(gamepad2.right_trigger>0) {
-            sliderTargetPos+=10;
-        }
-        armTargetPos+=10*-gamepad2.left_stick_y;//if pressed up then will add between 0 and positive 10 if pressed down will dubsttract between 0 and 10
+        sliderTargetPos+=10*-gamepad2.left_stick_y;//if pressed up then will add between 0 and positive 10 if pressed down will dubsttract between 0 and 10
+        armTargetPos+=10*-gamepad2.right_stick_y;//if pressed up then will add between 0 and positive 10 if pressed down will dubsttract between 0 and 10
 
         //safety
         if(armTargetPos < Fields.armMinimumTarget)armTargetPos = Fields.armMinimumTarget;
@@ -139,38 +141,47 @@ public class Teleop extends LinearOpMode {
         checkDUp();
         checkDDown();
         checkY();
+        checkDRightandLeft();
+        //checkDRightandLeft();
 
 
 
         //motor functionality
-        armRunTo((int)armTargetPos);
-        sliderRunTo((int)sliderTargetPos);
+        armRunTo((int)armTargetPos, .75);
+        sliderRunTo((int)sliderTargetPos, .75);
         
 
         telemetry.addLine("SLIDER STUFF:" );
         telemetry.addLine("__________________________________:" );
         telemetry.addLine("armTargetPos: "+armTargetPos);
         telemetry.addLine("armEstimatedPos: "+robot.arm.getTargetPosition());
+        telemetry.addLine("armState: "+armState);
+
 
         telemetry.addLine("SliderTargetPos: "+sliderTargetPos);
         telemetry.addLine("SliderEstimatePos: "+robot.slider.getTargetPosition());
 
 
         //claw stuff not yet implemented
-        if(gamepad1.a && gamepad1.a != prevA){
+        if(gamepad2.a && gamepad2.a != prevA){
             if(closed) {
-                closed= false;
-                robot.rightClaw.setPosition(1);
-                robot.leftClaw.setPosition(1);
+                closed=false;
+                if(armTargetPos>200) robot.rightClaw.setPosition(Fields.rightClawDeliver);
+                else robot.rightClaw.setPosition(Fields.rightClawPickup);
+                robot.leftClaw.setPosition(Fields.leftClawOpen);
             }
             else{
+
                 closed = true;
-                robot.rightClaw.setPosition(0);
-                robot.leftClaw.setPosition(0);
+                robot.rightClaw.setPosition(Fields.rightClawClose);
+                robot.leftClaw.setPosition(Fields.leftClawClose);
             }
 
         }
-        prevA = gamepad1.a;
+        prevA = gamepad2.a;
+        telemetry.addLine("LEFT: Position:"+robot.leftClaw.getPosition()+"Port:"+robot.leftClaw.getPortNumber());
+        telemetry.addLine("Right: Position:"+robot.rightClaw.getPosition()+"Port:"+robot.rightClaw.getPortNumber());
+
     }
     public void lockedFieldCentricDrive(){
 
@@ -461,14 +472,50 @@ public class Teleop extends LinearOpMode {
         }
         prevDDown= gamepad2.dpad_down;
     }
+    public void checkDRightandLeft() {
+        if (gamepad2.dpad_right && gamepad2.dpad_right != prevDRight) {
+            armState++;
+            if (armState == -1) armState = 2;
+            else if (armState == 3) armState = 0;
+
+            if (armState == 0) armTargetPos = Fields.armPickup;
+            else if (armState == 1) armTargetPos = Fields.armDepositForward;
+            else if (armState == 2) armTargetPos = Fields.armDepositBackwards;
+        }
+        prevDRight = gamepad2.dpad_right;
+        if (gamepad2.dpad_left && gamepad2.dpad_left != prevDLeft) {
+            armState--;
+            if(armState==-1)armState=2;
+            else if(armState ==3)armState=0;
+
+            if(armState==0)armTargetPos=Fields.armPickup;
+            else if(armState==1)armTargetPos=Fields.armDepositForward;
+            else if(armState==2)armTargetPos=Fields.armDepositBackwards;
+        }
+        prevDLeft = gamepad2.dpad_left;
+
+
+
+
+
+
+
+
+
+
+    }
     public void checkY(){
         if(gamepad2.y && gamepad2.y != prevY){
+            sliderState = Fields.referenceGroundPickup;
+            sliderTargetPos=Fields.sliderGroundPickup;
             armRunTo(Fields.armPickup);
             sliderRunTo(Fields.sliderGroundPickup);
-            sliderState = Fields.referenceGroundPickup;
+
         }
         prevY = gamepad2.y;
     }
+
+
     public void doTelemetry() {
         //telemetry.addLine("Positon:" + robot.drive.getPoseEstimate());
         telemetry.addLine("_____________: ");
@@ -490,14 +537,19 @@ public class Teleop extends LinearOpMode {
         armRunTo(position, 1);
     }
     public void armRunTo(int position, double power){
+        armTargetPos=position;
         robot.arm.setTargetPosition(position);
         robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.arm.setPower(power);
     }
     public void sliderRunTo(int position){
+        sliderRunTo(position, 1);
+    }
+    public void sliderRunTo(int position, double power){
+        sliderTargetPos=position;
         robot.slider.setTargetPosition(position);
         robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.slider.setPower(1);
+        robot.slider.setPower(power);
     }
     public static double round(double in){
         return ((int)(in*1000))/1000.0;

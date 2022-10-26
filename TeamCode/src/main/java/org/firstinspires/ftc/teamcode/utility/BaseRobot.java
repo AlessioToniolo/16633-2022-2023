@@ -62,10 +62,8 @@ public class BaseRobot {
         slider = hwMap.dcMotor.get("slider");
         arm = hwMap.dcMotor.get("arm");
 
-       // leftClaw = hwMap.servo.get("leftclaw");
-       // rightClaw = hwMap.servo.get("rightclaw");
-        leftClaw = null;
-        rightClaw=null;
+        leftClaw = hwMap.servo.get("leftclaw");
+        rightClaw = hwMap.servo.get("rightclaw");
 
 
 

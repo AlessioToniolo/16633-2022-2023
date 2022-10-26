@@ -38,4 +38,14 @@ public class Fields {
     public static int sliderMidJunctionLevel=0;
     public static int sliderHighJunctionLevel=0;
 
+    //claw varaiables
+    public static double rightClawClose = .55;
+    public static double leftClawClose = .3;
+    public static double rightClawPickup = .2;
+    public static double rightClawDeliver = .49;
+
+    public static double leftClawOpen = .25;
+
+
+
 }

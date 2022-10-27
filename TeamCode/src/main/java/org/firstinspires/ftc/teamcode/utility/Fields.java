@@ -7,15 +7,26 @@ import com.acmerobotics.dashboard.FtcDashboard;
 public class Fields {
     // Use `public static`
 
+    //Auto
+    public static final int subRectX = 0;
+    public static final int subRectY = 0;
+    public static final int subRectWidth=100;
+    public static final int subRectHeight=100;
+
+
+
     //Slider
     public static int sliderMinimumTarget = 0;
-    public static int sliderMaximumTarget=1200;
+    public static int sliderMaximumTarget=1500;
 
     public static int armMinimumTarget = 0;
     public static int armMaximumTarget = 2000;
 
     public static int armDepositForward=546;
     public static int armDepositBackwards=1761;
+    public static final int armDepostBackwardsHigh = 1551;
+    public static final int armDepostForwardsHigh = 830;
+
     public static int armPickup = 0;
 
     //refrence variables
@@ -26,9 +37,12 @@ public class Fields {
     public static int referenceMiddleJunction = 3;
     public static int referenceHighJunction = 4;
     //arm
-    public static int referenceArmPickup = 0;
-    public static int referenceArmForwards = 1;
-    public static int referenceArmBackwards =2;
+    public static final int referenceArmPickup = 0;
+    public static final int referenceArmForwards = 1;
+    public static final int referenceArmForwardsHigh =2;
+    public static final int referenceArmBackwardsHigh = 3;
+    public static final int referenceArmBackwards =4;
+
 
 
     /**
@@ -38,24 +52,22 @@ public class Fields {
     public static int armMidJunctionLevel=0;
     public static int armHighJunctionLevel=0;**/
 
-    public static int sliderGroundPickup=0;
-    public static int sliderConeStackPickup=0;
-    public static int sliderLowJunctionLevel=0;
-    public static int sliderMidJunctionLevel=0;
-    public static int sliderHighJunctionLevel=0;
-    // Claw
-    public static double leftClawGrab = 1.0;
-    public static double leftClawRelease = 0;
-    public static double rightClawGrab = -1;
-    public static double rightClawRelease = 0;
+    public static int sliderGroundPickup=100;
+    public static int sliderConeStackPickup=400;
+    public static int sliderLowJunctionLevel=690;
+    public static int sliderMidJunctionLevel=1200;
+    public static int sliderHighJunctionLevel=1450;
+
 
     //claw varaiables
-    public static double rightClawClose = .55;
     public static double leftClawClose = .3;
-    public static double rightClawPickup = .2;
-    public static double rightClawDeliver = .49;
+    public static double leftClawPickup = .25;
+    public static double leftClawDeliver = .1;
 
-    public static double leftClawOpen = .25;
+
+    public static double rightClawPickup = .2;
+    public static double rightClawDeliver = .45;
+    public static double rightClawClose = .55;
 
 
 

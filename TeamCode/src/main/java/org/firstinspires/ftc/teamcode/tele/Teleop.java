@@ -48,6 +48,7 @@ public class Teleop extends LinearOpMode {
     BNO055IMU.Parameters imuParameters = robot.imuParameters;
     double robotDegree;
     double gamepadDegree;
+    double changeDegree = 0;
     boolean imuInitialized= false;
 
     //dpad
@@ -77,11 +78,13 @@ public class Teleop extends LinearOpMode {
 
         robot.init(hardwareMap);
         initializeImuParameters();
+        initializeImu();
         robot.drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         robot.rightClaw.setPosition(Fields.rightClawPickup);
-        robot.leftClaw.setPosition(Fields.leftClawOpen);
-
+        robot.leftClaw.setPosition(Fields.leftClawPickup);
+        telemetry.addLine("ready to Go");
+        telemetry.update();
         waitForStart();
 
         // TODO RR
@@ -164,13 +167,11 @@ public class Teleop extends LinearOpMode {
         telemetry.addLine("DRIVE INFO");
         String modeName = imuInitialized?"FIELDCENTRIC":"FIELDCENTRIC: IMU UNITIALIZED";
         telemetry.addLine("DRIVE MODE: "+modeName);
-        double x = leftStickX;
-        double y = leftStickY;
-        rightStickX*=speed;//Experimental
 
-        if(imuInitialized){
+
             //get degree of the robot from the imu
             robotDegree = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+            robotDegree-=changeDegree;
             telemetry.addLine("Robot Degree: "+robotDegree);
 
             //compute degree of joystick using atan of y/x
@@ -179,18 +180,17 @@ public class Teleop extends LinearOpMode {
 
             telemetry.addLine("Gamepad Degree: "+gamepadDegree);
 
-
             double turnDegrees = gamepadDegree-robotDegree;//determine what heading relative to the robot we want to drive
 
             //x and y are doubles in the range [-1,1] which are just the cos and sin of the angle you want to drive
-            x = round(Math.cos(Math.toRadians(turnDegrees)))*speed;//find x and y using cos and sin and then multiply them by the speed
-            y = round(Math.sin(Math.toRadians(turnDegrees)))*speed;
+            double x = round(Math.cos(Math.toRadians(turnDegrees)))*speed;//find x and y using cos and sin and then multiply them by the speed
+            double y = round(Math.sin(Math.toRadians(turnDegrees)))*speed;
 
             if(Math.abs(leftStickY) == 0 &&Math.abs(leftStickX)==0 ){//however if there is no joystick movement x and y are 0
                 x=0;
                 y=0;
             }
-        }
+
 
 
         //calculate power; copied from the Nebomusc Macanum Quad with changes to match our motor directions
@@ -222,11 +222,13 @@ public class Teleop extends LinearOpMode {
         prevLBumper = gamepad1.left_bumper;
 
         double triggerSpeedModifier = 1.0-gamepad1.left_trigger;//left trigger works like a brake
+        if(triggerSpeedModifier ==0)triggerSpeedModifier=.1;
         speed = triggerSpeedModifier*baseSpeed;
+
 
         if(gamepad1.left_stick_button)speed = 1;//set speed to 1
 
-        if(gamepad1.right_stick_button)speed=.2;
+        if(gamepad1.right_stick_button||gamepad1.right_trigger>0)speed=.2;
 
 
         if(speed>1)speed=1;
@@ -240,10 +242,18 @@ public class Teleop extends LinearOpMode {
     public void checkClaw(){
         if(gamepad2.a && gamepad2.a != prevA2){
             if(closed) {
-                closed=false;
-                if(armTargetPos>200) robot.rightClaw.setPosition(Fields.rightClawDeliver);
-                else robot.rightClaw.setPosition(Fields.rightClawPickup);
-                robot.leftClaw.setPosition(Fields.leftClawOpen);
+                closed = false;
+                if (armTargetPos > 200) {
+                    robot.rightClaw.setPosition(Fields.rightClawDeliver);
+                    robot.leftClaw.setPosition(Fields.leftClawDeliver);
+
+                }
+                else {
+                    robot.rightClaw.setPosition(Fields.rightClawPickup);
+                    robot.leftClaw.setPosition(Fields.leftClawPickup);
+                }
+
+
             }
             else{
 
@@ -261,14 +271,7 @@ public class Teleop extends LinearOpMode {
     }
     public void checkInitializeImu(){
         if(gamepad1.a && gamepad1.a != prevA){
-            if(imuInitialized) {
-                imuInitialized = false;
-                closeImu();
-            }
-            else{
-                imuInitialized=true;
-                initializeImu();
-            }
+            changeDegree = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
         }
         prevA = gamepad1.a;
     }
@@ -316,19 +319,22 @@ public class Teleop extends LinearOpMode {
             // to these target positions and called to move to these positions in the checkSlider() function
 
             //arm State is 0,1, or 2; this allows armState to circle from 2 -> 0 or from 0 ->2 in case armState ever becomes -1 or 3
-            if (armState == -1) armState = 2;
-            else if (armState == 3) armState = 0;
+            if (armState == -1) armState = 4;
+            else if (armState == 5) armState = 0;
 
             // 0 = PIckup; 1 = deposit forward; 2 = deposit backward
             if (armState == 0) armTargetPos = Fields.armPickup;
             else if (armState == 1) armTargetPos = Fields.armDepositForward;
-            else if (armState == 2) armTargetPos = Fields.armDepositBackwards;
+            else if (armState == 2) armTargetPos = Fields.armDepostForwardsHigh;
+            else if (armState == 3) armTargetPos = Fields.armDepostBackwardsHigh;
+            else if(armState ==4) armTargetPos = Fields.armDepositBackwards;
 
             //if we want to deposit backwards; moves the slider up to at least the low junction
-            if(armState==2){
+            if(armState==2 && sliderTargetPos<200){
                 sliderState=Fields.referenceLowJunction;
                 sliderTargetPos=Fields.sliderLowJunctionLevel;
             }
+
         }
     }
     public void checkY(){
@@ -339,6 +345,10 @@ public class Teleop extends LinearOpMode {
             armTargetPos=Fields.armPickup;
             armRunTo(Fields.armPickup);
             sliderRunTo(Fields.sliderGroundPickup);
+            robot.leftClaw.setPosition(Fields.leftClawPickup);
+            robot.rightClaw.setPosition(Fields.rightClawPickup);
+
+
         }
         prevY = gamepad2.y;
     }
@@ -346,10 +356,18 @@ public class Teleop extends LinearOpMode {
         if(gamepad2.x&& gamepad2.x!=prevX){
             sliderState=Fields.referenceHighJunction;
             sliderTargetPos=Fields.sliderHighJunctionLevel;
-            armState=Fields.referenceArmForwards;
-            armTargetPos=Fields.armDepositForward;
+            armState=Fields.referenceArmForwardsHigh;
+            armTargetPos=Fields.armDepostForwardsHigh;
         }
         prevX=gamepad2.x;
+        if(gamepad2.b&& gamepad2.b!=prevB){
+            sliderState=Fields.referenceHighJunction;
+            sliderTargetPos=Fields.sliderHighJunctionLevel;
+            armState=Fields.referenceArmBackwardsHigh;
+            armTargetPos=Fields.armDepostBackwardsHigh;
+        }
+        prevB=gamepad2.b;
+
     }
     public void doTelemetry() {
 

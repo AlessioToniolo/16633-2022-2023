@@ -40,14 +40,19 @@ public class ZoneDetectionPipeline extends OpenCvPipeline {
     //holds subMat
     public Mat detectionArea = new Mat();
 
+    public static int zone = 0;
     Telemetry telemetry = null;
 
     public Rect subMat;
     //CREATE all Mats as instance variables so you dont forget to call .release(0 on therm)
 
-    public ZoneDetectionPipeline(Telemetry in, int x, int y,int width, int height){
+    public ZoneDetectionPipeline(Telemetry in, double x, double y,double width, double height){
         telemetry = in;
-        subMat = new Rect(x,y,width, height);
+        if(x<0)x=0;
+        if(y<0)y=0;
+        if(width<0)width=0;
+        if(height<0)height=0;
+        subMat = new Rect((int)x,(int)y,(int)width, (int)height);
     }
 
 
@@ -65,6 +70,15 @@ public class ZoneDetectionPipeline extends OpenCvPipeline {
         //Search Green
         double greenPercent = determinePercent(input, subMat, greenLower, greenUpper);
         telemetry.addLine("Green: " + greenPercent);
+        if(pinkPercent>yellowPercent && pinkPercent>greenPercent){
+            ZoneDetectionPipeline.zone = 2;
+        }
+        else if(yellowPercent>pinkPercent&&yellowPercent>greenPercent){
+            ZoneDetectionPipeline.zone=1;
+        }
+        else if(greenPercent>pinkPercent&&greenPercent>yellowPercent){
+            ZoneDetectionPipeline.zone=3;
+        }
 
         //Search Orange
         //double orangePercent = determinePercent(input, subMat, orangeLower, orangeUpper);
@@ -75,13 +89,10 @@ public class ZoneDetectionPipeline extends OpenCvPipeline {
         //telemetry.addLine("BLack: " + blackPercent);
 
         telemetry.addLine("Input Dimentions: Width: " +input.width() + "Height: "+input.height() );
-
         telemetry.addLine("X:" + subMat.x);
         telemetry.addLine("Y"+subMat.y);
         telemetry.addLine("Width: "+subMat.width);
         telemetry.addLine("Height"+subMat.height);
-
-
         telemetry.update();
 
         //For Visualization
@@ -137,6 +148,9 @@ public class ZoneDetectionPipeline extends OpenCvPipeline {
     //Core.bitwise_and(input, input, mask, filtered);
     //Imgproc.cvtColor(mask, mask, Imgproc.COLOR_HSV2RGB);
     //Imgproc.threshold(input, input, 76, 255, Imgproc.THRESH_BINARY);
+    public static int getZone(){
+        return zone;
+    }
 
 
 

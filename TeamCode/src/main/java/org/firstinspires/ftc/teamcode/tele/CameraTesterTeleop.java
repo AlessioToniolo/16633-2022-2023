@@ -15,10 +15,10 @@ public class CameraTesterTeleop extends LinearOpMode {
     WebcamName webcamName;
     OpenCvCamera camera;
     ZoneDetectionPipeline myPipeline;
-    int x = 0;
-    int y = 0;
-    int width = 50;
-    int height = 50;
+    double x = 0;
+    double y = 0;
+    double width = 50;
+    double height = 50;
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -42,16 +42,17 @@ public class CameraTesterTeleop extends LinearOpMode {
         waitForStart();
         while(opModeIsActive() && !isStopRequested()){
 
-            if(gamepad1.left_stick_y >0)y+=1;
-            if(gamepad1.left_stick_y <0)y-=1;
-            if(gamepad1.left_stick_x >0)x+=1;
-            if(gamepad1.left_stick_x <0)x-=1;
-            if(gamepad1.right_stick_y >0)height+=1;
-            if(gamepad1.right_stick_y <0)height-=1;
-            if(gamepad1.right_stick_x >0)width+=1;
-            if(gamepad1.right_stick_x <0)width-=1;
+            if(gamepad1.left_stick_y >0)y+=.1;
+            if(gamepad1.left_stick_y <0)y-=.1;
+            if(gamepad1.left_stick_x >0)x+=.1;
+            if(gamepad1.left_stick_x <0)x-=.1;
+            if(gamepad1.right_stick_y >0)height+=.1;
+            if(gamepad1.right_stick_y <0)height-=.1;
+            if(gamepad1.right_stick_x >0)width+=.1;
+            if(gamepad1.right_stick_x <0)width-=.1;
             myPipeline = new ZoneDetectionPipeline(telemetry,x,y,width,height);
             camera.setPipeline(myPipeline);
+
 
         }
         // Close Camera

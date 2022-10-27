@@ -19,11 +19,17 @@ public class Fields {
     public static int armPickup = 0;
 
     //refrence variables
+    //slider
     public static int referenceGroundPickup =0;
     public static int referenceConeStackPickup=1;
     public static int referenceLowJunction = 2;
     public static int referenceMiddleJunction = 3;
     public static int referenceHighJunction = 4;
+    //arm
+    public static int referenceArmPickup = 0;
+    public static int referenceArmForwards = 1;
+    public static int referenceArmBackwards =2;
+
 
     /**
     public static int armIntakeLevel=0;

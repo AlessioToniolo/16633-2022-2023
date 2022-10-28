@@ -31,6 +31,8 @@ public class Teleop extends LinearOpMode {
     double triggerSpeedModifier = 1;
     boolean prevRBumper=false;
     boolean prevLBumper = false;
+    boolean prevRBumper2=false;
+    boolean prevLBumper2 = false;
 
     //slider vars
     int sliderState = 0;
@@ -80,6 +82,7 @@ public class Teleop extends LinearOpMode {
         initializeImuParameters();
         initializeImu();
         robot.drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.setForward();
 
         robot.rightClaw.setPosition(Fields.rightClawPickup);
         robot.leftClaw.setPosition(Fields.leftClawPickup);
@@ -95,7 +98,7 @@ public class Teleop extends LinearOpMode {
             fieldCentricDrive();
             checkSlider();
             checkClaw();
-            checkInitializeImu();
+            recenterIMU();
             doTelemetry();
         }
 
@@ -119,6 +122,7 @@ public class Teleop extends LinearOpMode {
         checkY();
         checkDRightandLeft();
         checkXB();
+        checkBumpers();
 
         //motor functionality
         armRunTo((int)armTargetPos, .75);
@@ -269,7 +273,7 @@ public class Teleop extends LinearOpMode {
         telemetry.addLine("LEFT: Position:"+robot.leftClaw.getPosition()+"Port:"+robot.leftClaw.getPortNumber());
         telemetry.addLine("Right: Position:"+robot.rightClaw.getPosition()+"Port:"+robot.rightClaw.getPortNumber());
     }
-    public void checkInitializeImu(){
+    public void recenterIMU(){
         if(gamepad1.a && gamepad1.a != prevA){
             changeDegree = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
         }
@@ -367,6 +371,23 @@ public class Teleop extends LinearOpMode {
             armTargetPos=Fields.armDepostBackwardsHigh;
         }
         prevB=gamepad2.b;
+
+    }
+    public void checkBumpers(){
+        if(gamepad2.right_bumper && gamepad2.right_bumper!=prevRBumper2){
+            sliderState = Fields.referenceMiddleJunction;
+            sliderTargetPos=Fields.sliderMidJunctionLevel;
+            armState = Fields.referenceArmBackwards;
+            armTargetPos = Fields.armDepositBackwards;
+        }
+        prevRBumper2=gamepad2.right_bumper;
+        if(gamepad2.left_bumper && gamepad2.left_bumper!=prevLBumper2){
+            sliderState = Fields.referenceMiddleJunction;
+            sliderTargetPos=Fields.sliderMidJunctionLevel;
+            armState = Fields.referenceArmForwards;
+            armTargetPos = Fields.armDepositForward;
+        }
+        prevLBumper2=gamepad2.left_bumper;
 
     }
     public void doTelemetry() {

@@ -58,6 +58,11 @@ public class ZoneDetectionPipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
+        if(subMat.x>=input.width())subMat.x=input.width()-1;
+        if(subMat.y>=input.height())subMat.y=input.height()-1;
+        if(subMat.width+subMat.x>=input.width())subMat.width=input.width()-subMat.x-1;
+        if(subMat.height+subMat.y>=input.height())subMat.height=input.height()-subMat.y-1;
+
 
         //Search Pink
         double pinkPercent = determinePercent(input, subMat, pinkLower, pinkUpper);

@@ -8,10 +8,10 @@ public class Fields {
     // Use `public static`
 
     //Auto
-    public static final int subRectX = 0;
-    public static final int subRectY = 0;
-    public static final int subRectWidth=100;
-    public static final int subRectHeight=100;
+    public static  int subRectX = 0;
+    public static  int subRectY = 0;
+    public static  int subRectWidth=170;
+    public static  int subRectHeight=72;
 
 
 
@@ -27,7 +27,7 @@ public class Fields {
     public static final int armDepostBackwardsHigh = 1551;
     public static final int armDepostForwardsHigh = 830;
 
-    public static int armPickup = 0;
+    public static int armPickup = 110;
 
     //refrence variables
     //slider
@@ -52,7 +52,7 @@ public class Fields {
     public static int armMidJunctionLevel=0;
     public static int armHighJunctionLevel=0;**/
 
-    public static int sliderGroundPickup=100;
+    public static int sliderGroundPickup=110;
     public static int sliderConeStackPickup=400;
     public static int sliderLowJunctionLevel=690;
     public static int sliderMidJunctionLevel=1200;

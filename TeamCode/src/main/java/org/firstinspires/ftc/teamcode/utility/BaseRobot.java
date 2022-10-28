@@ -333,11 +333,22 @@ public class BaseRobot {
         }
 
     }
+
+    public void strafe(double distance, double speed, double timeouts){
+        int newLeftFrontTarget;
+        int newRightFrontTarget;
+        int newLeftRearTarget;
+        int newRightRearTarget;
+
+
+
+
+    }
     public void setReverse(){
-        drive.leftFront.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        drive.leftFront.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         drive.rightFront.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         drive.leftRear.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        drive.rightRear.setDirection(DcMotor.Direction.REVERSE);
+        drive.rightRear.setDirection(DcMotor.Direction.FORWARD);
     }
     public void setForward(){
         drive.leftFront.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors

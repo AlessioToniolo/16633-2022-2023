@@ -47,11 +47,12 @@ public class BlueLeft extends LinearOpMode {
         delay(1);
         camera.stopStreaming();
         camera.closeCameraDevice();
-        robot.strafeInches(1,-24,5);
-        telemetry.addLine("hello");
+        robot.strafeInches(.5,-21,5);
+
         delay(.5);
         robot.driveStraightInches(1,56,5);
         delay(.5);
+        /**
         robot.strafeInches(1,36,5);
         delay(.5);
         robot.pointTurnDegrees(1,180,5);
@@ -81,7 +82,7 @@ public class BlueLeft extends LinearOpMode {
         else if(zone==3)
         {
             robot.strafeInches(1,24,5);
-        }
+        }**/
     }
     public void delay(double t) { // Imitates the Arduino delay function
         runtime.reset();

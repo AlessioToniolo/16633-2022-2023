@@ -40,7 +40,7 @@ https://developer.android.com/guide/topics/connectivity/usb/host
    <usb-device vendor-id="1027" product-id="24597" /> <!-- FT232 Lynx: 0x0403/0x6015 -->
 
    <!-- cameras -->
-   <!-- We don't currently auto-connect to UVC cameras, instead relying
+   <!-- We don't currently org.firstinspires.ftc.teamcode.auto-connect to UVC cameras, instead relying
         on the app itself to poll. But we could change that if we wished -->
    <!-- Update: turns out we need that if we are to get onNewIntent() notifications
         in our activity when cameras attach. See FtcRobotControllerActivity. -->

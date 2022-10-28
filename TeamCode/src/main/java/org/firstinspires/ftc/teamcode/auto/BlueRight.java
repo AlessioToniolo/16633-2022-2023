@@ -1,4 +1,4 @@
-package auto;
+package org.firstinspires.ftc.teamcode.auto;
 
 public class BlueRight {
     public static final int cameraX = 34;

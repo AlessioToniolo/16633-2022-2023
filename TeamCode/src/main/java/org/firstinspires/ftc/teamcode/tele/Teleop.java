@@ -82,7 +82,6 @@ public class Teleop extends LinearOpMode {
         initializeImuParameters();
         initializeImu();
         robot.drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.setForward();
 
         robot.rightClaw.setPosition(Fields.rightClawPickup);
         robot.leftClaw.setPosition(Fields.leftClawPickup);
@@ -152,8 +151,8 @@ public class Teleop extends LinearOpMode {
         leftStickY = -gamepad1.left_stick_y;//inversed to match x y plane coords
         /**
          * This is the left stick
-         *        -1
-         *        \
+         *          *        -1
+         *          *        \
          *        \
          -1_______\________ +1 so -gamepad1.leftStickY turns it into the coordinate plane
          *        \

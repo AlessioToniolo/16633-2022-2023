@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.utility.BaseRobot;
 
+@Disabled
 @TeleOp
 public class MotorTester extends OpMode {
     // Use the class created to define a Robot's hardware

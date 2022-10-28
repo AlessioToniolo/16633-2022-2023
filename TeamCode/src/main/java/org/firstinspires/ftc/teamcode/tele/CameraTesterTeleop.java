@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.tele;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -39,7 +38,6 @@ public class CameraTesterTeleop extends LinearOpMode {
             public void onError(int errorCode) {
             }
         });
-        FtcDashboard.getInstance().startCameraStream(camera, 0);
         waitForStart();
         while(opModeIsActive() && !isStopRequested()){
 

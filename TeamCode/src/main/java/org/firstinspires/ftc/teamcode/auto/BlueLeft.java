@@ -24,7 +24,6 @@ public class BlueLeft extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
-        robot.setReverse();
         webcamName = hardwareMap.get(WebcamName .class, "Webcam 1");
         camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName);
         myPipeline = new ZoneDetectionPipeline(telemetry, Fields.subRectX,Fields.subRectY,Fields.subRectWidth,Fields.subRectHeight);
@@ -46,6 +45,8 @@ public class BlueLeft extends LinearOpMode {
         delay(1);
         camera.stopStreaming();
         camera.closeCameraDevice();
+        robot.strafe(-10);
+        /*
         robot.strafeInches(.5,-21,5);
 
         delay(.5);

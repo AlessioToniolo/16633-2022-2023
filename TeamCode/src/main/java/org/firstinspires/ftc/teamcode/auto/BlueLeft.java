@@ -45,13 +45,17 @@ public class BlueLeft extends LinearOpMode {
         delay(1);
         camera.stopStreaming();
         camera.closeCameraDevice();
-        robot.strafe(-10);
-        /*
-        robot.strafeInches(.5,-21,5);
 
+        robot.drive.leftFront.setPower(1);
+        robot.drive.rightFront.setPower(1);
+        robot.drive.leftRear.setPower(1);
+        robot.drive.rightRear.setPower(1);
         delay(.5);
-        robot.driveStraightInches(1,56,5);
-        delay(.5);
+
+        robot.drive.leftFront.setPower(0);
+        robot.drive.rightFront.setPower(0);
+        robot.drive.leftRear.setPower(0);
+        robot.drive.rightRear.setPower(0);
         /**
         robot.strafeInches(1,36,5);
         delay(.5);

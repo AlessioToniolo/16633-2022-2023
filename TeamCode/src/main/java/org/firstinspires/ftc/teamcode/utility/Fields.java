@@ -13,6 +13,8 @@ public class Fields {
     public static  int subRectWidth=170;
     public static  int subRectHeight=72;
 
+    public static double motorSpeed = .5;
+
 
 
     //Slider

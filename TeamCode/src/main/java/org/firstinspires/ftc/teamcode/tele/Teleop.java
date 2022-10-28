@@ -124,8 +124,8 @@ public class Teleop extends LinearOpMode {
         checkBumpers();
 
         //motor functionality
-        armRunTo((int)armTargetPos, .75);
-        sliderRunTo((int)sliderTargetPos, .75);
+        armRunTo((int)armTargetPos, Fields.motorSpeed);
+        sliderRunTo((int)sliderTargetPos, Fields.motorSpeed);
         
 
         telemetry.addLine("SLIDER STUFF:" );

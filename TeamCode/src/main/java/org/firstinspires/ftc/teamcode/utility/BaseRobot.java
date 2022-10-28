@@ -87,7 +87,7 @@ public class BaseRobot {
     }
 
     // AUTO
-    public void forward(double inch) {
+    public void forward(double inch, double power) {
         double leftFrontTarget, rightFrontTarget, leftRearTarget, rightRearTarget;
 
         drive.leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -105,6 +105,7 @@ public class BaseRobot {
         leftRearTarget = drive.leftRear.getCurrentPosition() + inchesToTicks(inch);
         rightRearTarget = drive.rightRear.getCurrentPosition() + inchesToTicks(inch);
 
+
         drive.leftFront.setTargetPosition((int) leftFrontTarget);
         drive.rightFront.setTargetPosition((int) rightFrontTarget);
         drive.leftRear.setTargetPosition((int) leftRearTarget);
@@ -116,13 +117,22 @@ public class BaseRobot {
         drive.leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         drive.rightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        drive.leftFront.setPower(1);
-        drive.rightFront.setPower(1);
-        drive.leftRear.setPower(1);
-        drive.rightRear.setPower(1);
+        drive.leftFront.setPower(power);
+        drive.rightFront.setPower(power);
+        drive.leftRear.setPower(power);
+        drive.rightRear.setPower(power);
+        /**while ((drive.leftFront.isBusy() && drive.rightFront.isBusy() && drive.leftRear.isBusy() && drive.rightRear.isBusy() )) {
+            // Wait for Sequence to complete
+        }**/
+
+        // Stop all motion;
+        /**drive.leftFront.setPower(0);
+        drive.rightFront.setPower(0);
+        drive.leftRear.setPower(0);
+        drive.rightRear.setPower(0);**/
     }
 
-    public void turn(double inch) {
+    public void turn(double inch, double power) {
         double leftFrontTarget, rightFrontTarget, leftRearTarget, rightRearTarget;
 
         drive.leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -152,13 +162,13 @@ public class BaseRobot {
         drive.leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         drive.rightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        drive.leftFront.setPower(1);
-        drive.rightFront.setPower(1);
-        drive.leftRear.setPower(1);
-        drive.rightRear.setPower(1);
+        drive.leftFront.setPower(power);
+        drive.rightFront.setPower(power);
+        drive.leftRear.setPower(power);
+        drive.rightRear.setPower(power);
     }
 
-    public void strafe(double inch) {
+    public void strafe(double inch, double power) {
         double leftFrontTarget, rightFrontTarget, leftRearTarget, rightRearTarget;
 
         drive.leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -188,10 +198,10 @@ public class BaseRobot {
         drive.leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         drive.rightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        drive.leftFront.setPower(1);
-        drive.rightFront.setPower(1);
-        drive.leftRear.setPower(1);
-        drive.rightRear.setPower(1);
+        drive.leftFront.setPower(power);
+        drive.rightFront.setPower(power);
+        drive.leftRear.setPower(power);
+        drive.rightRear.setPower(power);
     }
 
     public double inchesToTicks(double inches) {

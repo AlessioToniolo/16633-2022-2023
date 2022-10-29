@@ -11,6 +11,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+@Autonomous
 public class ZoneAuto extends LinearOpMode{
     BaseRobot robot = new BaseRobot();
     WebcamName webcamName;
@@ -91,7 +92,7 @@ public class ZoneAuto extends LinearOpMode{
         robot.drive.rightFront.setPower(1);
         robot.drive.leftRear.setPower(1);
         robot.drive.rightRear.setPower(1);
-        delay(.5);
+        delay(.4);
 
         robot.drive.leftFront.setPower(0);
         robot.drive.rightFront.setPower(0);
@@ -115,7 +116,7 @@ public class ZoneAuto extends LinearOpMode{
         robot.drive.rightFront.setPower(-1);
         robot.drive.leftRear.setPower(-1);
         robot.drive.rightRear.setPower(1);
-        delay(.5);
+        delay(.8);
 
         robot.drive.leftFront.setPower(0);
         robot.drive.rightFront.setPower(0);
@@ -127,7 +128,7 @@ public class ZoneAuto extends LinearOpMode{
         robot.drive.rightFront.setPower(1);
         robot.drive.leftRear.setPower(1);
         robot.drive.rightRear.setPower(-1);
-        delay(.5);
+        delay(.8);
 
         robot.drive.leftFront.setPower(0);
         robot.drive.rightFront.setPower(0);

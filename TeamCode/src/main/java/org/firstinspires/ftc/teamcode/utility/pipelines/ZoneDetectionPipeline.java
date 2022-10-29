@@ -98,6 +98,8 @@ public class ZoneDetectionPipeline extends OpenCvPipeline {
         telemetry.addLine("Y"+subMat.y);
         telemetry.addLine("Width: "+subMat.width);
         telemetry.addLine("Height"+subMat.height);
+        telemetry.addLine("Zone: "+zone);
+
         telemetry.update();
 
         //For Visualization

@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.auto;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -12,8 +11,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous
-public class BlueLeft extends LinearOpMode {
+public class ZoneAuto extends LinearOpMode{
     BaseRobot robot = new BaseRobot();
     WebcamName webcamName;
     OpenCvCamera camera;
@@ -41,7 +39,6 @@ public class BlueLeft extends LinearOpMode {
         waitForStart();
         delay(1);
         double zone = ZoneDetectionPipeline.getZone();
-        telemetry.addLine("Zone: "+zone);
         delay(1);
         camera.stopStreaming();
         camera.closeCameraDevice();
@@ -53,36 +50,36 @@ public class BlueLeft extends LinearOpMode {
 
 
         /**
-        robot.strafeInches(1,36,5);
-        delay(.5);
-        robot.pointTurnDegrees(1,180,5);
-        delay(.5);
-        robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.slider.setTargetPosition(Fields.sliderHighJunctionLevel);
-        robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.arm.setTargetPosition(Fields.armDepositForward);
-        robot.arm.setPower(1);
-        robot.slider.setPower(1);
-        delay(2);
-        robot.leftClaw.setPosition(Fields.leftClawDeliver);
-        robot.rightClaw.setPosition(Fields.rightClawDeliver);
-        delay(1);
-        robot.leftClaw.setPosition(Fields.rightClawPickup);
-        robot.rightClaw.setPosition(Fields.leftClawPickup);
-//set claw to open a;jl;oiewqoia;lkjdsa;lkjfdsa
-//set claw to close ;LASJFDKA;LJSDFKJJDSAF
-        robot.arm.setTargetPosition(0);
-        robot.slider.setTargetPosition(0);
-        robot.arm.setPower(1);
-        robot.slider.setPower(1);
-        if(zone==1)
-        {
-            robot.strafeInches(1,-24,5);
-        }
-        else if(zone==3)
-        {
-            robot.strafeInches(1,24,5);
-        }**/
+         robot.strafeInches(1,36,5);
+         delay(.5);
+         robot.pointTurnDegrees(1,180,5);
+         delay(.5);
+         robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+         robot.slider.setTargetPosition(Fields.sliderHighJunctionLevel);
+         robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+         robot.arm.setTargetPosition(Fields.armDepositForward);
+         robot.arm.setPower(1);
+         robot.slider.setPower(1);
+         delay(2);
+         robot.leftClaw.setPosition(Fields.leftClawDeliver);
+         robot.rightClaw.setPosition(Fields.rightClawDeliver);
+         delay(1);
+         robot.leftClaw.setPosition(Fields.rightClawPickup);
+         robot.rightClaw.setPosition(Fields.leftClawPickup);
+         //set claw to open a;jl;oiewqoia;lkjdsa;lkjfdsa
+         //set claw to close ;LASJFDKA;LJSDFKJJDSAF
+         robot.arm.setTargetPosition(0);
+         robot.slider.setTargetPosition(0);
+         robot.arm.setPower(1);
+         robot.slider.setPower(1);
+         if(zone==1)
+         {
+         robot.strafeInches(1,-24,5);
+         }
+         else if(zone==3)
+         {
+         robot.strafeInches(1,24,5);
+         }**/
     }
     public void delay(double t) { // Imitates the Arduino delay function
         runtime.reset();

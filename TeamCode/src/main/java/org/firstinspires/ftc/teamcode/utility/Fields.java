@@ -30,7 +30,7 @@ public class Fields {
     public static final int armDepostBackwardsHigh = 1551;
     public static final int armDepostForwardsHigh = 830;
 
-    public static int armPickup = 110;
+    public static int armPickup = 50;
 
     //refrence variables
     //slider

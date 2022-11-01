@@ -15,7 +15,8 @@ public class Fields {
 
     public static double motorSpeed = .5;
 
-
+    // Color sensor
+    public static double distanceToClose = 2.5;
 
     //Slider
     public static int sliderMinimumTarget = 0;
@@ -54,7 +55,7 @@ public class Fields {
     public static int armMidJunctionLevel=0;
     public static int armHighJunctionLevel=0;**/
 
-    public static int sliderGroundPickup=110;
+    public static int sliderGroundPickup=0;
     public static int sliderConeStackPickup=400;
     public static int sliderLowJunctionLevel=690;
     public static int sliderMidJunctionLevel=1200;
@@ -69,7 +70,7 @@ public class Fields {
 
     public static double rightClawPickup = .2;
     public static double rightClawDeliver = .45;
-    public static double rightClawClose = .55;
+    public static double rightClawClose = .5 ;
 
 
 

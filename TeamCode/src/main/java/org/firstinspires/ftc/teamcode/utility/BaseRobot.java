@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.utility;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -13,6 +14,9 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 public class BaseRobot {
     // Drivetrain Reference
     public SampleMecanumDrive drive;
+
+    // Color Sensor
+    public RevColorSensorV3 distanceSensor;
 
     // Linear Slider Motor
     public DcMotor slider;
@@ -64,6 +68,9 @@ public class BaseRobot {
 
         // Initialize RoadRunner Sample Mecanum Drive
         drive = new SampleMecanumDrive(hwMap);
+
+        // Initialize color sensor
+        distanceSensor = hwMap.get(RevColorSensorV3.class, "color");
 
         // Define and Initialize Motors.  Assign Names that match the setup on the RC Phone
         slider = hwMap.dcMotor.get("slider");

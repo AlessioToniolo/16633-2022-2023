@@ -16,6 +16,7 @@ public class BaseRobot {
 
     // Linear Slider Motor
     public DcMotor slider;
+    public DcMotor sideSlider;
 
     // Virtual Four Bar Motor;
     public DcMotor arm;
@@ -66,6 +67,7 @@ public class BaseRobot {
 
         // Define and Initialize Motors.  Assign Names that match the setup on the RC Phone
         slider = hwMap.dcMotor.get("slider");
+        sideSlider = hwMap.dcMotor.get("sideSlider");
         arm = hwMap.dcMotor.get("arm");
 
         leftClaw = hwMap.servo.get("leftclaw");
@@ -82,6 +84,8 @@ public class BaseRobot {
         // Enable Slider & V4B for Arm Run Code
         slider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        sideSlider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        sideSlider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }

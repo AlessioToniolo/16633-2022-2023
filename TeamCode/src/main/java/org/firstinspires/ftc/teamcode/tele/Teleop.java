@@ -413,6 +413,9 @@ public class Teleop extends LinearOpMode {
         robot.slider.setTargetPosition(position);
         robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.slider.setPower(power);
+        robot.sideSlider.setTargetPosition(position);
+        robot.sideSlider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.sideSlider.setPower(power);
     }
     public static double round(double in){
         return ((int)(in*1000))/1000.0;

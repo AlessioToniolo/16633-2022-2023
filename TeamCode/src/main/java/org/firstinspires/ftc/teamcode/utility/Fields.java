@@ -13,13 +13,13 @@ public class Fields {
     public static  int subRectWidth=170;
     public static  int subRectHeight=72;
 
-    public static double motorSpeed = .5;
+    public static double motorSpeed = 1;
 
 
 
     //Slider
     public static int sliderMinimumTarget = 0;
-    public static int sliderMaximumTarget=1500;
+    public static int sliderMaximumTarget=1600;
 
     public static int armMinimumTarget = 0;
     public static int armMaximumTarget = 2000;

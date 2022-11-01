@@ -40,7 +40,7 @@ See https://developer.android.com/guide/topics/ui/settings.html
 
 <PreferenceScreen xmlns:tools="http://schemas.android.com/tools"
                   xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:app="http://schemas.android.com/apk/res-auto"
+                  xmlns:app="http://schemas.android.com/apk/res-org.firstinspires.ftc.teamcode.auto"
                   tools:context=".FtcRobotControllerActivity">
 
   <PreferenceCategory

@@ -474,7 +474,7 @@ public class FtcRobotControllerActivity extends Activity
     DeviceNameManagerFactory.getInstance().stop(deviceNameStartResult);
 
     unbindFromService();
-    // If the app manually (?) is stopped, then we don't need the auto-starting function (?)
+    // If the app manually (?) is stopped, then we don't need the org.firstinspires.ftc.teamcode.auto-starting function (?)
     ServiceController.stopService(FtcRobotControllerWatchdogService.class);
     if (wifiLock != null) wifiLock.release();
     if (preferencesHelper != null) preferencesHelper.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(sharedPreferencesListener);

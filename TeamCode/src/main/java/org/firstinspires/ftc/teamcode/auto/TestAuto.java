@@ -91,9 +91,11 @@ public class TestAuto extends LinearOpMode {
         drive.followTrajectory(traj2);
         drive.followTrajectory(traj3);
         liftHighGoal(false);
+        robot.drive.followTrajectory(drive.trajectoryBuilder(traj3.end()).forward(1).build());
+        robot.rightClaw.setPosition(Fields.rightClawDeliver);
+        robot.leftClaw.setPosition(Fields.leftClawDeliver);
+        delay(1);
         resetLift();
-        drive.turn(Math.toRadians(-45));
-
         if (zone == 1) {
             robot.drive.followTrajectory(zone1);
         } else if (zone == 3) {
@@ -114,9 +116,7 @@ public class TestAuto extends LinearOpMode {
             armRunTo(Fields.armDepostForwardsHigh);
         }
         delay(3);
-        robot.rightClaw.setPosition(Fields.rightClawDeliver);
-        robot.leftClaw.setPosition(Fields.leftClawDeliver);
-        delay(1);
+
     }
     public void resetLift() {
         armRunTo(Fields.armPickup);

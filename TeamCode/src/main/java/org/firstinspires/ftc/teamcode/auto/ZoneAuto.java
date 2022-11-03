@@ -92,7 +92,7 @@ public class ZoneAuto extends LinearOpMode{
         robot.drive.rightFront.setPower(1);
         robot.drive.leftRear.setPower(1);
         robot.drive.rightRear.setPower(1);
-        delay(.4);
+        delay(.6);
 
         robot.drive.leftFront.setPower(0);
         robot.drive.rightFront.setPower(0);

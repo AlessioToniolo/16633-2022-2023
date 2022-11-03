@@ -26,10 +26,10 @@ public class Fields {
 
     public static int armDepositForward=546;
     public static int armDepositBackwards=1761;
-    public static final int armDepostBackwardsHigh = 1551;
-    public static final int armDepostForwardsHigh = 830;
+    public static  int armDepostBackwardsHigh = 1360;
+    public static int armDepostForwardsHigh = 830;
 
-    public static int armPickup = 110;
+    public static int armPickup = 50;
 
     //refrence variables
     //slider
@@ -54,7 +54,7 @@ public class Fields {
     public static int armMidJunctionLevel=0;
     public static int armHighJunctionLevel=0;**/
 
-    public static int sliderGroundPickup=110;
+    public static int sliderGroundPickup=0;
     public static int sliderConeStackPickup=400;
     public static int sliderLowJunctionLevel=690;
     public static int sliderMidJunctionLevel=1200;

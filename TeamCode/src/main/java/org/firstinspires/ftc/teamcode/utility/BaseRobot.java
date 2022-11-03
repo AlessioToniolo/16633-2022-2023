@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.utility;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -13,6 +14,9 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 public class BaseRobot {
     // Drivetrain Reference
     public SampleMecanumDrive drive;
+
+    // Color Sensor
+    public RevColorSensorV3 distanceSensor;
 
     // Linear Slider Motor
     public DcMotor slider;
@@ -32,6 +36,9 @@ public class BaseRobot {
     double previousHeading = 0;
     double integratedHeading = 0;
     private final ElapsedTime period = new ElapsedTime();
+
+    // other
+    ElapsedTime runtime = new ElapsedTime();
 
     public double currentOrientation = 0;
 
@@ -65,6 +72,9 @@ public class BaseRobot {
         // Initialize RoadRunner Sample Mecanum Drive
         drive = new SampleMecanumDrive(hwMap);
 
+        // Initialize color sensor
+        distanceSensor = hwMap.get(RevColorSensorV3.class, "color");
+
         // Define and Initialize Motors.  Assign Names that match the setup on the RC Phone
         slider = hwMap.dcMotor.get("slider");
         sideSlider = hwMap.dcMotor.get("sideSlider");
@@ -91,7 +101,57 @@ public class BaseRobot {
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    // AUTO
+    // Auto robot functions
+    public void liftHighGoal(boolean depositBackwards) {
+        if(depositBackwards){
+            sliderRunTo(Fields.sliderHighJunctionLevel);
+            armRunTo(Fields.armDepostBackwardsHigh);
+        } else {
+            sliderRunTo(Fields.sliderHighJunctionLevel);
+            armRunTo(Fields.armDepostForwardsHigh);
+        }
+        delay(0.5);
+        rightClaw.setPosition(Fields.rightClawDeliver);
+        leftClaw.setPosition(Fields.leftClawDeliver);
+    }
+    public void resetLift() {
+        armRunTo(Fields.armPickup);
+        sliderRunTo(Fields.sliderGroundPickup);
+        leftClaw.setPosition(Fields.leftClawPickup);
+        rightClaw.setPosition(Fields.rightClawPickup);
+    }
+    public void closeClaw() {
+        rightClaw.setPosition(Fields.rightClawClose);
+        leftClaw.setPosition(Fields.leftClawClose);
+    }
+
+    //helper functions
+    private void armRunTo(int position){
+        armRunTo(position, 1);
+    }
+    private void armRunTo(int position, double power){
+        arm.setTargetPosition(position);
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm.setPower(power);
+    }
+    private void sliderRunTo(int position){
+        sliderRunTo(position, 1);
+    }
+    private void sliderRunTo(int position, double power){
+        slider.setTargetPosition(position);
+        slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slider.setPower(power);
+        sideSlider.setTargetPosition(position);
+        sideSlider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        sideSlider.setPower(power);
+    }
+    public void delay(double t) {
+        runtime.reset();
+        while (runtime.seconds() < t) {
+        }
+    }
+
+    // Old AUTO
     public void forward(double inch, double power) {
         double leftFrontTarget, rightFrontTarget, leftRearTarget, rightRearTarget;
 

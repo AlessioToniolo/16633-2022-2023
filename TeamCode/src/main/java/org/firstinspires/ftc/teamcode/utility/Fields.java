@@ -15,7 +15,8 @@ public class Fields {
 
     public static double motorSpeed = 1;
 
-
+    // Color sensor
+    public static double distanceToClose = 2.5;
 
     //Slider
     public static int sliderMinimumTarget = 0;
@@ -69,7 +70,7 @@ public class Fields {
 
     public static double rightClawPickup = .2;
     public static double rightClawDeliver = .45;
-    public static double rightClawClose = .55;
+    public static double rightClawClose = .5 ;
 
 
 

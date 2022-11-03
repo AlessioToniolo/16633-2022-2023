@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
@@ -98,10 +99,23 @@ public class Teleop extends LinearOpMode {
             checkSlider();
             checkClaw();
             recenterIMU();
+            checkColor();
             doTelemetry();
         }
 
 
+    }
+
+    public void checkColor() {
+        double currentDistance = robot.distanceSensor.getDistance(DistanceUnit.CM);
+
+        if (currentDistance <= Fields.distanceToClose && sliderState==Fields.referenceArmPickup) {
+            closed = true;
+            robot.rightClaw.setPosition(Fields.rightClawClose);
+            robot.leftClaw.setPosition(Fields.leftClawClose);
+        }
+
+        telemetry.addLine(String.valueOf(currentDistance));
     }
 
     public void checkSlider(){

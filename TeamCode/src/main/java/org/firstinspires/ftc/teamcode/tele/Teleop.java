@@ -361,7 +361,7 @@ public class Teleop extends LinearOpMode {
             armState = Fields.referenceArmPickup;
             armTargetPos=Fields.armPickup;
             armRunTo(Fields.armPickup);
-            sliderRunTo(Fields.sliderGroundPickup);
+            sliderRunTo(Fields.sliderGroundPickup, .25);
             robot.leftClaw.setPosition(Fields.leftClawPickup);
             robot.rightClaw.setPosition(Fields.rightClawPickup);
 
@@ -420,7 +420,7 @@ public class Teleop extends LinearOpMode {
         robot.arm.setPower(power);
     }
     public void sliderRunTo(int position){
-        sliderRunTo(position, 1);
+        sliderRunTo(position, Fields.motorSpeed);
     }
     public void sliderRunTo(int position, double power){
         sliderTargetPos=position;

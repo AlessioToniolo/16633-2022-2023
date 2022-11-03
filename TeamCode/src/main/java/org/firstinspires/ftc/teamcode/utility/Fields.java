@@ -13,22 +13,22 @@ public class Fields {
     public static  int subRectWidth=170;
     public static  int subRectHeight=72;
 
-    public static double motorSpeed = .5;
+    public static double motorSpeed = 1;
 
     // Color sensor
     public static double distanceToClose = 2.5;
 
     //Slider
     public static int sliderMinimumTarget = 0;
-    public static int sliderMaximumTarget=1500;
+    public static int sliderMaximumTarget=1600;
 
     public static int armMinimumTarget = 0;
     public static int armMaximumTarget = 2000;
 
     public static int armDepositForward=546;
     public static int armDepositBackwards=1761;
-    public static final int armDepostBackwardsHigh = 1551;
-    public static final int armDepostForwardsHigh = 830;
+    public static  int armDepostBackwardsHigh = 1360;
+    public static int armDepostForwardsHigh = 830;
 
     public static int armPickup = 50;
 

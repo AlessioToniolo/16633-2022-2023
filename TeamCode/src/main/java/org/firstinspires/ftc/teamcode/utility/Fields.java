@@ -27,7 +27,7 @@ public class Fields {
 
     public static int armDepositForward=546;
     public static int armDepositBackwards=1761;
-    public static  int armDepostBackwardsHigh = 1360;
+    public static  int armDepostBackwardsHigh = 1380;
     public static int armDepostForwardsHigh = 830;
 
     public static int armPickup = 50;
@@ -59,7 +59,7 @@ public class Fields {
     public static int sliderConeStackPickup=400;
     public static int sliderLowJunctionLevel=690;
     public static int sliderMidJunctionLevel=1200;
-    public static int sliderHighJunctionLevel=1450;
+    public static int sliderHighJunctionLevel=1400;
 
 
     //claw varaiables

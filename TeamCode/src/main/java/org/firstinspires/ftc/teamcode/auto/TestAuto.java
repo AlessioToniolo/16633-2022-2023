@@ -76,14 +76,19 @@ public class TestAuto extends LinearOpMode {
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
                 .lineToSplineHeading(new Pose2d(32, -10, Math.toRadians(135)))
                 .build();
+        Trajectory traj4 = drive.trajectoryBuilder(traj3.end()).forward(3).build();
+        Trajectory traj5 = drive.trajectoryBuilder(traj4.end()).forward(-3).build();
+        Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
+                .lineTo(new Vector2d(34, -10))
+                .build();
 
         // Zone trajs
-        Trajectory zone1 = robot.drive.trajectoryBuilder(traj3.end())
+        Trajectory zone1 = robot.drive.trajectoryBuilder(traj6.end())
                 .lineTo(new Vector2d(12, -12))
                 .build();
 
-        Trajectory zone2 = robot.drive.trajectoryBuilder(traj3.end())
-                .lineTo(new Vector2d(60, -12))
+        Trajectory zone3 = robot.drive.trajectoryBuilder(traj6.end())
+                .lineTo(new Vector2d(70, -12))
                 .build();
 
         drive.followTrajectory(traj1);
@@ -91,18 +96,23 @@ public class TestAuto extends LinearOpMode {
         drive.followTrajectory(traj2);
         drive.followTrajectory(traj3);
         liftHighGoal(false);
+        drive.followTrajectory(traj4);
+        deposit();
+        drive.followTrajectory(traj5);
         resetLift();
         drive.turn(Math.toRadians(-45));
+        drive.followTrajectory(traj6);
 
         if (zone == 1) {
             robot.drive.followTrajectory(zone1);
         } else if (zone == 3) {
-            robot.drive.followTrajectory(zone1);
+            robot.drive.followTrajectory(zone3);
         }
 
         telemetry.clear();
         telemetry.speak("Free O O", "en-TT", "ALB");
-        telemetry.addLine("🤡🤡🤡 LETS GO BRAZY DRIPP MONSTERS!!!!😛😛😛🤙");
+        telemetry.speak("LETS GO BRAZY DRIPP MONSTERS!!!!");
+        telemetry.update();
     }
     // Auto robot functions
     public void liftHighGoal(boolean depositBackwards) {
@@ -114,6 +124,8 @@ public class TestAuto extends LinearOpMode {
             armRunTo(Fields.armDepostForwardsHigh);
         }
         delay(3);
+    }
+    public void deposit() {
         robot.rightClaw.setPosition(Fields.rightClawDeliver);
         robot.leftClaw.setPosition(Fields.leftClawDeliver);
         delay(1);

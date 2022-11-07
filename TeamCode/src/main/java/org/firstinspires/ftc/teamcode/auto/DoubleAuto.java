@@ -17,10 +17,17 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-import java.util.Vector;
+// TODO LIST
+/*
+- get opencv zone on loop and save it to variable to decrease wait time
+- figure out when and where to deposit preloaded cone
+- try to compile trajectories before the opmode
+- figure out best way to collapse lift, and create a function for it
+- since claw closes at end of auto (add this), initialize it open in Teleop.java
+ */
 
 @Autonomous
-public class TestAuto extends LinearOpMode {
+public class DoubleAuto extends LinearOpMode {
     // robot with drive
     BaseRobot robot = new BaseRobot();
     //opencv
@@ -121,9 +128,6 @@ public class TestAuto extends LinearOpMode {
         if (zone == 3) {
             drive.followTrajectory(zone3);
         }
-
-        telemetry.speak("free o o");
-        telemetry.speak("we in this jawn");
     }
     // Auto robot functions
     public void liftHighGoal(boolean depositBackwards) {

@@ -97,7 +97,6 @@ public class BaseRobot {
         sideSlider.setDirection(DcMotorSimple.Direction.REVERSE);
         sideSlider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         sideSlider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        slider.setDirection(DcMotorSimple.Direction.REVERSE);
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }

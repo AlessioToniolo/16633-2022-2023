@@ -44,6 +44,7 @@ public class Teleop extends LinearOpMode {
     //claw vars
     double leftClawPos = 0;
     double rightClawPos = 0;
+    boolean prevGuide = false;
 
     ElapsedTime runtime = new ElapsedTime();
 
@@ -70,10 +71,15 @@ public class Teleop extends LinearOpMode {
     boolean prevA2=false;
     boolean prevA=false;
 
+    String armStateStr = "GROUND";
+    String sliderStateStr = "GROUND";
+
 
 
     //arm state vars
     int armState = 0;//0=pickup 1=forwardDeliver, 2 =backwardDeliver
+
+    boolean sliderTestMode = false;
 
 
 
@@ -133,8 +139,21 @@ public class Teleop extends LinearOpMode {
         if(sliderTargetPos>Fields.sliderMaximumTarget) sliderTargetPos = Fields.sliderMaximumTarget;
         else if(sliderTargetPos<Fields.sliderMinimumTarget) sliderTargetPos=Fields.sliderMinimumTarget;
 
+
+        if(gamepad2.guide && gamepad2.guide != prevGuide){
+            if(sliderTestMode){
+                sliderTestMode=false;
+            }
+            else{
+                sliderTestMode=true;
+            }
+        }
+        prevGuide=gamepad2.guide;
+        telemetry.addLine("PracticeMode: "+sliderTestMode);
         telemetry.addLine("SLIDER STUFF:" );
         telemetry.addLine("__________________________________:" );
+
+
         //automatic controls
 
         checkY();
@@ -145,8 +164,8 @@ public class Teleop extends LinearOpMode {
 
 
         //motor functionality
-        armRunTo((int)armTargetPos, Fields.motorSpeed);
-        sliderRunTo((int)sliderTargetPos, Fields.motorSpeed);
+        armRunTo((int)armTargetPos, Fields.armSpeed);
+        sliderRunTo((int)sliderTargetPos, Fields.sliderSpeed);
         
 
 
@@ -291,21 +310,33 @@ public class Teleop extends LinearOpMode {
         prevA = gamepad1.a;
     }
     public void checkDDownandUp(){
-
-        if(gamepad2.dpad_down && gamepad2.dpad_down != prevDDown){
-            sliderState--;
+        if(sliderTestMode) {
+            if (gamepad2.dpad_down && gamepad2.dpad_down != prevDDown) {
+                sliderState--;
+            }
+            prevDDown = gamepad2.dpad_down;
+            if (gamepad2.dpad_up && gamepad2.dpad_up != prevDUp) {
+                sliderState++;
+            }
+            prevDUp = gamepad2.dpad_up;
         }
-        prevDDown= gamepad2.dpad_down;
-        if(gamepad2.dpad_up && gamepad2.dpad_up != prevDUp){
-            sliderState++;
+        else{
+            if (gamepad2.dpad_down && gamepad2.dpad_down != prevDDown) {
+                sliderState--;
+                armState--;
+            }
+            prevDDown = gamepad2.dpad_down;
+            if (gamepad2.dpad_up && gamepad2.dpad_up != prevDUp) {
+                sliderState++;
+                armState++;
+            }
+            prevDUp = gamepad2.dpad_up;
         }
-        prevDUp= gamepad2.dpad_up;
 
         //allows cycle to circle around
         if(sliderState ==7)sliderState = 0;
         else if(sliderState==-1)sliderState = 6;
-        String stateStr = "";
-        if(gamepad2.dpad_up||gamepad2.dpad_down) {//if dpad up or down is pressed then use the sliderState
+            String stateStr = "";
             // to determine the sliderTarget pos
             if (sliderState == Fields.referenceSliderGround) {
                 sliderTargetPos = Fields.sliderGround;
@@ -335,73 +366,69 @@ public class Teleop extends LinearOpMode {
                 sliderTargetPos = Fields.sliderBackMid;
                 stateStr="BACKWARD MIDDLE";
             }
+            sliderStateStr=stateStr;
 
-        }
+
         telemetry.addLine("Slider :" );
         telemetry.addLine("______" );
         telemetry.addLine("SliderTargetPos: "+sliderTargetPos);
         telemetry.addLine("SliderEstimatedPos: "+robot.slider.getTargetPosition());
-        telemetry.addLine("SliderState: "+stateStr);
+        telemetry.addLine("SliderState: "+sliderStateStr);
     }
     public void checkDRightandLeft() {
-        if (gamepad2.dpad_right && gamepad2.dpad_right != prevDRight) {
-            armState++;//incrase the armState
+        if(sliderTestMode) {
+            if (gamepad2.dpad_right && gamepad2.dpad_right != prevDRight) {
+                armState++;//incrase the armState
+            }
+            prevDRight = gamepad2.dpad_right;
+            if (gamepad2.dpad_left && gamepad2.dpad_left != prevDLeft) {
+                armState--;//decrease the arm state
+            }
+            prevDLeft = gamepad2.dpad_left;
         }
-        prevDRight = gamepad2.dpad_right;
-        if (gamepad2.dpad_left && gamepad2.dpad_left != prevDLeft) {
-            armState--;//decrease the arm state
-        }
-        prevDLeft = gamepad2.dpad_left;
 
-        //arm State is 0,1, or 2; this allows armState to circle from 2 -> 0 or from 0 ->2 in case armState ever becomes -1 or 3
-        if (armState == -1) armState = 6;
-        else if (armState == 7) armState = 0;
-        if(gamepad2.dpad_right || gamepad2.dpad_left){//if either of the buttons are pressed, then update the armPos
-            //IMPORTANT: WE are only setting instance target positions here because every loop the slider and arm are set
-            // to these target positions and called to move to these positions in the checkSlider() function
+            //arm State is 0,1, or 2; this allows armState to circle from 2 -> 0 or from 0 ->2 in case armState ever becomes -1 or 3
+            if (armState == -1) armState = 6;
+            else if (armState == 7) armState = 0;
+                //IMPORTANT: WE are only setting instance target positions here because every loop the slider and arm are set
+                // to these target positions and called to move to these positions in the checkSlider() function
+                String stateStr="";
+                if (armState == Fields.referenceArmGround) {
+                    armTargetPos = Fields.armGround;
+                    stateStr = "GROUND";
+                } else if (armState == Fields.referenceArmConeStack) {
+                    armTargetPos = Fields.armConeStack;
+                    stateStr = "CONE STACK";
+                } else if (armState == Fields.referenceArmForwardLow) {
+                    armTargetPos = Fields.armForwardLow;
+                    stateStr = "FORWARD LOW";
+                } else if (armState == Fields.referenceArmForwardMid) {
+                    armTargetPos = Fields.armForwardMid;
+                    stateStr = "FORWARD MIDDLE";
+                } else if (armState == Fields.referenceArmForwardsHigh) {
+                    armTargetPos = Fields.armForwardHigh;
+                    stateStr = "FORWARD HIGH";
+                } else if (armState == Fields.referenceArmBackwardsHigh) {
+                    armTargetPos = Fields.armBackwardsHigh;
+                    stateStr = "BACKWARD HIGH";
+                } else if (armState == Fields.referenceSliderBackwardsMid) {
+                    armTargetPos = Fields.armBackwardsMid;
+                    stateStr = "BACKWARD MIDDLE";
+                }
 
-            String stateStr="";
-            if (armState == Fields.referenceArmGround) {
-                armTargetPos = Fields.armGround;
-                stateStr = "GROUND";
-            }
-            else if (armState == Fields.referenceArmConeStack) {
-                armTargetPos = Fields.armConeStack;
-                stateStr = "CONE STACK";
-            }
-            else if (armState == Fields.referenceArmForwardLow) {
-                armTargetPos = Fields.armForwardLow;
-                stateStr = "FORWARD LOW";
-            }
-            else if (armState == Fields.referenceArmForwardMid) {
-                armTargetPos = Fields.armForwardMid;
-                stateStr="FORWARD MIDDLE";
-            }
-            else if (armState == Fields.referenceArmForwardsHigh) {
-                armTargetPos = Fields.armForwardHigh;
-                stateStr = "FORWARD HIGH";
-            }
-            else if (armState == Fields.referenceArmBackwardsHigh) {
-                armTargetPos = Fields.armBackwardsHigh;
-                stateStr = "BACKWARD HIGH";
-            }
-            else if (armState == Fields.referenceSliderBackwardsMid) {
-                armTargetPos = Fields.armBackwardsMid;
-                stateStr="BACKWARD MIDDLE";
-            }
-
-            //if we want to deposit backwards; moves the slider up to at least the low junction
-            if(armState==2 && sliderTargetPos<200){
-                sliderState=Fields.referenceSliderBackwardsMid;
-                sliderTargetPos=Fields.sliderBackMid;
-            }
-
-        }
+                //if we want to deposit backwards; moves the slider up to at least the low junction
+                if (armState == 2 && sliderTargetPos < 200) {
+                    sliderState = Fields.referenceSliderBackwardsMid;
+                    sliderTargetPos = Fields.sliderBackMid;
+                }
+                armStateStr=stateStr;
+        telemetry.addLine();
         telemetry.addLine("ARM :" );
         telemetry.addLine("______" );
         telemetry.addLine("armTargetPos: "+armTargetPos);
         telemetry.addLine("armEstimatedPos: "+robot.arm.getTargetPosition());
-        telemetry.addLine("armState: "+armState);
+        telemetry.addLine("armState: "+armStateStr);
+
     }
     public void checkY(){
         if(gamepad2.y && gamepad2.y != prevY){
@@ -410,8 +437,8 @@ public class Teleop extends LinearOpMode {
             sliderTargetPos=Fields.sliderGround;
             armState = Fields.referenceArmGround;
             armTargetPos=Fields.armGround;
-            armRunTo(Fields.armGround);
-            sliderRunTo(Fields.sliderGround, .25);
+            sliderRunTo(Fields.sliderGround, 1);
+            armRunTo(Fields.armGround, Fields.armSpeed);
             delay(1);
             robot.leftClaw.setPosition(Fields.leftClawPickup);
             robot.rightClaw.setPosition(Fields.rightClawPickup);
@@ -470,7 +497,7 @@ public class Teleop extends LinearOpMode {
         robot.arm.setPower(power);
     }
     public void sliderRunTo(int position){
-        sliderRunTo(position, Fields.motorSpeed);
+        sliderRunTo(position, Fields.sliderSpeed);
     }
     public void sliderRunTo(int position, double power){
         sliderTargetPos=position;

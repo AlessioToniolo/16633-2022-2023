@@ -13,7 +13,8 @@ public class Fields {
     public static  int subRectWidth=170;
     public static  int subRectHeight=72;
 
-    public static double motorSpeed = .75;
+    public static double armSpeed = .5;
+    public static double sliderSpeed = 1;
 
     // Color sensor
     public static double distanceToClose = 2.5;
@@ -42,7 +43,7 @@ public class Fields {
     public static int sliderForwardLow=690;
     public static int sliderForwardMid=1150;
     public static int sliderForwardHigh=1760;
-    public static int sliderBackwardsHigh=1760;
+    public static int sliderBackwardsHigh=1780;
     public static int sliderBackMid=587;
 
 

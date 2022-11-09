@@ -119,10 +119,10 @@ public class SingleAuto extends LinearOpMode {
     public void liftHighGoal(boolean depositBackwards) {
         if(depositBackwards){
             sliderRunTo(1610 );
-            armRunTo(Fields.armBackwardsHigh);
+            armRunTo(Fields.armBackwardsHigh, Fields.armSpeed);
         } else {
             sliderRunTo(Fields.sliderForwardHigh);
-            armRunTo(Fields.armForwardHigh);
+            armRunTo(Fields.armForwardHigh,Fields.armSpeed);
         }
         delay(3);
     }
@@ -133,9 +133,10 @@ public class SingleAuto extends LinearOpMode {
     }
     // TODO this is the part that tips the entire robot over
     public void clearLift() {
-        armRunTo(Fields.armBackwardsHigh);
-        delay(1);
+
         sliderRunTo(Fields.sliderForwardLow);
+        delay(1);
+        armRunTo(Fields.armBackwardsHigh, Fields.armSpeed);
         delay(1);
     }
     public void resetLift() {

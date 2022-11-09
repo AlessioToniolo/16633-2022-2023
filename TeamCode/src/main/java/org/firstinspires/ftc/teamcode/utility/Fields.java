@@ -20,7 +20,7 @@ public class Fields {
 
     //Slider
     public static int sliderMinimumTarget = 0;
-    public static int sliderMaximumTarget=1700;
+    public static int sliderMaximumTarget=1800;
 
     public static int armMinimumTarget = 0;
     public static int armMaximumTarget = 2000;
@@ -28,9 +28,9 @@ public class Fields {
     public static int armDepositForward=550;
     public static int armDepositForwardLow=432;
     public static int armDepositBackwards=1761;
-    public static  int armDepostBackwardsHigh = 1456;
+    public static  int armDepostBackwardsHigh = 1504;
     public static int armDepostForwardsHigh = 588;
-    public static int armDepositBackwardsMid = 1454;
+    public static int armDepositBackwardsMid = 1481;
     public static int armDepositForwardsMid = 1454;
 
 
@@ -65,8 +65,8 @@ public class Fields {
     public static int sliderConeStackPickup=400;
     public static int sliderLowJunctionLevel=690;
     public static int sliderMidJunctionLevel=1200;
-    public static int sliderHighJunctionLevel=1441;
-    public static int sliderMidBack=632;
+    public static int sliderHighJunctionLevel=1760;
+    public static int sliderMidBack=587;
     public static int sliderMidForward=1150;
 
 

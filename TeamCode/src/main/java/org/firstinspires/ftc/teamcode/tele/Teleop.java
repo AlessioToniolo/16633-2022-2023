@@ -356,25 +356,24 @@ public class Teleop extends LinearOpMode {
     }
     public void checkY(){
         if(gamepad2.y && gamepad2.y != prevY){
+            robot.leftClaw.setPosition(Fields.leftClawDeliver);
+            robot.rightClaw.setPosition(Fields.rightClawDeliver);
+            closed=true;
             sliderState = Fields.referenceGroundPickup;
             sliderTargetPos=Fields.sliderGroundPickup;
             armState = Fields.referenceArmPickup;
             armTargetPos=Fields.armPickup;
             armRunTo(Fields.armPickup);
             sliderRunTo(Fields.sliderGroundPickup, .25);
-            robot.leftClaw.setPosition(Fields.leftClawPickup);
-            robot.rightClaw.setPosition(Fields.rightClawPickup);
-
-
         }
         prevY = gamepad2.y;
     }
     public void checkXB(){
         if(gamepad2.x&& gamepad2.x!=prevX){
-            sliderState=Fields.referenceHighJunction;
-            sliderTargetPos=Fields.sliderHighJunctionLevel;
-            armState=Fields.referenceArmForwardsHigh;
-            armTargetPos=Fields.armDepostForwardsHigh;
+            sliderState=Fields.referenceLowJunction;
+            sliderTargetPos=Fields.sliderLowJunctionLevel;
+            armState=Fields.referenceArmForwards;
+            armTargetPos=Fields.armDepositForwardLow;
         }
         prevX=gamepad2.x;
         if(gamepad2.b&& gamepad2.b!=prevB){
@@ -389,9 +388,9 @@ public class Teleop extends LinearOpMode {
     public void checkBumpers(){
         if(gamepad2.right_bumper && gamepad2.right_bumper!=prevRBumper2){
             sliderState = Fields.referenceMiddleJunction;
-            sliderTargetPos=Fields.sliderMidJunctionLevel;
+            sliderTargetPos=Fields.sliderMidBack;
             armState = Fields.referenceArmBackwards;
-            armTargetPos = Fields.armDepositBackwards;
+            armTargetPos = Fields.armDepositBackwardsMid;
         }
         prevRBumper2=gamepad2.right_bumper;
         if(gamepad2.left_bumper && gamepad2.left_bumper!=prevLBumper2){

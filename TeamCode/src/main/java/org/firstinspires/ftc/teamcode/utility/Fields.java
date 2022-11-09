@@ -13,7 +13,7 @@ public class Fields {
     public static  int subRectWidth=170;
     public static  int subRectHeight=72;
 
-    public static double motorSpeed = 1;
+    public static double motorSpeed = .75;
 
     // Color sensor
     public static double distanceToClose = 2.5;
@@ -25,10 +25,15 @@ public class Fields {
     public static int armMinimumTarget = 0;
     public static int armMaximumTarget = 2000;
 
-    public static int armDepositForward=546;
+    public static int armDepositForward=550;
+    public static int armDepositForwardLow=432;
     public static int armDepositBackwards=1761;
-    public static  int armDepostBackwardsHigh = 1380;
-    public static int armDepostForwardsHigh = 830;
+    public static  int armDepostBackwardsHigh = 1456;
+    public static int armDepostForwardsHigh = 588;
+    public static int armDepositBackwardsMid = 1454;
+    public static int armDepositForwardsMid = 1454;
+
+
 
     public static int armPickup = 50;
 
@@ -59,18 +64,20 @@ public class Fields {
     public static int sliderConeStackPickup=400;
     public static int sliderLowJunctionLevel=690;
     public static int sliderMidJunctionLevel=1200;
-    public static int sliderHighJunctionLevel=1400;
+    public static int sliderHighJunctionLevel=1441;
+    public static int sliderMidBack=632;
+    public static int sliderMidForward=1150;
 
 
     //claw varaiables
-    public static double leftClawClose = .3;
-    public static double leftClawPickup = .25;
+    public static double leftClawClose = .35;
+    public static double leftClawPickup = .1;
     public static double leftClawDeliver = .1;
 
 
     public static double rightClawPickup = .2;
     public static double rightClawDeliver = .45;
-    public static double rightClawClose = .5 ;
+    public static double rightClawClose = .6 ;
 
 
 

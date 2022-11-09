@@ -88,6 +88,7 @@ public class Teleop extends LinearOpMode {
         robot.leftClaw.setPosition(Fields.leftClawPickup);
         telemetry.addLine("ready to Go");
         telemetry.update();
+
         waitForStart();
 
         // TODO RR

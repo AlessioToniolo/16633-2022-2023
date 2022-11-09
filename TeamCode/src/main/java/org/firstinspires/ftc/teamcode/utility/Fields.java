@@ -20,7 +20,7 @@ public class Fields {
 
     //Slider
     public static int sliderMinimumTarget = 0;
-    public static int sliderMaximumTarget=1600;
+    public static int sliderMaximumTarget=1700;
 
     public static int armMinimumTarget = 0;
     public static int armMaximumTarget = 2000;
@@ -35,7 +35,8 @@ public class Fields {
 
 
 
-    public static int armPickup = 50;
+
+    public static int armPickup = 0;
 
     //refrence variables
     //slider
@@ -67,6 +68,7 @@ public class Fields {
     public static int sliderHighJunctionLevel=1441;
     public static int sliderMidBack=632;
     public static int sliderMidForward=1150;
+
 
 
     //claw varaiables

@@ -17,8 +17,17 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+// TODO LIST
+/*
+- get opencv zone on loop and save it to variable to decrease wait time
+- figure out when and where to deposit preloaded cone
+- try to compile trajectories before the opmode
+- figure out best way to collapse lift, and create a function for it
+- since claw closes at end of auto (add this), initialize it open in Teleop.java
+ */
+
 @Autonomous
-public class TestAuto extends LinearOpMode {
+public class DoubleAuto extends LinearOpMode {
     // robot with drive
     BaseRobot robot = new BaseRobot();
     //opencv
@@ -31,7 +40,6 @@ public class TestAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
-        robot.closeClaw();
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
@@ -56,6 +64,8 @@ public class TestAuto extends LinearOpMode {
 
         if (isStopRequested()) return;
 
+        robot.closeClaw();
+
         robot.delay(1);
         double zone = ZoneDetectionPipeline.getZone();
         robot.delay(1);
@@ -70,25 +80,30 @@ public class TestAuto extends LinearOpMode {
                 .build();
 
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
-                .lineTo(new Vector2d(65, -10))
+                .lineTo(new Vector2d(62, -10))
                 .build();
 
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
                 .lineToSplineHeading(new Pose2d(32, -10, Math.toRadians(135)))
                 .build();
-        Trajectory traj4 = drive.trajectoryBuilder(traj3.end()).forward(3).build();
-        Trajectory traj5 = drive.trajectoryBuilder(traj4.end()).forward(-3).build();
-        Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
-                .lineTo(new Vector2d(34, -10))
+        Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
+                .lineToSplineHeading(new Pose2d(33.5, -4, Math.toRadians(135)))
+                .build();
+        Trajectory traj5 = drive.trajectoryBuilder(traj4.end()).forward(-1.5).build();
+        /*Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
+                .forward(-4)
+                .build();*/
+        Trajectory traj7 = drive.trajectoryBuilder(new Pose2d(traj5.end().getX(), traj5.end().getY(), Math.toRadians(90)))
+                .lineTo(new Vector2d(36, -10))
                 .build();
 
         // Zone trajs
-        Trajectory zone1 = robot.drive.trajectoryBuilder(traj6.end())
-                .lineTo(new Vector2d(12, -12))
+        Trajectory zone3 = drive.trajectoryBuilder(traj7.end())
+                .lineTo(new Vector2d(69, -12))
                 .build();
 
-        Trajectory zone3 = robot.drive.trajectoryBuilder(traj6.end())
-                .lineTo(new Vector2d(70, -12))
+        Trajectory zone1 = drive.trajectoryBuilder(traj7.end())
+                .lineTo(new Vector2d(2.3, -11.3))
                 .build();
 
         drive.followTrajectory(traj1);
@@ -97,27 +112,27 @@ public class TestAuto extends LinearOpMode {
         drive.followTrajectory(traj3);
         liftHighGoal(false);
         drive.followTrajectory(traj4);
-        deposit();
+        // go back on the pole
         drive.followTrajectory(traj5);
+        deposit();
+        closeClaw();
+        // hits pole
         resetLift();
-        drive.turn(Math.toRadians(-45));
-        drive.followTrajectory(traj6);
+        //drive.followTrajectory(traj6);
+        drive.turn(Math.toRadians(-43));
+        drive.followTrajectory(traj7);
 
         if (zone == 1) {
-            robot.drive.followTrajectory(zone1);
-        } else if (zone == 3) {
-            robot.drive.followTrajectory(zone3);
+            drive.followTrajectory(zone1);
         }
-
-        telemetry.clear();
-        telemetry.speak("Free O O", "en-TT", "ALB");
-        telemetry.speak("LETS GO BRAZY DRIPP MONSTERS!!!!");
-        telemetry.update();
+        if (zone == 3) {
+            drive.followTrajectory(zone3);
+        }
     }
     // Auto robot functions
     public void liftHighGoal(boolean depositBackwards) {
         if(depositBackwards){
-            sliderRunTo(Fields.sliderHighJunctionLevel);
+            sliderRunTo(1610 );
             armRunTo(Fields.armDepostBackwardsHigh);
         } else {
             sliderRunTo(Fields.sliderHighJunctionLevel);
@@ -132,13 +147,18 @@ public class TestAuto extends LinearOpMode {
     }
     public void resetLift() {
         armRunTo(Fields.armPickup);
+        delay(1.5);
         sliderRunTo(Fields.sliderGroundPickup);
+        /*
         robot.leftClaw.setPosition(Fields.leftClawPickup);
         robot.rightClaw.setPosition(Fields.rightClawPickup);
+
+         */
     }
     public void closeClaw() {
         robot.rightClaw.setPosition(Fields.rightClawClose);
         robot.leftClaw.setPosition(Fields.leftClawClose);
+        delay(1);
     }
 
     //helper functions

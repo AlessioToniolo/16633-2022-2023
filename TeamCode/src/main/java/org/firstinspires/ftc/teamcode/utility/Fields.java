@@ -25,49 +25,46 @@ public class Fields {
     public static int armMinimumTarget = 0;
     public static int armMaximumTarget = 2000;
 
-    public static int armDepositForward=550;
-    public static int armDepositForwardLow=432;
-    public static int armDepositBackwards=1761;
-    public static  int armDepostBackwardsHigh = 1504;
-    public static int armDepostForwardsHigh = 588;
-    public static int armDepositBackwardsMid = 1481;
-    public static int armDepositForwardsMid = 1454;
-
-
-
-
-    public static int armPickup = 0;
-
     //refrence variables
     //slider
-    public static int referenceGroundPickup =0;
-    public static int referenceConeStackPickup=1;
-    public static int referenceLowJunction = 2;
-    public static int referenceMiddleJunction = 3;
-    public static int referenceHighJunction = 4;
-    //arm
-    public static final int referenceArmPickup = 0;
-    public static final int referenceArmForwards = 1;
-    public static final int referenceArmForwardsHigh =2;
-    public static final int referenceArmBackwardsHigh = 3;
-    public static final int referenceArmBackwards =4;
+    public static int referenceSliderGround =0;
+    public static int referenceSliderConeStack=1;
+    public static int referenceSliderForwardLow = 2;
+    public static int referenceSliderForwardMid = 3;
+    public static int referenceSliderForwardHigh = 4;
+    public static int referenceSliderBackwardsHigh = 5;
+    public static int referenceSliderBackwardsMid = 6;
 
 
 
-    /**
-    public static int armIntakeLevel=0;
-    public static int armGroundJunctionLevel=0;
-    public static int armLowJunctionLevel=540;
-    public static int armMidJunctionLevel=0;
-    public static int armHighJunctionLevel=0;**/
+    public static int sliderGround=0;
+    public static int sliderConeStack=400;
+    public static int sliderForwardLow=690;
+    public static int sliderForwardMid=1150;
+    public static int sliderForwardHigh=1760;
+    public static int sliderBackwardsHigh=1760;
+    public static int sliderBackMid=587;
 
-    public static int sliderGroundPickup=0;
-    public static int sliderConeStackPickup=400;
-    public static int sliderLowJunctionLevel=690;
-    public static int sliderMidJunctionLevel=1200;
-    public static int sliderHighJunctionLevel=1760;
-    public static int sliderMidBack=587;
-    public static int sliderMidForward=1150;
+
+    public static final int referenceArmGround = 0;
+    public static final int referenceArmConeStack = 1;
+    public static final int referenceArmForwardLow = 2;
+    public static final int referenceArmForwardMid = 3;
+    public static final int referenceArmForwardsHigh = 4;
+    public static final int referenceArmBackwardsHigh=5;
+    public static final int referenceArmBackwardsMid=6;
+
+    public static int armGround = 0;
+    public static int armConeStack = 550;
+    public static int armForwardLow=432;
+    public static int armForwardMid=550;
+    public static int armForwardHigh = 558;
+    public static  int armBackwardsHigh = 1504;
+    public static int armBackwardsMid = 1481;
+
+    //public static int armDepositForwardsMid = 1454;
+
+
 
 
 

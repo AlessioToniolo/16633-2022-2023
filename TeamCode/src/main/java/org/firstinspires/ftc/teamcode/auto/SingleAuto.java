@@ -58,9 +58,8 @@ public class SingleAuto extends LinearOpMode {
 
         robot.closeClaw();
 
-        robot.delay(1);
+        robot.delay(.5);
         double zone = ZoneDetectionPipeline.getZone();
-        robot.delay(1);
         camera.stopStreaming();
         camera.closeCameraDevice();
 
@@ -118,13 +117,14 @@ public class SingleAuto extends LinearOpMode {
     }
     // Auto robot functions
     public void liftHighGoal(boolean depositBackwards) {
-        sliderRunTo(Fields.sliderHighJunctionLevel);
         if(depositBackwards){
-            armRunTo(Fields.armDepostBackwardsHigh);
+            sliderRunTo(1610 );
+            armRunTo(Fields.armBackwardsHigh);
         } else {
-            armRunTo(Fields.armDepostForwardsHigh);
+            sliderRunTo(Fields.sliderForwardHigh);
+            armRunTo(Fields.armForwardHigh);
         }
-        delay(2);
+        delay(3);
     }
     public void deposit() {
         robot.rightClaw.setPosition(Fields.rightClawDeliver);
@@ -133,14 +133,14 @@ public class SingleAuto extends LinearOpMode {
     }
     // TODO this is the part that tips the entire robot over
     public void clearLift() {
-        armRunTo(Fields.armDepostBackwardsHigh);
+        armRunTo(Fields.armBackwardsHigh);
         delay(1);
-        sliderRunTo(Fields.sliderLowJunctionLevel);
+        sliderRunTo(Fields.sliderForwardLow);
         delay(1);
     }
     public void resetLift() {
-        armRunTo(Fields.armPickup);
-        sliderRunTo(Fields.sliderGroundPickup);
+        armRunTo(Fields.armGround);
+        sliderRunTo(Fields.sliderGround);
         delay(1.5);
     }
     public void closeClaw() {

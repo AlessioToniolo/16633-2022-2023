@@ -66,9 +66,8 @@ public class DoubleAuto extends LinearOpMode {
 
         robot.closeClaw();
 
-        robot.delay(1);
+        robot.delay(.5);
         double zone = ZoneDetectionPipeline.getZone();
-        robot.delay(1);
         camera.stopStreaming();
         camera.closeCameraDevice();
 
@@ -133,10 +132,10 @@ public class DoubleAuto extends LinearOpMode {
     public void liftHighGoal(boolean depositBackwards) {
         if(depositBackwards){
             sliderRunTo(1610 );
-            armRunTo(Fields.armDepostBackwardsHigh);
+            armRunTo(Fields.armBackwardsHigh);
         } else {
-            sliderRunTo(Fields.sliderHighJunctionLevel);
-            armRunTo(Fields.armDepostForwardsHigh);
+            sliderRunTo(Fields.sliderForwardHigh);
+            armRunTo(Fields.armForwardHigh);
         }
         delay(3);
     }
@@ -146,9 +145,9 @@ public class DoubleAuto extends LinearOpMode {
         delay(1);
     }
     public void resetLift() {
-        armRunTo(Fields.armPickup);
+        armRunTo(Fields.armGround);
         delay(1.5);
-        sliderRunTo(Fields.sliderGroundPickup);
+        sliderRunTo(Fields.sliderGround);
         /*
         robot.leftClaw.setPosition(Fields.leftClawPickup);
         robot.rightClaw.setPosition(Fields.rightClawPickup);

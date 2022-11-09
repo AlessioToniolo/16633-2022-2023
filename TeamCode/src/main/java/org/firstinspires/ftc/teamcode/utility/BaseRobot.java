@@ -105,19 +105,19 @@ public class BaseRobot {
     // Auto robot functions
     public void liftHighGoal(boolean depositBackwards) {
         if(depositBackwards){
-            sliderRunTo(Fields.sliderHighJunctionLevel);
-            armRunTo(Fields.armDepostBackwardsHigh);
+            sliderRunTo(Fields.sliderBackwardsHigh);
+            armRunTo(Fields.armBackwardsHigh);
         } else {
-            sliderRunTo(Fields.sliderHighJunctionLevel);
-            armRunTo(Fields.armDepostForwardsHigh);
+            sliderRunTo(Fields.sliderForwardHigh);
+            armRunTo(Fields.armForwardHigh);
         }
         delay(0.5);
         rightClaw.setPosition(Fields.rightClawDeliver);
         leftClaw.setPosition(Fields.leftClawDeliver);
     }
     public void resetLift() {
-        armRunTo(Fields.armPickup);
-        sliderRunTo(Fields.sliderGroundPickup);
+        armRunTo(Fields.armGround);
+        sliderRunTo(Fields.sliderGround);
         leftClaw.setPosition(Fields.leftClawPickup);
         rightClaw.setPosition(Fields.rightClawPickup);
     }

@@ -8,6 +8,7 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -44,6 +45,7 @@ public class Teleop extends LinearOpMode {
     double leftClawPos = 0;
     double rightClawPos = 0;
 
+    ElapsedTime runtime = new ElapsedTime();
 
     //IMU
     // IMU Fields
@@ -110,7 +112,7 @@ public class Teleop extends LinearOpMode {
     public void checkColor() {
         double currentDistance = robot.distanceSensor.getDistance(DistanceUnit.CM);
 
-        if (currentDistance <= Fields.distanceToClose && sliderState==Fields.referenceArmPickup) {
+        if (currentDistance <= Fields.distanceToClose && sliderState==Fields.referenceArmGround) {
             closed = true;
             robot.rightClaw.setPosition(Fields.rightClawClose);
             robot.leftClaw.setPosition(Fields.leftClawClose);
@@ -131,30 +133,25 @@ public class Teleop extends LinearOpMode {
         if(sliderTargetPos>Fields.sliderMaximumTarget) sliderTargetPos = Fields.sliderMaximumTarget;
         else if(sliderTargetPos<Fields.sliderMinimumTarget) sliderTargetPos=Fields.sliderMinimumTarget;
 
+        telemetry.addLine("SLIDER STUFF:" );
+        telemetry.addLine("__________________________________:" );
         //automatic controls
-        checkDDownandUp();
+
         checkY();
-        checkDRightandLeft();
         checkXB();
         checkBumpers();
+        checkDDownandUp();
+        checkDRightandLeft();
+
 
         //motor functionality
         armRunTo((int)armTargetPos, Fields.motorSpeed);
         sliderRunTo((int)sliderTargetPos, Fields.motorSpeed);
         
 
-        telemetry.addLine("SLIDER STUFF:" );
-        telemetry.addLine("__________________________________:" );
-        telemetry.addLine("ARM :" );
-        telemetry.addLine("______" );
-        telemetry.addLine("armTargetPos: "+armTargetPos);
-        telemetry.addLine("armEstimatedPos: "+robot.arm.getTargetPosition());
-        telemetry.addLine("armState: "+armState);
-        telemetry.addLine("Slider :" );
-        telemetry.addLine("______" );
-        telemetry.addLine("SliderTargetPos: "+sliderTargetPos);
-        telemetry.addLine("SliderEstimatedPos: "+robot.slider.getTargetPosition());
-        telemetry.addLine("SliderState: "+sliderState);
+
+
+
     }
     public void fieldCentricDrive(){
         double leftStickX;
@@ -305,22 +302,46 @@ public class Teleop extends LinearOpMode {
         prevDUp= gamepad2.dpad_up;
 
         //allows cycle to circle around
-        if(sliderState ==5)sliderState = 0;
-        else if(sliderState==-1)sliderState = 4;
-
+        if(sliderState ==7)sliderState = 0;
+        else if(sliderState==-1)sliderState = 6;
+        String stateStr = "";
         if(gamepad2.dpad_up||gamepad2.dpad_down) {//if dpad up or down is pressed then use the sliderState
             // to determine the sliderTarget pos
-            if (sliderState == Fields.referenceGroundPickup)
-                sliderTargetPos = Fields.sliderGroundPickup;
-            else if (sliderState == Fields.referenceConeStackPickup)
-                sliderTargetPos = Fields.sliderConeStackPickup;
-            else if (sliderState == Fields.referenceLowJunction)
-                sliderTargetPos = Fields.sliderLowJunctionLevel;
-            else if (sliderState == Fields.referenceMiddleJunction)
-                sliderTargetPos = Fields.sliderMidJunctionLevel;
-            else if (sliderState == Fields.referenceHighJunction)
-                sliderTargetPos = Fields.sliderHighJunctionLevel;
+            if (sliderState == Fields.referenceSliderGround) {
+                sliderTargetPos = Fields.sliderGround;
+                stateStr = "GROUND";
+            }
+            else if (sliderState == Fields.referenceSliderConeStack) {
+                sliderTargetPos = Fields.sliderConeStack;
+                stateStr = "CONE STACK";
+            }
+            else if (sliderState == Fields.referenceSliderForwardLow) {
+                sliderTargetPos = Fields.sliderForwardLow;
+                stateStr = "FORWARD LOW";
+            }
+            else if (sliderState == Fields.referenceSliderForwardMid) {
+                sliderTargetPos = Fields.sliderForwardMid;
+                stateStr="FORWARD MIDDLE";
+            }
+            else if (sliderState == Fields.referenceSliderForwardHigh) {
+                sliderTargetPos = Fields.sliderForwardHigh;
+                stateStr = "FORWARD HIGH";
+            }
+            else if (sliderState == Fields.referenceSliderBackwardsHigh) {
+                sliderTargetPos = Fields.sliderBackwardsHigh;
+                stateStr = "BACKWARD HIGH";
+            }
+            else if (sliderState == Fields.referenceArmBackwardsMid) {
+                sliderTargetPos = Fields.sliderBackMid;
+                stateStr="BACKWARD MIDDLE";
+            }
+
         }
+        telemetry.addLine("Slider :" );
+        telemetry.addLine("______" );
+        telemetry.addLine("SliderTargetPos: "+sliderTargetPos);
+        telemetry.addLine("SliderEstimatedPos: "+robot.slider.getTargetPosition());
+        telemetry.addLine("SliderState: "+stateStr);
     }
     public void checkDRightandLeft() {
         if (gamepad2.dpad_right && gamepad2.dpad_right != prevDRight) {
@@ -332,73 +353,102 @@ public class Teleop extends LinearOpMode {
         }
         prevDLeft = gamepad2.dpad_left;
 
+        //arm State is 0,1, or 2; this allows armState to circle from 2 -> 0 or from 0 ->2 in case armState ever becomes -1 or 3
+        if (armState == -1) armState = 6;
+        else if (armState == 7) armState = 0;
         if(gamepad2.dpad_right || gamepad2.dpad_left){//if either of the buttons are pressed, then update the armPos
             //IMPORTANT: WE are only setting instance target positions here because every loop the slider and arm are set
             // to these target positions and called to move to these positions in the checkSlider() function
 
-            //arm State is 0,1, or 2; this allows armState to circle from 2 -> 0 or from 0 ->2 in case armState ever becomes -1 or 3
-            if (armState == -1) armState = 4;
-            else if (armState == 5) armState = 0;
-
-            // 0 = PIckup; 1 = deposit forward; 2 = deposit backward
-            if (armState == 0) armTargetPos = Fields.armPickup;
-            else if (armState == 1) armTargetPos = Fields.armDepositForward;
-            else if (armState == 2) armTargetPos = Fields.armDepostForwardsHigh;
-            else if (armState == 3) armTargetPos = Fields.armDepostBackwardsHigh;
-            else if(armState ==4) armTargetPos = Fields.armDepositBackwards;
+            String stateStr="";
+            if (armState == Fields.referenceArmGround) {
+                armTargetPos = Fields.armGround;
+                stateStr = "GROUND";
+            }
+            else if (armState == Fields.referenceArmConeStack) {
+                armTargetPos = Fields.armConeStack;
+                stateStr = "CONE STACK";
+            }
+            else if (armState == Fields.referenceArmForwardLow) {
+                armTargetPos = Fields.armForwardLow;
+                stateStr = "FORWARD LOW";
+            }
+            else if (armState == Fields.referenceArmForwardMid) {
+                armTargetPos = Fields.armForwardMid;
+                stateStr="FORWARD MIDDLE";
+            }
+            else if (armState == Fields.referenceArmForwardsHigh) {
+                armTargetPos = Fields.armForwardHigh;
+                stateStr = "FORWARD HIGH";
+            }
+            else if (armState == Fields.referenceArmBackwardsHigh) {
+                armTargetPos = Fields.armBackwardsHigh;
+                stateStr = "BACKWARD HIGH";
+            }
+            else if (armState == Fields.referenceSliderBackwardsMid) {
+                armTargetPos = Fields.armBackwardsMid;
+                stateStr="BACKWARD MIDDLE";
+            }
 
             //if we want to deposit backwards; moves the slider up to at least the low junction
             if(armState==2 && sliderTargetPos<200){
-                sliderState=Fields.referenceLowJunction;
-                sliderTargetPos=Fields.sliderLowJunctionLevel;
+                sliderState=Fields.referenceSliderBackwardsMid;
+                sliderTargetPos=Fields.sliderBackMid;
             }
 
         }
+        telemetry.addLine("ARM :" );
+        telemetry.addLine("______" );
+        telemetry.addLine("armTargetPos: "+armTargetPos);
+        telemetry.addLine("armEstimatedPos: "+robot.arm.getTargetPosition());
+        telemetry.addLine("armState: "+armState);
     }
     public void checkY(){
         if(gamepad2.y && gamepad2.y != prevY){
-            robot.leftClaw.setPosition(Fields.leftClawDeliver);
-            robot.rightClaw.setPosition(Fields.rightClawDeliver);
-            closed=true;
-            sliderState = Fields.referenceGroundPickup;
-            sliderTargetPos=Fields.sliderGroundPickup;
-            armState = Fields.referenceArmPickup;
-            armTargetPos=Fields.armPickup;
-            armRunTo(Fields.armPickup);
-            sliderRunTo(Fields.sliderGroundPickup, .25);
+
+            sliderState = Fields.referenceSliderGround;
+            sliderTargetPos=Fields.sliderGround;
+            armState = Fields.referenceArmGround;
+            armTargetPos=Fields.armGround;
+            armRunTo(Fields.armGround);
+            sliderRunTo(Fields.sliderGround, .25);
+            delay(1);
+            robot.leftClaw.setPosition(Fields.leftClawPickup);
+            robot.rightClaw.setPosition(Fields.rightClawPickup);
+            closed=false;
         }
         prevY = gamepad2.y;
     }
     public void checkXB(){
         if(gamepad2.x&& gamepad2.x!=prevX){
-            sliderState=Fields.referenceLowJunction;
-            sliderTargetPos=Fields.sliderLowJunctionLevel;
-            armState=Fields.referenceArmForwards;
-            armTargetPos=Fields.armDepositForwardLow;
+            sliderState=Fields.referenceSliderForwardLow;
+            sliderTargetPos=Fields.sliderForwardLow;
+            armState=Fields.referenceArmForwardLow;
+            armTargetPos=Fields.armForwardLow;
         }
         prevX=gamepad2.x;
         if(gamepad2.b&& gamepad2.b!=prevB){
-            sliderState=Fields.referenceHighJunction;
-            sliderTargetPos=Fields.sliderHighJunctionLevel;
+            sliderState=Fields.referenceSliderBackwardsHigh;
+            sliderTargetPos=Fields.sliderBackwardsHigh;
             armState=Fields.referenceArmBackwardsHigh;
-            armTargetPos=Fields.armDepostBackwardsHigh;
+            armTargetPos=Fields.armBackwardsHigh;
         }
         prevB=gamepad2.b;
 
     }
     public void checkBumpers(){
         if(gamepad2.right_bumper && gamepad2.right_bumper!=prevRBumper2){
-            sliderState = Fields.referenceMiddleJunction;
-            sliderTargetPos=Fields.sliderMidBack;
-            armState = Fields.referenceArmBackwards;
-            armTargetPos = Fields.armDepositBackwardsMid;
+            sliderState = Fields.referenceSliderBackwardsMid;
+            sliderTargetPos=Fields.sliderBackMid;
+            armState = Fields.referenceArmBackwardsMid;
+            armTargetPos = Fields.armBackwardsMid;
         }
         prevRBumper2=gamepad2.right_bumper;
         if(gamepad2.left_bumper && gamepad2.left_bumper!=prevLBumper2){
-            sliderState = Fields.referenceMiddleJunction;
-            sliderTargetPos=Fields.sliderMidJunctionLevel;
-            armState = Fields.referenceArmForwards;
-            armTargetPos = Fields.armDepositForward;
+            sliderState = Fields.referenceSliderForwardMid;
+            sliderTargetPos=Fields.sliderForwardMid;
+            armState = Fields.referenceArmForwardMid;
+            armTargetPos = Fields.armForwardMid;
         }
         prevLBumper2=gamepad2.left_bumper;
 
@@ -452,5 +502,10 @@ public class Teleop extends LinearOpMode {
         imuParameters.loggingEnabled = true;//used to be false
         imuParameters.loggingTag = "IMU";
         imuParameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+    }
+    public void delay(double t) {
+        runtime.reset();
+        while (runtime.seconds() < t) {
+        }
     }
 }

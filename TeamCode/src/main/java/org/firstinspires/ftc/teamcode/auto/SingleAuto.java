@@ -118,11 +118,11 @@ public class SingleAuto extends LinearOpMode {
     // Auto robot functions
     public void liftHighGoal(boolean depositBackwards) {
         if(depositBackwards){
-            sliderRunTo(1610 );
-            armRunTo(Fields.armBackwardsHigh, Fields.armSpeed);
+            sliderRunTo(Fields.sliderBackwardsHigh);
+            armRunTo(Fields.armBackwardsHigh);
         } else {
             sliderRunTo(Fields.sliderForwardHigh);
-            armRunTo(Fields.armForwardHigh,Fields.armSpeed);
+            armRunTo(Fields.armForwardHigh);
         }
         delay(3);
     }

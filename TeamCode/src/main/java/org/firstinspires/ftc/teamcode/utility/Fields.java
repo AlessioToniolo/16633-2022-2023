@@ -28,13 +28,14 @@ public class Fields {
 
     //refrence variables
     //slider
-    public static int referenceSliderGround =0;
-    public static int referenceSliderConeStack=1;
-    public static int referenceSliderForwardLow = 2;
-    public static int referenceSliderForwardMid = 3;
-    public static int referenceSliderForwardHigh = 4;
-    public static int referenceSliderBackwardsHigh = 5;
-    public static int referenceSliderBackwardsMid = 6;
+    public static final int referenceSliderGround =0;
+    public static final int referenceSliderConeStack=1;
+    public static final int referenceSliderForwardLow = 2;
+    public static final int referenceSliderForwardMid = 3;
+    public static final int referenceSliderForwardHigh = 4;
+    public static final int referenceSliderBackwardsHigh = 5;
+    public static final int referenceSliderBackwardsMid = 6;
+    public static final int referenceSliderBackwardsLow = 7;
 
 
 
@@ -45,6 +46,7 @@ public class Fields {
     public static int sliderForwardHigh=1674;
     public static int sliderBackwardsHigh=1780;
     public static int sliderBackMid=587;
+    public static int sliderBackLow = 263;
 
 
     public static final int referenceArmGround = 0;
@@ -54,14 +56,16 @@ public class Fields {
     public static final int referenceArmForwardsHigh = 4;
     public static final int referenceArmBackwardsHigh=5;
     public static final int referenceArmBackwardsMid=6;
+    public static final int referenceArmBackwardsLow = 7;
 
     public static int armGround = 0;
-    public static int armConeStack = 550;
+    public static int armConeStack = 95;
     public static int armForwardLow=432;
     public static int armForwardMid=550;
     public static int armForwardHigh = 780;
     public static  int armBackwardsHigh = 1504;
     public static int armBackwardsMid = 1481;
+    public static int armBackwardsLow = 1742;
 
     //public static int armDepositForwardsMid = 1454;
 

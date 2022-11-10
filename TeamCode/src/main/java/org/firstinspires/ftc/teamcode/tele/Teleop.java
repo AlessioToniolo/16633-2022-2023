@@ -340,8 +340,8 @@ public class Teleop extends LinearOpMode {
         }
 
         //allows cycle to circle around
-        if(sliderState ==7)sliderState = 0;
-        else if(sliderState==-1)sliderState = 6;
+        if(sliderState ==8)sliderState = 0;
+        else if(sliderState==-1)sliderState = 7;
 
 
 
@@ -364,8 +364,8 @@ public class Teleop extends LinearOpMode {
         }
 
             //arm State is 0,1, or 2; this allows armState to circle from 2 -> 0 or from 0 ->2 in case armState ever becomes -1 or 3
-            if (armState == -1) armState = 6;
-            else if (armState == 7) armState = 0;
+            if (armState == -1) armState = 7;
+            else if (armState == 8) armState = 0;
             if((gamepad2.dpad_left||gamepad2.dpad_right)&&sliderTestMode){
                 updateArmStates();
             }
@@ -410,8 +410,8 @@ public class Teleop extends LinearOpMode {
         if(gamepad2.b&& gamepad2.b!=prevB){
             sliderState=Fields.referenceSliderBackwardsHigh;
             sliderTargetPos=Fields.sliderBackwardsHigh;
-            armState=Fields.referenceArmBackwardsHigh;
-            armTargetPos=Fields.armBackwardsHigh;
+            armState=Fields.referenceArmForwardsHigh;
+            armTargetPos=Fields.armForwardHigh;
         }
         prevB=gamepad2.b;
 
@@ -519,6 +519,9 @@ public class Teleop extends LinearOpMode {
         else if (sliderState == Fields.referenceArmBackwardsMid) {
             sliderTargetPos = Fields.sliderBackMid;
             stateStr="BACKWARD MIDDLE";
+        }else if (sliderState == Fields.referenceSliderBackwardsLow) {
+            sliderTargetPos = Fields.sliderBackLow;
+            stateStr = "BACKWARD LOW";
         }
         sliderStateStr=stateStr;
     }
@@ -544,9 +547,13 @@ public class Teleop extends LinearOpMode {
         } else if (armState == Fields.referenceArmBackwardsHigh) {
             armTargetPos = Fields.armBackwardsHigh;
             stateStr = "BACKWARD HIGH";
-        } else if (armState == Fields.referenceSliderBackwardsMid) {
+        } else if (armState == Fields.referenceArmBackwardsMid) {
             armTargetPos = Fields.armBackwardsMid;
             stateStr = "BACKWARD MIDDLE";
+        }
+        else if (armState == Fields.referenceArmBackwardsLow) {
+            armTargetPos = Fields.armBackwardsLow;
+            stateStr = "BACKWARD LOW";
         }
         armStateStr=stateStr;
     }

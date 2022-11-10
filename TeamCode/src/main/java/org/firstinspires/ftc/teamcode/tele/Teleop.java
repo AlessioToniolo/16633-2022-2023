@@ -319,6 +319,8 @@ public class Teleop extends LinearOpMode {
                 sliderState++;
             }
             prevDUp = gamepad2.dpad_up;
+            if(gamepad2.dpad_up||gamepad2.dpad_down){
+                updateSliderStates();}
         }
         else{
             if (gamepad2.dpad_down && gamepad2.dpad_down != prevDDown) {
@@ -331,42 +333,16 @@ public class Teleop extends LinearOpMode {
                 armState++;
             }
             prevDUp = gamepad2.dpad_up;
+            if(gamepad2.dpad_up||gamepad2.dpad_down) {
+                updateArmStates();
+                updateSliderStates();
+            }
         }
 
         //allows cycle to circle around
         if(sliderState ==7)sliderState = 0;
         else if(sliderState==-1)sliderState = 6;
-            String stateStr = "";
-            // to determine the sliderTarget pos
-            if (sliderState == Fields.referenceSliderGround) {
-                sliderTargetPos = Fields.sliderGround;
-                stateStr = "GROUND";
-            }
-            else if (sliderState == Fields.referenceSliderConeStack) {
-                sliderTargetPos = Fields.sliderConeStack;
-                stateStr = "CONE STACK";
-            }
-            else if (sliderState == Fields.referenceSliderForwardLow) {
-                sliderTargetPos = Fields.sliderForwardLow;
-                stateStr = "FORWARD LOW";
-            }
-            else if (sliderState == Fields.referenceSliderForwardMid) {
-                sliderTargetPos = Fields.sliderForwardMid;
-                stateStr="FORWARD MIDDLE";
-            }
-            else if (sliderState == Fields.referenceSliderForwardHigh) {
-                sliderTargetPos = Fields.sliderForwardHigh;
-                stateStr = "FORWARD HIGH";
-            }
-            else if (sliderState == Fields.referenceSliderBackwardsHigh) {
-                sliderTargetPos = Fields.sliderBackwardsHigh;
-                stateStr = "BACKWARD HIGH";
-            }
-            else if (sliderState == Fields.referenceArmBackwardsMid) {
-                sliderTargetPos = Fields.sliderBackMid;
-                stateStr="BACKWARD MIDDLE";
-            }
-            sliderStateStr=stateStr;
+
 
 
         telemetry.addLine("Slider :" );
@@ -390,38 +366,15 @@ public class Teleop extends LinearOpMode {
             //arm State is 0,1, or 2; this allows armState to circle from 2 -> 0 or from 0 ->2 in case armState ever becomes -1 or 3
             if (armState == -1) armState = 6;
             else if (armState == 7) armState = 0;
-                //IMPORTANT: WE are only setting instance target positions here because every loop the slider and arm are set
-                // to these target positions and called to move to these positions in the checkSlider() function
-                String stateStr="";
-                if (armState == Fields.referenceArmGround) {
-                    armTargetPos = Fields.armGround;
-                    stateStr = "GROUND";
-                } else if (armState == Fields.referenceArmConeStack) {
-                    armTargetPos = Fields.armConeStack;
-                    stateStr = "CONE STACK";
-                } else if (armState == Fields.referenceArmForwardLow) {
-                    armTargetPos = Fields.armForwardLow;
-                    stateStr = "FORWARD LOW";
-                } else if (armState == Fields.referenceArmForwardMid) {
-                    armTargetPos = Fields.armForwardMid;
-                    stateStr = "FORWARD MIDDLE";
-                } else if (armState == Fields.referenceArmForwardsHigh) {
-                    armTargetPos = Fields.armForwardHigh;
-                    stateStr = "FORWARD HIGH";
-                } else if (armState == Fields.referenceArmBackwardsHigh) {
-                    armTargetPos = Fields.armBackwardsHigh;
-                    stateStr = "BACKWARD HIGH";
-                } else if (armState == Fields.referenceSliderBackwardsMid) {
-                    armTargetPos = Fields.armBackwardsMid;
-                    stateStr = "BACKWARD MIDDLE";
-                }
+            if((gamepad2.dpad_left||gamepad2.dpad_right)&&sliderTestMode){
+                updateArmStates();
+            }
 
                 //if we want to deposit backwards; moves the slider up to at least the low junction
                 if (armState == 2 && sliderTargetPos < 200) {
                     sliderState = Fields.referenceSliderBackwardsMid;
                     sliderTargetPos = Fields.sliderBackMid;
                 }
-                armStateStr=stateStr;
         telemetry.addLine();
         telemetry.addLine("ARM :" );
         telemetry.addLine("______" );
@@ -534,5 +487,67 @@ public class Teleop extends LinearOpMode {
         runtime.reset();
         while (runtime.seconds() < t) {
         }
+    }
+
+    public void updateSliderStates(){
+        String stateStr = "";
+        // to determine the sliderTarget pos
+        if (sliderState == Fields.referenceSliderGround) {
+            sliderTargetPos = Fields.sliderGround;
+            stateStr = "GROUND";
+        }
+        else if (sliderState == Fields.referenceSliderConeStack) {
+            sliderTargetPos = Fields.sliderConeStack;
+            stateStr = "CONE STACK";
+        }
+        else if (sliderState == Fields.referenceSliderForwardLow) {
+            sliderTargetPos = Fields.sliderForwardLow;
+            stateStr = "FORWARD LOW";
+        }
+        else if (sliderState == Fields.referenceSliderForwardMid) {
+            sliderTargetPos = Fields.sliderForwardMid;
+            stateStr="FORWARD MIDDLE";
+        }
+        else if (sliderState == Fields.referenceSliderForwardHigh) {
+            sliderTargetPos = Fields.sliderForwardHigh;
+            stateStr = "FORWARD HIGH";
+        }
+        else if (sliderState == Fields.referenceSliderBackwardsHigh) {
+            sliderTargetPos = Fields.sliderBackwardsHigh;
+            stateStr = "BACKWARD HIGH";
+        }
+        else if (sliderState == Fields.referenceArmBackwardsMid) {
+            sliderTargetPos = Fields.sliderBackMid;
+            stateStr="BACKWARD MIDDLE";
+        }
+        sliderStateStr=stateStr;
+    }
+    public void updateArmStates(){
+        //IMPORTANT: WE are only setting instance target positions here because every loop the slider and arm are set
+        // to these target positions and called to move to these positions in the checkSlider() function
+        String stateStr="";
+        if (armState == Fields.referenceArmGround) {
+            armTargetPos = Fields.armGround;
+            stateStr = "GROUND";
+        } else if (armState == Fields.referenceArmConeStack) {
+            armTargetPos = Fields.armConeStack;
+            stateStr = "CONE STACK";
+        } else if (armState == Fields.referenceArmForwardLow) {
+            armTargetPos = Fields.armForwardLow;
+            stateStr = "FORWARD LOW";
+        } else if (armState == Fields.referenceArmForwardMid) {
+            armTargetPos = Fields.armForwardMid;
+            stateStr = "FORWARD MIDDLE";
+        } else if (armState == Fields.referenceArmForwardsHigh) {
+            armTargetPos = Fields.armForwardHigh;
+            stateStr = "FORWARD HIGH";
+        } else if (armState == Fields.referenceArmBackwardsHigh) {
+            armTargetPos = Fields.armBackwardsHigh;
+            stateStr = "BACKWARD HIGH";
+        } else if (armState == Fields.referenceSliderBackwardsMid) {
+            armTargetPos = Fields.armBackwardsMid;
+            stateStr = "BACKWARD MIDDLE";
+        }
+        armStateStr=stateStr;
     }
 }

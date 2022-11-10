@@ -42,7 +42,7 @@ public class Fields {
     public static int sliderConeStack=400;
     public static int sliderForwardLow=690;
     public static int sliderForwardMid=1150;
-    public static int sliderForwardHigh=1760;
+    public static int sliderForwardHigh=1674;
     public static int sliderBackwardsHigh=1780;
     public static int sliderBackMid=587;
 
@@ -59,7 +59,7 @@ public class Fields {
     public static int armConeStack = 550;
     public static int armForwardLow=432;
     public static int armForwardMid=550;
-    public static int armForwardHigh = 558;
+    public static int armForwardHigh = 780;
     public static  int armBackwardsHigh = 1504;
     public static int armBackwardsMid = 1481;
 

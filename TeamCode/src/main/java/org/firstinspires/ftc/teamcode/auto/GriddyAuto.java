@@ -63,11 +63,19 @@ public class GriddyAuto extends LinearOpMode {
                 .forward(-5)
                 .build();
         Trajectory toConeStack = drive.trajectoryBuilder(goBack.end())
-                .lineToSplineHeading(new Pose2d(57, -12, Math.toRadians(48)))
+                .lineToSplineHeading(new Pose2d(54, -9, Math.toRadians(35)))
                 .build();
         Trajectory intoConeStack = drive.trajectoryBuilder(toConeStack.end())
-                .lineTo(new Vector2d(59, 20))
+                .lineTo(new Vector2d(58, -5))
                 .build();
+        Trajectory backUpALittle = drive.trajectoryBuilder(intoConeStack.end())
+                .forward(-1.5)
+                .build();
+        Trajectory depositSecond = drive.trajectoryBuilder(backUpALittle.end())
+                .lineTo(new Vector2d(55, -7))
+                .build();
+        Trajectory backUpAgain = drive.trajectoryBuilder(depositSecond.end())
+                        .forward(-1.5).build();
 
         waitForStart();
 
@@ -91,8 +99,20 @@ public class GriddyAuto extends LinearOpMode {
         drive.followTrajectory(intoConeStack);
         closeClaw();
         delay(0.5);
+        drive.followTrajectory(backUpALittle);
         liftSmallGoal();
+        delay(2);
+        drive.followTrajectory(depositSecond);
+        openClaw();
+        delay(0.5);
+        liftConeStack();
+        openClaw();
         delay(1);
+        closeClaw();
+        drive.followTrajectory(backUpAgain);
+        liftOut();
+        delay(1);
+
 
         if (zone == 1) {
         }
@@ -112,12 +132,16 @@ public class GriddyAuto extends LinearOpMode {
         }
         delay(3);
     }
+    public void liftOut() {
+        sliderRunTo(Fields.sliderBackMid);
+        armRunTo(Fields.sliderBackwardsHigh);
+    }
     public void liftConeStack() {
         sliderRunTo(Fields.sliderConeStack);
         armRunTo(Fields.armConeStack);
     }
     public void liftSmallGoal() {
-        sliderRunTo(Fields.sliderBackLow);
+        sliderRunTo(Fields.sliderBackMid);
         armRunTo(Fields.armBackwardsLow);
     }
     public void liftSlightly() {

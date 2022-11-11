@@ -56,37 +56,94 @@ public class GriddyAuto extends LinearOpMode {
         Pose2d startPose = new Pose2d(36, -60, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
 
-        Trajectory terminal = drive.trajectoryBuilder(startPose)
+        Trajectory one = drive.trajectoryBuilder(startPose)
                 .lineToSplineHeading(new Pose2d(61, -54, Math.toRadians(0)))
                 .build();
-        Trajectory goBack = drive.trajectoryBuilder(terminal.end())
+        Trajectory two = drive.trajectoryBuilder(one.end())
+                .lineTo(new Vector2d(62, -10))
+                .addTemporalMarker(1.2, this::resetLift)
+                .build();
+        Trajectory three = drive.trajectoryBuilder(two.end())
+                .lineTo(new Vector2d(65, -10))
+                .build();
+        Trajectory four = drive.trajectoryBuilder(three.end())
+                .lineToSplineHeading(new Pose2d(60, -15, Math.toRadians(45)))
+                .build();
+        Trajectory five = drive.trajectoryBuilder(four.end())
+                .lineToSplineHeading(new Pose2d(62, -10, Math.toRadians(0)))
+                .splineTo(new Vector2d(65, -10), 0)
+                .addTemporalMarker(0.5, this::liftConeStack)
+                .build();
+        Trajectory six = drive.trajectoryBuilder(five.end())
+                .lineToSplineHeading(new Pose2d(32, -10, Math.toRadians(135)))
+                .build();
+        Trajectory seven = drive.trajectoryBuilder(six.end())
+                .lineToSplineHeading(new Pose2d(35, -6, Math.toRadians(135)))
+                .build();
+        Trajectory eight = drive.trajectoryBuilder(new Pose2d(seven.end().getX(), seven.end().getY(), Math.toRadians(90)))
+                .lineTo(new Vector2d(36, -10))
+                .build();
+
+        // Zone trajs
+        Trajectory zone3 = drive.trajectoryBuilder(eight.end())
+                .lineTo(new Vector2d(69, -12))
+                .build();
+        Trajectory zone1 = drive.trajectoryBuilder(eight.end())
+                .lineTo(new Vector2d(2.3, -11.3))
+                .build();
+
+        /*
+        Trajectory two = drive.trajectoryBuilder(one.end())
                 .forward(-5)
                 .build();
-        Trajectory toConeStack = drive.trajectoryBuilder(goBack.end())
+        Trajectory three = drive.trajectoryBuilder(two.end())
                 .lineToSplineHeading(new Pose2d(54, -9, Math.toRadians(35)))
                 .build();
-        Trajectory intoConeStack = drive.trajectoryBuilder(toConeStack.end())
+        Trajectory four = drive.trajectoryBuilder(three.end())
                 .lineTo(new Vector2d(58, -5))
                 .build();
-        Trajectory backUpALittle = drive.trajectoryBuilder(intoConeStack.end())
+        Trajectory five = drive.trajectoryBuilder(four.end())
                 .forward(-1.5)
                 .build();
-        Trajectory depositSecond = drive.trajectoryBuilder(backUpALittle.end())
+        Trajectory six = drive.trajectoryBuilder(five.end())
                 .lineTo(new Vector2d(55, -7))
                 .build();
-        Trajectory backUpAgain = drive.trajectoryBuilder(depositSecond.end())
+        Trajectory seven = drive.trajectoryBuilder(six.end())
                         .forward(-1.5).build();
+
+         */
 
         waitForStart();
 
         if (isStopRequested()) return;
 
         robot.closeClaw();
+        delay(0.15);
+
         double zone = ZoneDetectionPipeline.getZone();
         camera.stopStreaming();
         camera.closeCameraDevice();
 
+        // NEW STUFF
+        drive.followTrajectory(one);
+        openClaw();
+        liftSlightly();
+        delay(0.5);
+        drive.followTrajectory(two);
+        liftConeStack();
+        drive.followTrajectory(three);
+        closeClaw();
+        liftSmallGoal();
+        drive.followTrajectory(four);
+        openClaw();
+        drive.followTrajectory(five);
+        closeClaw();
+
+
+
+
         // AUTO CODE
+        /*
         delay(0.15);
         drive.followTrajectory(terminal);
         openClaw();
@@ -112,6 +169,9 @@ public class GriddyAuto extends LinearOpMode {
         drive.followTrajectory(backUpAgain);
         liftOut();
         delay(1);
+
+         */
+
 
 
         if (zone == 1) {
@@ -145,7 +205,7 @@ public class GriddyAuto extends LinearOpMode {
         armRunTo(Fields.armBackwardsLow);
     }
     public void liftSlightly() {
-        sliderRunTo(Fields.sliderBackMid);
+        sliderRunTo(Fields.sliderForwardHigh);
     }
     public void openClaw() {
         robot.rightClaw.setPosition(Fields.rightClawDeliver);

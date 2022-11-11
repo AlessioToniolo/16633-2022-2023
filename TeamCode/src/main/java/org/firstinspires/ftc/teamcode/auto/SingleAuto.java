@@ -80,7 +80,6 @@ public class SingleAuto extends LinearOpMode {
         Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
                 .lineToSplineHeading(new Pose2d(35, -6, Math.toRadians(135)))
                 .build();
-        //Trajectory traj5 = drive.trajectoryBuilder(traj4.end()).forward(-1.5).build();
         Trajectory traj7 = drive.trajectoryBuilder(new Pose2d(traj4.end().getX(), traj4.end().getY(), Math.toRadians(90)))
                 .lineTo(new Vector2d(36, -10))
                 .build();

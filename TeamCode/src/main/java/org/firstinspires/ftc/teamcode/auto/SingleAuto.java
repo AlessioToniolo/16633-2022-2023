@@ -78,11 +78,11 @@ public class SingleAuto extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(32, -10, Math.toRadians(135)))
                 .build();
         Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
-                .lineToSplineHeading(new Pose2d(35, -6, Math.toRadians(135)))
+                .lineToSplineHeading(new Pose2d(38, -3.5, Math.toRadians(135)))
                 .build();
         //Trajectory traj5 = drive.trajectoryBuilder(traj4.end()).forward(-1.5).build();
         Trajectory traj7 = drive.trajectoryBuilder(new Pose2d(traj4.end().getX(), traj4.end().getY(), Math.toRadians(90)))
-                .lineTo(new Vector2d(36, -10))
+                .lineTo(new Vector2d(36, -12))
                 .build();
 
         // Zone trajs
@@ -94,11 +94,13 @@ public class SingleAuto extends LinearOpMode {
                 .lineTo(new Vector2d(2.3, -11.3))
                 .build();
 
+        sliderRunTo(150,Fields.sliderSpeed);
         drive.followTrajectory(traj1);
         drive.followTrajectory(traj2);
         drive.followTrajectory(traj3);
         liftHighGoal(false);
         drive.followTrajectory(traj4);
+
         deposit();
         closeClaw();
         // hits pole
@@ -121,26 +123,29 @@ public class SingleAuto extends LinearOpMode {
             sliderRunTo(Fields.sliderBackwardsHigh);
             armRunTo(Fields.armBackwardsHigh);
         } else {
-            sliderRunTo(Fields.sliderForwardHigh);
+            sliderRunTo(Fields.sliderForwardHigh-100);
             armRunTo(Fields.armForwardHigh);
         }
-        delay(3);
+        delay(4);
     }
     public void deposit() {
+        delay(2);
         robot.rightClaw.setPosition(Fields.rightClawDeliver);
         robot.leftClaw.setPosition(Fields.leftClawDeliver);
         delay(1);
     }
     // TODO this is the part that tips the entire robot over
     public void clearLift() {
-
-        sliderRunTo(Fields.sliderForwardLow);
-        delay(1);
         armRunTo(Fields.armBackwardsHigh, Fields.armSpeed);
         delay(1);
+        sliderRunTo(Fields.sliderForwardLow);
+        delay(1);
+        robot.rightClaw.setPosition(Fields.rightClawPickup);
+        robot.leftClaw.setPosition(Fields.leftClawPickup);
+
     }
     public void resetLift() {
-        armRunTo(Fields.armGround);
+        armRunTo(Fields.armGround, Fields.armSpeed);
         sliderRunTo(Fields.sliderGround);
         delay(1.5);
     }

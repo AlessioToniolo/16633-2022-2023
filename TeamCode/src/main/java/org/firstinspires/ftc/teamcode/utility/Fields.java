@@ -11,7 +11,7 @@ public class Fields {
     public static  int subRectX = 0;
     public static  int subRectY = 0;
     public static  int subRectWidth=170;
-    public static  int subRectHeight=72;
+    public static  int subRectHeight=55;
 
     public static double armSpeed = .5;
     public static double sliderSpeed = 1;
@@ -41,7 +41,7 @@ public class Fields {
 
     public static int sliderGround=0;
     public static int sliderConeStack=400;
-    public static int sliderForwardLow=690;
+    public static int sliderForwardLow=350;
     public static int sliderForwardMid=1150;
     public static int sliderForwardHigh=1674;
     public static int sliderBackwardsHigh=1780;

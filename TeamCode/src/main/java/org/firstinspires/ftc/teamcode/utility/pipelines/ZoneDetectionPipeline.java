@@ -24,7 +24,7 @@ public class ZoneDetectionPipeline extends OpenCvPipeline {
 
     //Pink
     public Scalar pinkLower = new Scalar(156 , 24, 0);
-    public Scalar pinkUpper = new Scalar(177.5 ,255,255);
+    public Scalar pinkUpper = new Scalar(168 ,255,255);
 
     //Green
     public Scalar greenLower = new Scalar(63 , 63, 0);

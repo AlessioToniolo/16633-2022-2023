@@ -82,7 +82,6 @@ public class Teleop extends LinearOpMode {
     boolean sliderTestMode = false;
 
 
-
     @Override
     public void runOpMode() throws InterruptedException {
         FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -410,8 +409,8 @@ public class Teleop extends LinearOpMode {
         if(gamepad2.b&& gamepad2.b!=prevB){
             sliderState=Fields.referenceSliderBackwardsHigh;
             sliderTargetPos=Fields.sliderBackwardsHigh;
-            armState=Fields.referenceArmForwardsHigh;
-            armTargetPos=Fields.armForwardHigh;
+            armState=Fields.referenceArmBackwardsHigh;
+            armTargetPos=Fields.armBackwardsHigh;
         }
         prevB=gamepad2.b;
 

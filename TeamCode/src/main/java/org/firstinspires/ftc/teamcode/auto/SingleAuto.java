@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.utility.BaseRobot;
 import org.firstinspires.ftc.teamcode.utility.Fields;
@@ -21,7 +20,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.Vector;
 
 @Autonomous
-public class RightDoubleAuto extends LinearOpMode {
+public class SingleAuto extends LinearOpMode {
     // robot with drive
     BaseRobot robot = new BaseRobot();
     //opencv
@@ -66,32 +65,55 @@ public class RightDoubleAuto extends LinearOpMode {
 
         Pose2d startPose = new Pose2d(36, -60, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
-        sliderRunTo(150, Fields.sliderSpeed);
-        Trajectory toHighGoal = drive.trajectoryBuilder(startPose)
-                .lineTo(new Vector2d(32, -10))
+
+        Trajectory traj1 = drive.trajectoryBuilder(startPose)
+                .lineTo(new Vector2d(70, -57))
                 .build();
-        Trajectory centerHighGoal = drive.trajectoryBuilder(toHighGoal.end())
-                .lineToSplineHeading(new Pose2d(38, -2, Math.toRadians(135)),SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                .build();
-        Trajectory backUp = drive.trajectoryBuilder(centerHighGoal.end())
-                .lineToSplineHeading(new Pose2d(38, -6, Math.toRadians(90)))
-                .build();
-        Trajectory toConeStack = drive.trajectoryBuilder(toHighGoal.end())
-                .lineTo(new Vector2d(52, -12))
+        Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
+                .lineTo(new Vector2d(62, -10))
                 .build();
 
-        drive.followTrajectory(toHighGoal);
+        Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
+                .lineToSplineHeading(new Pose2d(32, -10, Math.toRadians(135)))
+                .build();
+        Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
+                .lineToSplineHeading(new Pose2d(38, -3.5, Math.toRadians(135)))
+                .build();
+        Trajectory traj7 = drive.trajectoryBuilder(new Pose2d(traj4.end().getX(), traj4.end().getY(), Math.toRadians(90)))
+                .lineTo(new Vector2d(36, -12))
+                .build();
+
+        // Zone trajs
+        Trajectory zone3 = drive.trajectoryBuilder(traj7.end())
+                .lineTo(new Vector2d(69, -12))
+                .build();
+
+        Trajectory zone1 = drive.trajectoryBuilder(traj7.end())
+                .lineTo(new Vector2d(2.3, -11.3))
+                .build();
+
+        sliderRunTo(150,Fields.sliderSpeed);
+        drive.followTrajectory(traj1);
+        drive.followTrajectory(traj2);
+        drive.followTrajectory(traj3);
         liftHighGoal(false);
-        drive.followTrajectory(centerHighGoal);
+        drive.followTrajectory(traj4);
+
         deposit();
         closeClaw();
-        //Sample Slow down
-        //, SampleMEcanumDrive.getVelosityConstraint(slowerVelocity, DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH), SAMPLEMECANUMDRIVE.getAccelerationConstaint(DriveConstants.Max_Accel)
-//        drive.followTrajectory(backUp);
-//        clearLift();
-//        drive.followTrajectory(toConeStack);
+        // hits pole
+        clearLift();
+        drive.turn(Math.toRadians(-43));
 
-        
+        drive.followTrajectory(traj7);
+        resetLift();
+
+        if (zone == 1) {
+            drive.followTrajectory(zone1);
+        }
+        if (zone == 3) {
+            drive.followTrajectory(zone3);
+        }
     }
     // Auto robot functions
     public void liftHighGoal(boolean depositBackwards) {

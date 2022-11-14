@@ -17,10 +17,8 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-import java.util.Vector;
-
 @Autonomous
-public class RightSingleAuto extends LinearOpMode {
+public class TripleHighAuto extends LinearOpMode {
     // robot with drive
     BaseRobot robot = new BaseRobot();
     //opencv
@@ -46,11 +44,54 @@ public class RightSingleAuto extends LinearOpMode {
                 camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
                 camera.setPipeline(myPipeline);
             }
-
             @Override
             public void onError(int errorCode) {
             }
         });
+
+        // Build Trajectories
+        Pose2d startPose = new Pose2d(36, -60, Math.toRadians(90));
+        drive.setPoseEstimate(startPose);
+
+        Trajectory one = drive.trajectoryBuilder(startPose)
+                .lineTo(new Vector2d(36, -20))
+                .build();
+        Trajectory two = drive.trajectoryBuilder(one.end())
+                .lineToLinearHeading(new Pose2d(40, -3.5, Math.toRadians(132)))
+                .build();
+        Trajectory three = drive.trajectoryBuilder(two.end())
+                .lineToLinearHeading(new Pose2d(36, -10, Math.toRadians(90)))
+                .build();
+        Trajectory four = drive.trajectoryBuilder(three.end())
+                .lineToLinearHeading(new Pose2d(62, -10, Math.toRadians(0)))
+                .addTemporalMarker(0.5, ()->{
+                    fastOpenClaw();
+                    liftConeStack();
+                })
+                .build();
+        Trajectory five = drive.trajectoryBuilder(four.end())
+                .lineToLinearHeading(new Pose2d(38, -3.5, Math.toRadians(130)))
+                .build();
+
+        // Zone trajs
+        Trajectory zone3 = drive.trajectoryBuilder(four.end())
+                .lineTo(new Vector2d(69, -12))
+                .build();
+
+        Trajectory zone1 = drive.trajectoryBuilder(four.end())
+                .lineTo(new Vector2d(2.3, -11.3))
+                .build();
+
+
+        // Zone trajs
+        /*
+        Trajectory zone3 = drive.trajectoryBuilder(eight.end())
+                .lineTo(new Vector2d(69, -12))
+                .build();
+        Trajectory zone1 = drive.trajectoryBuilder(eight.end())
+                .lineTo(new Vector2d(2.3, -11.3))
+                .build();
+        */
 
         waitForStart();
 
@@ -58,56 +99,23 @@ public class RightSingleAuto extends LinearOpMode {
 
         robot.closeClaw();
 
-        robot.delay(.5);
+        // OpenCV Code
         double zone = ZoneDetectionPipeline.getZone();
         camera.stopStreaming();
         camera.closeCameraDevice();
 
-        Pose2d startPose = new Pose2d(36, -60, Math.toRadians(90));
-        drive.setPoseEstimate(startPose);
-
-        Trajectory traj1 = drive.trajectoryBuilder(startPose)
-                .lineTo(new Vector2d(70, -57))
-                .build();
-
-        Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
-                .lineTo(new Vector2d(62, -10))
-                .build();
-
-        Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
-                .lineToSplineHeading(new Pose2d(32, -10, Math.toRadians(135)))
-                .build();
-        Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
-                .lineToSplineHeading(new Pose2d(38, -3.5, Math.toRadians(135)))
-                .build();
-        Trajectory traj7 = drive.trajectoryBuilder(new Pose2d(traj4.end().getX(), traj4.end().getY(), Math.toRadians(90)))
-                .lineTo(new Vector2d(36, -12))
-                .build();
-
-        // Zone trajs
-        Trajectory zone3 = drive.trajectoryBuilder(traj7.end())
-                .lineTo(new Vector2d(69, -12))
-                .build();
-
-        Trajectory zone1 = drive.trajectoryBuilder(traj7.end())
-                .lineTo(new Vector2d(2.3, -11.3))
-                .build();
-
-        sliderRunTo(150,Fields.sliderSpeed);
-        drive.followTrajectory(traj1);
-        drive.followTrajectory(traj2);
-        drive.followTrajectory(traj3);
-        liftHighGoal(false);
-        drive.followTrajectory(traj4);
-
-        deposit();
-        closeClaw();
-        // hits pole
-        clearLift();
-        drive.turn(Math.toRadians(-43));
-
-        drive.followTrajectory(traj7);
+        // NEW STUFF
+        drive.followTrajectory(one);
+        fastLiftHigh(false, 0.5);
+        drive.followTrajectory(two);
+        delay(0.5);
+        openClaw();
+        drive.followTrajectory(three);
         resetLift();
+        drive.followTrajectory(four);
+        closeClaw();
+        //drive.followTrajectory(five);
+        //openClaw();
 
         if (zone == 1) {
             drive.followTrajectory(zone1);
@@ -122,29 +130,75 @@ public class RightSingleAuto extends LinearOpMode {
             sliderRunTo(Fields.sliderBackwardsHigh);
             armRunTo(Fields.armBackwardsHigh);
         } else {
-            sliderRunTo(Fields.sliderForwardHigh-100);
+            sliderRunTo(Fields.sliderForwardHigh);
             armRunTo(Fields.armForwardHigh);
         }
-        delay(4);
+        delay(3);
     }
-    public void deposit() {
-        delay(2);
+    public void liftHighGoal(boolean depositBackwards, double power) {
+        if(depositBackwards){
+            sliderRunTo(Fields.sliderBackwardsHigh, power);
+            armRunTo(Fields.armBackwardsHigh, power);
+        } else {
+            sliderRunTo(Fields.sliderForwardHigh, power);
+            armRunTo(Fields.armForwardHigh, power);
+        }
+        delay(3);
+    }
+    public void fastLiftHigh(boolean depositBackwards) {
+        if(depositBackwards){
+            sliderRunTo(Fields.sliderBackwardsHigh);
+            armRunTo(Fields.armBackwardsHigh);
+        } else {
+            sliderRunTo(Fields.sliderForwardHigh);
+            armRunTo(Fields.armForwardHigh);
+        }
+    }
+    public void fastLiftHigh(boolean depositBackwards, double power) {
+        if(depositBackwards){
+            sliderRunTo(Fields.sliderBackwardsHigh, power);
+            armRunTo(Fields.armBackwardsHigh, power);
+        } else {
+            sliderRunTo(Fields.sliderForwardHigh, power);
+            armRunTo(Fields.armForwardHigh, power);
+        }
+    }
+
+
+    public void liftOut() {
+        sliderRunTo(Fields.sliderBackMid);
+        armRunTo(Fields.sliderBackwardsHigh);
+    }
+    public void liftConeStack() {
+        sliderRunTo(Fields.sliderConeStack);
+        armRunTo(Fields.armConeStack);
+    }
+    public void liftSmallGoal() {
+        sliderRunTo(Fields.sliderBackMid);
+        armRunTo(Fields.armBackwardsLow);
+    }
+    public void liftSlightly() {
+        sliderRunTo(Fields.sliderForwardHigh);
+    }
+    public void openClaw() {
         robot.rightClaw.setPosition(Fields.rightClawDeliver);
         robot.leftClaw.setPosition(Fields.leftClawDeliver);
         delay(1);
     }
+    public void fastOpenClaw() {
+        robot.rightClaw.setPosition(Fields.rightClawDeliver);
+        robot.leftClaw.setPosition(Fields.leftClawDeliver);
+    }
     // TODO this is the part that tips the entire robot over
     public void clearLift() {
-        armRunTo(Fields.armBackwardsHigh, Fields.armSpeed);
-        delay(1);
+
         sliderRunTo(Fields.sliderForwardLow);
         delay(1);
-        robot.rightClaw.setPosition(Fields.rightClawPickup);
-        robot.leftClaw.setPosition(Fields.leftClawPickup);
-
+        armRunTo(Fields.armBackwardsHigh, Fields.armSpeed);
+        delay(1);
     }
     public void resetLift() {
-        armRunTo(Fields.armGround, Fields.armSpeed);
+        armRunTo(Fields.armGround);
         sliderRunTo(Fields.sliderGround);
         delay(1.5);
     }

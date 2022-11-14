@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.auto;
 
-import com.acmerobotics.roadrunner.drive.Drive;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -22,7 +21,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.Vector;
 
 @Autonomous
-public class RightLowCycleAuto extends LinearOpMode {
+public class DoubleHighAuto extends LinearOpMode {
     // robot with drive
     BaseRobot robot = new BaseRobot();
     //opencv
@@ -100,8 +99,8 @@ public class RightLowCycleAuto extends LinearOpMode {
             sliderRunTo(Fields.sliderBackwardsHigh);
             armRunTo(Fields.armBackwardsHigh);
         } else {
-            sliderRunTo(Fields.sliderForwardHigh, Fields.sliderSpeed);
-            armRunTo(Fields.armForwardHigh, Fields.armSpeed);
+            sliderRunTo(Fields.sliderForwardHigh-100);
+            armRunTo(Fields.armForwardHigh);
         }
         delay(4);
     }

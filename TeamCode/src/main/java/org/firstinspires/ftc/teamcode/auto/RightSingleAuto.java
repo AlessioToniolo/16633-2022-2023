@@ -20,7 +20,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.Vector;
 
 @Autonomous
-public class SingleAuto extends LinearOpMode {
+public class RightSingleAuto extends LinearOpMode {
     // robot with drive
     BaseRobot robot = new BaseRobot();
     //opencv

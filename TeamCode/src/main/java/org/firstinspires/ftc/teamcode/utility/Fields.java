@@ -69,6 +69,19 @@ public class Fields {
 
     //public static int armDepositForwardsMid = 1454;
 
+    //Fields for cone stack
+    public static int coneStack5 = 400;
+    public static int coneStack4 = 220;
+    public static int coneStack3 = 110;
+    public static int coneStack2 = 95;
+    public static int coneStack1 = Fields.sliderGround;
+    //set arm to ground too
+
+    public static int sliderBeacon = 170;
+
+
+
+
 
 
 

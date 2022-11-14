@@ -22,6 +22,8 @@ import org.firstinspires.ftc.teamcode.utility.Fields;
 
 import java.lang.reflect.Field;
 
+import javax.swing.text.html.parser.TagElement;
+
 @TeleOp
 public class Teleop extends LinearOpMode {
 
@@ -40,10 +42,12 @@ public class Teleop extends LinearOpMode {
     int sliderState = 0;
     double armTargetPos = 0;
     double sliderTargetPos = 0;
-    boolean closed = false;
+    int coneStackPos = -1;//-1 is not in use, 0 is out of bounds for looping purposes 1 is 5 cones, 2 is 4 cones, 3 is 3 cones, 4 is 2 cones, 5 is 1 cone
     //claw vars
     double leftClawPos = 0;
     double rightClawPos = 0;
+    boolean closed = false;
+
     boolean prevGuide = false;
 
     ElapsedTime runtime = new ElapsedTime();
@@ -149,8 +153,7 @@ public class Teleop extends LinearOpMode {
         }
         prevGuide=gamepad2.guide;
         telemetry.addLine("PracticeMode: "+sliderTestMode);
-        telemetry.addLine("SLIDER STUFF:" );
-        telemetry.addLine("__________________________________:" );
+        telemetry.addLine();
 
 
         //automatic controls
@@ -196,6 +199,7 @@ public class Teleop extends LinearOpMode {
         if(rightStickX<0)rightStickX=-speed;
         else if(rightStickX>0)rightStickX=speed;
 
+        telemetry.addLine();
         telemetry.addLine("__________________________________");
         telemetry.addLine("DRIVE INFO");
         String modeName = imuInitialized?"FIELDCENTRIC":"FIELDCENTRIC: IMU UNITIALIZED";
@@ -212,6 +216,8 @@ public class Teleop extends LinearOpMode {
             gamepadDegree = Math.toDegrees(gamepadDegree);
 
             telemetry.addLine("Gamepad Degree: "+gamepadDegree);
+        telemetry.addLine("_________________" );
+        telemetry.addLine();
 
             double turnDegrees = gamepadDegree-robotDegree;//determine what heading relative to the robot we want to drive
 
@@ -231,13 +237,15 @@ public class Teleop extends LinearOpMode {
         double leftFrontPower = y + x + rightStickX;
         double rightRearPower = y + x - rightStickX;
         double rightFrontPower = y - x - rightStickX;
-
+        telemetry.addLine();
         telemetry.addLine("______________________________________");
         telemetry.addLine("MOTOR DATA");
         telemetry.addData("leftRear", leftRearPower);
         telemetry.addData("leftFront", leftFrontPower);
         telemetry.addData("rightRear", rightRearPower);
         telemetry.addData("rightFront", rightFrontPower);
+        telemetry.addLine("_______________________________________" );
+        telemetry.addLine();
         robot.drive.leftFront.setPower(leftFrontPower);
         robot.drive.leftRear.setPower(leftRearPower);
         robot.drive.rightFront.setPower(rightFrontPower);
@@ -266,11 +274,14 @@ public class Teleop extends LinearOpMode {
 
         if(speed>1)speed=1;
         else if(speed<0)speed=0;
-        telemetry.addLine("_____________: ");
+        telemetry.addLine();
+        telemetry.addLine("_________________" );
         telemetry.addLine("SPEED DATA:");
         telemetry.addLine("BaseSpeed: "+baseSpeed);
         telemetry.addLine("speedModifier: "+triggerSpeedModifier);
         telemetry.addLine("Speed: "+speed);
+        telemetry.addLine("_________________" );
+        telemetry.addLine();
     }
     public void checkClaw(){
         if(gamepad2.a && gamepad2.a != prevA2){
@@ -297,10 +308,13 @@ public class Teleop extends LinearOpMode {
 
         }
         prevA2 = gamepad2.a;
+        telemetry.addLine();
         telemetry.addLine("__________________________");
         telemetry.addLine("CLAW INFO");
         telemetry.addLine("LEFT: Position:"+robot.leftClaw.getPosition()+"Port:"+robot.leftClaw.getPortNumber());
         telemetry.addLine("Right: Position:"+robot.rightClaw.getPosition()+"Port:"+robot.rightClaw.getPortNumber());
+        telemetry.addLine("_________________" );
+        telemetry.addLine();
     }
     public void recenterIMU(){
         if(gamepad1.a && gamepad1.a != prevA){
@@ -343,12 +357,13 @@ public class Teleop extends LinearOpMode {
         else if(sliderState==-1)sliderState = 7;
 
 
-
+        telemetry.addLine();
+        telemetry.addLine("_________________" );
         telemetry.addLine("Slider :" );
-        telemetry.addLine("______" );
-        telemetry.addLine("SliderTargetPos: "+sliderTargetPos);
-        telemetry.addLine("SliderEstimatedPos: "+robot.slider.getTargetPosition());
+        telemetry.addLine("SliderTargetPos: "+sliderTargetPos + "Estimaed: " + robot.slider.getTargetPosition());
         telemetry.addLine("SliderState: "+sliderStateStr);
+        telemetry.addLine("_________________" );
+        telemetry.addLine();
     }
     public void checkDRightandLeft() {
         if(sliderTestMode) {
@@ -368,19 +383,59 @@ public class Teleop extends LinearOpMode {
             if((gamepad2.dpad_left||gamepad2.dpad_right)&&sliderTestMode){
                 updateArmStates();
             }
+            telemetry.addLine();
+            telemetry.addLine("_________________" );
+            telemetry.addLine("ARM :" );
+            telemetry.addLine("armTargetPos: "+armTargetPos + "Estimated " + robot.arm.getTargetPosition());
+            telemetry.addLine("armState: "+armStateStr);
+            telemetry.addLine("_________________" );
+            telemetry.addLine();
 
-                //if we want to deposit backwards; moves the slider up to at least the low junction
-                if (armState == 2 && sliderTargetPos < 200) {
-                    sliderState = Fields.referenceSliderBackwardsMid;
-                    sliderTargetPos = Fields.sliderBackMid;
+
+        if(!sliderTestMode){
+            if(armState == Fields.referenceArmConeStack && sliderState == Fields.referenceSliderConeStack){
+                if(coneStackPos==-1)coneStackPos=5;
+
+                if(gamepad1.dpad_left && gamepad1.dpad_left != prevDLeft){
+                    coneStackPos--;
                 }
-        telemetry.addLine();
-        telemetry.addLine("ARM :" );
-        telemetry.addLine("______" );
-        telemetry.addLine("armTargetPos: "+armTargetPos);
-        telemetry.addLine("armEstimatedPos: "+robot.arm.getTargetPosition());
-        telemetry.addLine("armState: "+armStateStr);
+                
+                if(gamepad1.dpad_right && gamepad1.dpad_right != prevDRight){
+                    coneStackPos++;
+                }
+                if(coneStackPos == 0)coneStackPos=5;
+                else if(coneStackPos = 6)coneStackPos=1;
 
+
+                if(coneStackPos != 1)armTargetPos = Fields.armConeStack;
+                if(coneStackPos==5)sliderTargetPos=Fields.coneStack5;
+                else if(coneStackPos ==4)sliderTargetPos = Fields.coneStack4;
+                else if(coneStackPos == 3)sliderTargetPos = Fields.coneStack3;
+                else if(coneStackPos == 2)sliderTargetPos = Fields.coneStack2;
+                else if(coneStackPos == 1){sliderTargetPos = Fields.coneStack1;armTargetPos=Fields.armGround;}
+
+
+
+            }
+            else{
+                coneStackPos=-1;
+            }
+        }
+        prevDLeft = gamepad1.dpad_left;
+        prevDRight = gamepad1.dpad_right;
+        telemetry.addLine();
+        telemetry.addLine("___________________");
+        String coneStackPosString = "";
+        if(coneStackPos==-1)coneStackPosString = "NOT IN USE";
+        else coneStackPosString = coneStackPos + " Cones Lft";
+        telemetry.addLine("CONE STACK POS: " + coneStackPosString);
+        telemetry.addLine("___________________");
+        telemetry.addLine();
+
+
+
+
+        
     }
     public void checkY(){
         if(gamepad2.y && gamepad2.y != prevY){

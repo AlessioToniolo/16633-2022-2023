@@ -22,7 +22,6 @@ import org.firstinspires.ftc.teamcode.utility.Fields;
 
 import java.lang.reflect.Field;
 
-import javax.swing.text.html.parser.TagElement;
 
 @TeleOp
 public class Teleop extends LinearOpMode {
@@ -37,6 +36,7 @@ public class Teleop extends LinearOpMode {
     boolean prevLBumper = false;
     boolean prevRBumper2=false;
     boolean prevLBumper2 = false;
+    boolean prevRTrigger = false;
 
     //slider vars
     int sliderState = 0;
@@ -163,6 +163,7 @@ public class Teleop extends LinearOpMode {
         checkBumpers();
         checkDDownandUp();
         checkDRightandLeft();
+        checkRightTrigger();
 
 
         //motor functionality
@@ -396,15 +397,15 @@ public class Teleop extends LinearOpMode {
             if(armState == Fields.referenceArmConeStack && sliderState == Fields.referenceSliderConeStack){
                 if(coneStackPos==-1)coneStackPos=5;
 
-                if(gamepad1.dpad_left && gamepad1.dpad_left != prevDLeft){
+                if(gamepad2.dpad_left && gamepad2.dpad_left != prevDLeft){
                     coneStackPos--;
                 }
                 
-                if(gamepad1.dpad_right && gamepad1.dpad_right != prevDRight){
+                if(gamepad2.dpad_right && gamepad2.dpad_right != prevDRight){
                     coneStackPos++;
                 }
                 if(coneStackPos == 0)coneStackPos=5;
-                else if(coneStackPos = 6)coneStackPos=1;
+                else if(coneStackPos == 6)coneStackPos=1;
 
 
                 if(coneStackPos != 1)armTargetPos = Fields.armConeStack;
@@ -421,8 +422,8 @@ public class Teleop extends LinearOpMode {
                 coneStackPos=-1;
             }
         }
-        prevDLeft = gamepad1.dpad_left;
-        prevDRight = gamepad1.dpad_right;
+        prevDLeft = gamepad2.dpad_left;
+        prevDRight = gamepad2.dpad_right;
         telemetry.addLine();
         telemetry.addLine("___________________");
         String coneStackPosString = "";
@@ -486,6 +487,16 @@ public class Teleop extends LinearOpMode {
         }
         prevLBumper2=gamepad2.left_bumper;
 
+    }
+    public void checkRightTrigger(){
+        if(gamepad2.right_trigger > 0 && gamepad2.right_trigger>0 != prevRTrigger){
+            sliderTargetPos = Fields.sliderBeacon;
+            armTargetPos = Fields.armBeacon;
+            sliderState = Fields.referenceSliderGround;
+            armState = Fields.referenceArmGround;
+
+        }
+        prevRTrigger = gamepad2.right_trigger>0;
     }
     public void doTelemetry() {
 

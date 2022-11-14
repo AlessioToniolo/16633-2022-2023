@@ -78,6 +78,7 @@ public class Fields {
     //set arm to ground too
 
     public static int sliderBeacon = 170;
+    public static int armBeacon = 0;
 
 
 

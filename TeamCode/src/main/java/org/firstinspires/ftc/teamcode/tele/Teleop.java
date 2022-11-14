@@ -399,21 +399,18 @@ public class Teleop extends LinearOpMode {
 
                 if(gamepad2.dpad_left && gamepad2.dpad_left != prevDLeft){
                     coneStackPos--;
+                    updateConeStackPos();
                 }
                 
                 if(gamepad2.dpad_right && gamepad2.dpad_right != prevDRight){
                     coneStackPos++;
+                    updateConeStackPos();
                 }
                 if(coneStackPos == 0)coneStackPos=5;
                 else if(coneStackPos == 6)coneStackPos=1;
 
 
-                if(coneStackPos != 1)armTargetPos = Fields.armConeStack;
-                if(coneStackPos==5)sliderTargetPos=Fields.coneStack5;
-                else if(coneStackPos ==4)sliderTargetPos = Fields.coneStack4;
-                else if(coneStackPos == 3)sliderTargetPos = Fields.coneStack3;
-                else if(coneStackPos == 2)sliderTargetPos = Fields.coneStack2;
-                else if(coneStackPos == 1){sliderTargetPos = Fields.coneStack1;armTargetPos=Fields.armGround;}
+
 
 
 
@@ -621,5 +618,13 @@ public class Teleop extends LinearOpMode {
             stateStr = "BACKWARD LOW";
         }
         armStateStr=stateStr;
+    }
+    public void updateConeStackPos(){
+        if(coneStackPos != 1)armTargetPos = Fields.armConeStack;
+        if(coneStackPos==5)sliderTargetPos=Fields.coneStack5;
+        else if(coneStackPos ==4)sliderTargetPos = Fields.coneStack4;
+        else if(coneStackPos == 3)sliderTargetPos = Fields.coneStack3;
+        else if(coneStackPos == 2)sliderTargetPos = Fields.coneStack2;
+        else if(coneStackPos == 1){sliderTargetPos = Fields.coneStack1;armTargetPos=Fields.armGround;}
     }
 }

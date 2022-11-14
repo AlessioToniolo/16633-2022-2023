@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.utility.BaseRobot;
 import org.firstinspires.ftc.teamcode.utility.Fields;
@@ -65,21 +66,30 @@ public class RightDoubleAuto extends LinearOpMode {
 
         Pose2d startPose = new Pose2d(36, -60, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
+        sliderRunTo(150, Fields.sliderSpeed);
         Trajectory toHighGoal = drive.trajectoryBuilder(startPose)
                 .lineTo(new Vector2d(32, -10))
                 .build();
         Trajectory centerHighGoal = drive.trajectoryBuilder(toHighGoal.end())
-                .lineToSplineHeading(new Pose2d(38, -3.5, Math.toRadians(135)))
+                .lineToSplineHeading(new Pose2d(38, -2, Math.toRadians(135)),SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
         Trajectory backUp = drive.trajectoryBuilder(centerHighGoal.end())
                 .lineToSplineHeading(new Pose2d(38, -6, Math.toRadians(90)))
                 .build();
+        Trajectory toConeStack = drive.trajectoryBuilder(toHighGoal.end())
+                .lineTo(new Vector2d(52, -12))
+                .build();
+
+        drive.followTrajectory(toHighGoal);
         liftHighGoal(false);
         drive.followTrajectory(centerHighGoal);
         deposit();
         closeClaw();
-        drive.followTrajectory(backUp);
-        clearLift();
+        //Sample Slow down
+        //, SampleMEcanumDrive.getVelosityConstraint(slowerVelocity, DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH), SAMPLEMECANUMDRIVE.getAccelerationConstaint(DriveConstants.Max_Accel)
+//        drive.followTrajectory(backUp);
+//        clearLift();
+//        drive.followTrajectory(toConeStack);
 
         
     }

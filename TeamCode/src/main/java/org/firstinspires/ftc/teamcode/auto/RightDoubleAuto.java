@@ -65,6 +65,21 @@ public class RightDoubleAuto extends LinearOpMode {
 
         Pose2d startPose = new Pose2d(36, -60, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
+        Trajectory toHighGoal = drive.trajectoryBuilder(startPose)
+                .lineTo(new Vector2d(32, -10))
+                .build();
+        Trajectory centerHighGoal = drive.trajectoryBuilder(toHighGoal.end())
+                .lineToSplineHeading(new Pose2d(38, -3.5, Math.toRadians(135)))
+                .build();
+        Trajectory backUp = drive.trajectoryBuilder(centerHighGoal.end())
+                .lineToSplineHeading(new Pose2d(38, -6, Math.toRadians(90)))
+                .build();
+        liftHighGoal(false);
+        drive.followTrajectory(centerHighGoal);
+        deposit();
+        closeClaw();
+        drive.followTrajectory(backUp);
+        clearLift();
 
         
     }

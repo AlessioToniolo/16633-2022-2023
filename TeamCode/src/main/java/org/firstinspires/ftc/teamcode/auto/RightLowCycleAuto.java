@@ -66,6 +66,28 @@ public class RightLowCycleAuto extends LinearOpMode {
         Pose2d startPose = new Pose2d(36, -60, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
 
+        Trajectory toHighGoal = drive.trajectoryBuilder(startPose)
+                .lineTo(new Vector2d(32, -10))
+                .build();
+        Trajectory centerHighGoal = drive.trajectoryBuilder(toHighGoal.end())
+                .lineToSplineHeading(new Pose2d(38, -3.5, Math.toRadians(135)))
+                .build();
+        Trajectory backUp = drive.trajectoryBuilder(centerHighGoal.end())
+                .lineToSplineHeading(new Pose2d(38, -6, Math.toRadians(90)))
+                .build();
+        Trajectory toConeStack = drive.trajectoryBuilder(toHighGoal.end())
+                .lineToSplineHeading(new Pose2d(52, 12, Math.toRadians(0)))
+                .build();
+
+        drive.followTrajectory(toHighGoal);
+        liftHighGoal(false);
+        drive.followTrajectory(centerHighGoal);
+        deposit();
+        closeClaw();
+        drive.followTrajectory(backUp);
+        clearLift();
+        drive.followTrajectory(toConeStack);
+
         
     }
     // Auto robot functions

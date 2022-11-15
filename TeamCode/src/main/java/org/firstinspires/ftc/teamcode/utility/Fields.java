@@ -47,7 +47,7 @@ public class Fields {
     public static int sliderBackwardsHigh=1780;
     public static int sliderBackMid=587;
     public static int sliderBackLow = 263;
-
+    public static int sliderSuperLow = 200;
 
     public static final int referenceArmGround = 0;
     public static final int referenceArmConeStack = 1;

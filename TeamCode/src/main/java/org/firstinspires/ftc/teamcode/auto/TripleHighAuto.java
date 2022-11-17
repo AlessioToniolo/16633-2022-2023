@@ -108,11 +108,8 @@ public class TripleHighAuto extends LinearOpMode {
         Trajectory fiveHalf = drive.trajectoryBuilder(five.end())
                 .lineTo(new Vector2d(45, -7))
                 .addTemporalMarker(0.1, () -> {
-                    fastLiftHigh(false, 0.5);
-                })/*
-                .addTemporalMarker(1, () -> {
-                    fastLiftHigher(true, 0.5);
-                })*/
+                    fastLiftHigh(true, 0.5);
+                })
                 .build();
         // Third Deposit
         Trajectory six = drive.trajectoryBuilder(fiveHalf.end())
@@ -299,14 +296,7 @@ public class TripleHighAuto extends LinearOpMode {
         robot.rightClaw.setPosition(Fields.rightClawDeliver);
         robot.leftClaw.setPosition(Fields.rightClawDeliver);
     }
-    // TODO this is the part that tips the entire robot over
-    public void clearLift() {
 
-        sliderRunTo(Fields.sliderForwardLow);
-        delay(1);
-        armRunTo(Fields.armBackwardsHigh, Fields.armSpeed);
-        delay(1);
-    }
     public void resetLift() {
         armRunTo(Fields.armGround);
         sliderRunTo(Fields.sliderGround);

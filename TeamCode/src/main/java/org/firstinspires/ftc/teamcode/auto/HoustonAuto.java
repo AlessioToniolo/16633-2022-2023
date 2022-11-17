@@ -111,7 +111,7 @@ public class HoustonAuto extends LinearOpMode {
         Trajectory fiveHalf = drive.trajectoryBuilder(five.end())
                 .lineTo(new Vector2d(45, -7))
                 .addTemporalMarker(0.1, () -> {
-                    fastLiftHigh(false, 0.5);
+                    fastLiftHigh(true, 0.5);
                 })/*
                 .addTemporalMarker(1, () -> {
                     fastLiftHigher(true, 0.5);

@@ -19,7 +19,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Autonomous
-public class TripleHighAuto extends LinearOpMode {
+public class HoustonAuto extends LinearOpMode {
     // robot with drive
     BaseRobot robot = new BaseRobot();
     //opencv
@@ -55,11 +55,14 @@ public class TripleHighAuto extends LinearOpMode {
         drive.setPoseEstimate(startPose);
 
         Trajectory one = drive.trajectoryBuilder(startPose)
-                .lineTo(new Vector2d(36, -20), SampleMecanumDrive.getVelocityConstraint(56, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .lineTo(new Vector2d(2, -56))
+                .build();
+        Trajectory oneHalf = drive.trajectoryBuilder(one.end())
+                .lineTo(new Vector2d(12, -20))
                 .build();
         // FIRST DEPOSIT
-        Trajectory two = drive.trajectoryBuilder(one.end())
-                .lineToLinearHeading(new Pose2d(37.7, -4.5, Math.toRadians(132)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+        Trajectory two = drive.trajectoryBuilder(oneHalf.end())
+                .lineToLinearHeading(new Pose2d(12, -5.5, Math.toRadians(48)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
         /*
         Trajectory three = drive.trajectoryBuilder(two.end())
@@ -68,11 +71,11 @@ public class TripleHighAuto extends LinearOpMode {
 
          */
         Trajectory twoHalf = drive.trajectoryBuilder(two.end())
-                .lineTo(new Vector2d(32, -13))
+                .lineTo(new Vector2d(35, -13.5))
                 .build();
         // SECOND PICKUP
         Trajectory three = drive.trajectoryBuilder(twoHalf.end())
-                .lineToLinearHeading(new Pose2d(60.5, -11, Math.toRadians(0)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .lineToSplineHeading(new Pose2d(58.5, -14.5, Math.toRadians(0)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .addTemporalMarker(0.2, ()->{
                     fastOpenClaw();
                     liftConeStack();
@@ -151,7 +154,10 @@ public class TripleHighAuto extends LinearOpMode {
         camera.closeCameraDevice();
 
         // NEW STUFF
+        delay(0.6);
+        liftSlightly();
         drive.followTrajectory(one);
+        drive.followTrajectory(oneHalf);
         fastLiftLower(false, 0.55);
         delay(0.2);
         drive.followTrajectory(two);
@@ -253,10 +259,10 @@ public class TripleHighAuto extends LinearOpMode {
     }
     public void fastLiftLower(boolean depositBackwards, double power) {
         if(depositBackwards){
-            sliderRunTo(Fields.sliderBackwardsHigh-50, power);
+            sliderRunTo(Fields.sliderBackwardsHigh-80, power);
             armRunTo(Fields.armBackwardsHigh, power);
         } else {
-            sliderRunTo(Fields.sliderForwardHigh+50, power);
+            sliderRunTo(Fields.sliderForwardHigh-80, power);
             armRunTo(Fields.armForwardHigh, power);
         }
     }

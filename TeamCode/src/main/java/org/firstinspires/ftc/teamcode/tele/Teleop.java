@@ -105,19 +105,27 @@ public class Teleop extends LinearOpMode {
         // TODO RR
         //robot.drive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(0)));
 
+        Thread driveLoop = new Thread(this::runDriveLoop);
+        driveLoop.start();
+        runEverythingElseLoop();
+
+
+    }
+    public void runDriveLoop(){
         while (!isStopRequested() && opModeIsActive()) {
             checkSpeed();
             fieldCentricDrive();
+        }
+    }
+    public void runEverythingElseLoop(){
+        while (!isStopRequested() && opModeIsActive()) {
             checkSlider();
             checkClaw();
             recenterIMU();
             checkColor();
             doTelemetry();
         }
-
-
     }
-
     public void checkColor() {
         double currentDistance = robot.distanceSensor.getDistance(DistanceUnit.CM);
 

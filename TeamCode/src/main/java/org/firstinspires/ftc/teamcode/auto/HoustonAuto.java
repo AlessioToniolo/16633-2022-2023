@@ -22,7 +22,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 public class HoustonAuto extends LinearOpMode {
     // robot with drive
     BaseRobot robot = new BaseRobot();
-    //opencv
+    // OpenCV
     WebcamName webcamName;
     OpenCvCamera camera;
     ZoneDetectionPipeline myPipeline;
@@ -54,61 +54,32 @@ public class HoustonAuto extends LinearOpMode {
         Pose2d startPose = new Pose2d(36, -60, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
 
+        // Go to leftmost square
         Trajectory one = drive.trajectoryBuilder(startPose)
                 .lineTo(new Vector2d(2, -56))
                 .build();
-        Trajectory oneHalf = drive.trajectoryBuilder(one.end())
+        // Drive near pole on left side of field
+        Trajectory two = drive.trajectoryBuilder(one.end())
                 .lineTo(new Vector2d(12, -20))
                 .build();
         // FIRST DEPOSIT
-        Trajectory two = drive.trajectoryBuilder(oneHalf.end())
+        Trajectory three = drive.trajectoryBuilder(two.end())
                 .lineToLinearHeading(new Pose2d(12, -5.5, Math.toRadians(48)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
-        /*
-        Trajectory three = drive.trajectoryBuilder(two.end())
-                .lineToLinearHeading(new Pose2d(36, -10, Math.toRadians(90)))
-                .build();
-
-         */
-        Trajectory twoHalf = drive.trajectoryBuilder(two.end())
+        // Back away to middle of middle square
+        Trajectory four = drive.trajectoryBuilder(three.end())
                 .lineTo(new Vector2d(35, -13.5))
                 .build();
         // SECOND PICKUP
-        Trajectory three = drive.trajectoryBuilder(twoHalf.end())
+        Trajectory five = drive.trajectoryBuilder(four.end())
                 .lineToSplineHeading(new Pose2d(58.5, -14.5, Math.toRadians(0)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .addTemporalMarker(0.2, ()->{
                     fastOpenClaw();
                     liftConeStack();
                 })
                 .build();
-        Trajectory threeHalf = drive.trajectoryBuilder(three.end())
-                .lineTo(new Vector2d(45, -7))
-                .addTemporalMarker(0.1, () -> {
-                    fastLiftHigh(false, 0.5);
-                })/*
-                .addTemporalMarker(1, () -> {
-                    fastLiftHigher(true, 0.5);
-                })*/
-                .build();
-        // SECOND DEPOSIT
-        Trajectory four = drive.trajectoryBuilder(threeHalf.end())
-                .lineToLinearHeading(new Pose2d(31.5, -2, Math.toRadians(-35)))
-                .build();
-        Trajectory fourHalf = drive.trajectoryBuilder(four.end())
-                .lineTo(new Vector2d(33, -8))
-                .build();
-        // THIRD PICKUP
-        Trajectory preFive = drive.trajectoryBuilder(fourHalf.end())
-                .lineToLinearHeading(new Pose2d(45, -6, Math.toRadians(0)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                .addTemporalMarker(0.2, ()->{
-                    fastOpenClaw();
-                    liftConeStackLess();
-                })
-                .build();
-        Trajectory five = drive.trajectoryBuilder(preFive.end())
-                .lineTo(new Vector2d(61, -8))
-                .build();
-        Trajectory fiveHalf = drive.trajectoryBuilder(five.end())
+        // Drive out of pickup and lift cone
+        Trajectory six = drive.trajectoryBuilder(five.end())
                 .lineTo(new Vector2d(45, -7))
                 .addTemporalMarker(0.1, () -> {
                     fastLiftHigh(true, 0.5);
@@ -117,68 +88,83 @@ public class HoustonAuto extends LinearOpMode {
                     fastLiftHigher(true, 0.5);
                 })*/
                 .build();
+        // SECOND DEPOSIT
+        Trajectory seven = drive.trajectoryBuilder(six.end())
+                .lineToLinearHeading(new Pose2d(31.5, -2, Math.toRadians(-35)))
+                .build();
+        // Back away to middle of middle square
+        Trajectory eight = drive.trajectoryBuilder(seven.end())
+                .lineTo(new Vector2d(33, -8))
+                .build();
+        // THIRD PICKUP
+        Trajectory nine = drive.trajectoryBuilder(eight.end())
+                .lineToSplineHeading(new Pose2d(61, -8, Math.toRadians(0)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .addTemporalMarker(0.2, ()->{
+                    fastOpenClaw();
+                    liftConeStackLess();
+                })
+                .build();
+        /*
+        // TODO not sure what this trajectory does
+        Trajectory ten = drive.trajectoryBuilder(nine.end())
+                .lineTo(new Vector2d(61, -8))
+                .build();
+         */
+        // I THINK Drive out of pickup to avoid hitting low junction
+        Trajectory ten = drive.trajectoryBuilder(nine.end())
+                .lineTo(new Vector2d(45, -7))
+                .addTemporalMarker(0.1, () -> {
+                    fastLiftHigh(true, 0.5);
+                })
+                .build();
         // Third Deposit
-        Trajectory six = drive.trajectoryBuilder(fiveHalf.end())
+        Trajectory eleven = drive.trajectoryBuilder(ten.end())
                 .lineToLinearHeading(new Pose2d(32.5, -0.3, Math.toRadians(-35)))
                 .build();
 
         // Zone trajs
-        Trajectory zone3 = drive.trajectoryBuilder(six.end())
+        Trajectory zone1 = drive.trajectoryBuilder(eleven.end())
+                .lineToLinearHeading(new Pose2d(2.3, -11.3, Math.toRadians(90)))
+                .build();
+        Trajectory zone3 = drive.trajectoryBuilder(eleven.end())
                 .lineToLinearHeading(new Pose2d(69, -12, Math.toRadians(90)))
                 .build();
 
-        Trajectory zone1 = drive.trajectoryBuilder(six.end())
-                .lineToLinearHeading(new Pose2d(2.3, -11.3, Math.toRadians(90)))
-                .build();
-
-
-        // Zone trajs
-        /*
-        Trajectory zone3 = drive.trajectoryBuilder(eight.end())
-                .lineTo(new Vector2d(69, -12))
-                .build();
-        Trajectory zone1 = drive.trajectoryBuilder(eight.end())
-                .lineTo(new Vector2d(2.3, -11.3))
-                .build();
-        */
-
         waitForStart();
-
         if (isStopRequested()) return;
 
+        // Start Code
         robot.closeClaw();
+        delay(0.5);
+        liftSlightly();
 
         // OpenCV Code
         double zone = ZoneDetectionPipeline.getZone();
         camera.stopStreaming();
         camera.closeCameraDevice();
 
-        // NEW STUFF
-        delay(0.6);
-        liftSlightly();
+        // Auto Code
         drive.followTrajectory(one);
-        drive.followTrajectory(oneHalf);
+        drive.followTrajectory(two);
         fastLiftLower(false, 0.55);
         delay(0.2);
-        drive.followTrajectory(two);
-        openClaw();
-        drive.followTrajectory(twoHalf);
         drive.followTrajectory(three);
-        closeClaw();
-        liftSlightly();
-        delay(0.2);
-        drive.followTrajectory(threeHalf);
-        drive.followTrajectory(four);
         openClaw();
-        drive.followTrajectory(fourHalf);
-        drive.followTrajectory(preFive);
+        drive.followTrajectory(four);
         drive.followTrajectory(five);
         closeClaw();
         liftSlightly();
         delay(0.2);
-        // TODO
-        drive.followTrajectory(fiveHalf);
         drive.followTrajectory(six);
+        drive.followTrajectory(seven);
+        openClaw();
+        drive.followTrajectory(eight);
+        drive.followTrajectory(nine);
+        closeClaw();
+        liftSlightly();
+        delay(0.2);
+        drive.followTrajectory(ten);
+        drive.followTrajectory(eleven);
         openClaw();
 
 
@@ -190,7 +176,8 @@ public class HoustonAuto extends LinearOpMode {
         }
         resetLift();
     }
-    // Auto robot functions
+
+    // FUNCTIONS
     public void liftHighGoal(boolean depositBackwards) {
         if(depositBackwards){
             sliderRunTo(Fields.sliderBackwardsHigh);
@@ -247,7 +234,6 @@ public class HoustonAuto extends LinearOpMode {
             armRunTo(Fields.armForwardHigh, power);
         }
     }
-
     public void fastLiftLower(boolean depositBackwards) {
         if(depositBackwards){
             sliderRunTo(Fields.sliderBackwardsHigh-30);
@@ -266,12 +252,6 @@ public class HoustonAuto extends LinearOpMode {
             armRunTo(Fields.armForwardHigh, power);
         }
     }
-
-
-    public void liftOut() {
-        sliderRunTo(Fields.sliderBackMid);
-        armRunTo(Fields.sliderBackwardsHigh);
-    }
     public void liftConeStack() {
         sliderRunTo(Fields.sliderConeStack+10);
         armRunTo(Fields.armConeStack);
@@ -279,14 +259,6 @@ public class HoustonAuto extends LinearOpMode {
     public void liftConeStackLess() {
         sliderRunTo(Fields.sliderConeStack-100);
         armRunTo(Fields.armConeStack+50);
-    }
-    public void liftConeStackLessLess() {
-        sliderRunTo(Fields.sliderConeStack-100);
-        armRunTo(Fields.armConeStack-100);
-    }
-    public void liftSmallGoal() {
-        sliderRunTo(Fields.sliderBackMid);
-        armRunTo(Fields.armBackwardsLow);
     }
     public void liftSlightly() {
         sliderRunTo(Fields.sliderForwardLow);
@@ -300,18 +272,6 @@ public class HoustonAuto extends LinearOpMode {
     public void fastOpenClaw() {
         robot.rightClaw.setPosition(Fields.rightClawPickup);
         robot.leftClaw.setPosition(Fields.rightClawPickup);
-    }
-    public void depositClaw() {
-        robot.rightClaw.setPosition(Fields.rightClawDeliver);
-        robot.leftClaw.setPosition(Fields.rightClawDeliver);
-    }
-    // TODO this is the part that tips the entire robot over
-    public void clearLift() {
-
-        sliderRunTo(Fields.sliderForwardLow);
-        delay(1);
-        armRunTo(Fields.armBackwardsHigh, Fields.armSpeed);
-        delay(1);
     }
     public void resetLift() {
         armRunTo(Fields.armGround);
@@ -327,8 +287,13 @@ public class HoustonAuto extends LinearOpMode {
         robot.leftClaw.setPosition(Fields.leftClawClose);
         delay(.5);
     }
+    public void fastCloseClaw() {
+        robot.rightClaw.setPosition(Fields.rightClawClose);
+        robot.leftClaw.setPosition(Fields.leftClawClose);
+        delay(.5);
+    }
 
-    //helper functions
+    // Helper functions
     private void armRunTo(int position){
         armRunTo(position, 1);
     }

@@ -122,7 +122,7 @@ public class Teleop extends LinearOpMode {
             checkSlider();
             checkClaw();
             recenterIMU();
-            checkColor();
+            //checkColor();
             doTelemetry();
         }
     }

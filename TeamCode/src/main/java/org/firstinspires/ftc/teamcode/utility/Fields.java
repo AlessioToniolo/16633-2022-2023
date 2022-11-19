@@ -95,7 +95,7 @@ public class Fields {
 
     public static double rightClawPickup = .2;
     public static double rightClawDeliver = .45;
-    public static double rightClawClose = .6 ;
+    public static double rightClawClose = .5 ;
 
 
 

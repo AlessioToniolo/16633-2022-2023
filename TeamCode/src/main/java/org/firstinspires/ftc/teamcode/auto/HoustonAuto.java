@@ -56,7 +56,7 @@ public class HoustonAuto extends LinearOpMode {
 
         // Go to leftmost square
         Trajectory one = drive.trajectoryBuilder(startPose)
-                .lineTo(new Vector2d(2, -56))
+                .lineTo(new Vector2d(3, -56))
                 .build();
         // Drive near pole on left side of field
         Trajectory two = drive.trajectoryBuilder(one.end())
@@ -64,22 +64,18 @@ public class HoustonAuto extends LinearOpMode {
                 .build();
         // FIRST DEPOSIT
         Trajectory three = drive.trajectoryBuilder(two.end())
-                .lineToLinearHeading(new Pose2d(12, -5.5, Math.toRadians(48)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                .build();
-        // Back away to middle of middle square
-        Trajectory four = drive.trajectoryBuilder(three.end())
-                .lineTo(new Vector2d(35, -13.5))
+                .lineToLinearHeading(new Pose2d(11.5, -4.8, Math.toRadians(48)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
         // SECOND PICKUP
-        Trajectory five = drive.trajectoryBuilder(four.end())
-                .lineToSplineHeading(new Pose2d(58.5, -14.5, Math.toRadians(0)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+        Trajectory four = drive.trajectoryBuilder(new Pose2d(three.end().getX(), three.end().getY(), Math.toRadians(0)))
+                .lineTo(new Vector2d(53, -9.2))
                 .addTemporalMarker(0.2, ()->{
                     fastOpenClaw();
                     liftConeStack();
                 })
                 .build();
         // Drive out of pickup and lift cone
-        Trajectory six = drive.trajectoryBuilder(five.end())
+        Trajectory five = drive.trajectoryBuilder(four.end())
                 .lineTo(new Vector2d(45, -7))
                 .addTemporalMarker(0.1, () -> {
                     fastLiftHigh(true, 0.5);
@@ -89,16 +85,12 @@ public class HoustonAuto extends LinearOpMode {
                 })*/
                 .build();
         // SECOND DEPOSIT
-        Trajectory seven = drive.trajectoryBuilder(six.end())
-                .lineToLinearHeading(new Pose2d(31.5, -2, Math.toRadians(-35)))
-                .build();
-        // Back away to middle of middle square
-        Trajectory eight = drive.trajectoryBuilder(seven.end())
-                .lineTo(new Vector2d(33, -8))
+        Trajectory six = drive.trajectoryBuilder(five.end())
+                .lineToLinearHeading(new Pose2d(28, -2.2, Math.toRadians(-35)))
                 .build();
         // THIRD PICKUP
-        Trajectory nine = drive.trajectoryBuilder(eight.end())
-                .lineToSplineHeading(new Pose2d(61, -8, Math.toRadians(0)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+        Trajectory seven = drive.trajectoryBuilder(six.end())
+                .lineToSplineHeading(new Pose2d(54, -8, Math.toRadians(0)), SampleMecanumDrive.getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .addTemporalMarker(0.2, ()->{
                     fastOpenClaw();
                     liftConeStackLess();
@@ -111,22 +103,22 @@ public class HoustonAuto extends LinearOpMode {
                 .build();
          */
         // I THINK Drive out of pickup to avoid hitting low junction
-        Trajectory ten = drive.trajectoryBuilder(nine.end())
+        Trajectory eight = drive.trajectoryBuilder(seven.end())
                 .lineTo(new Vector2d(45, -7))
                 .addTemporalMarker(0.1, () -> {
-                    fastLiftHigh(true, 0.5);
+                    fastLiftHigher(true, 0.5);
                 })
                 .build();
         // Third Deposit
-        Trajectory eleven = drive.trajectoryBuilder(ten.end())
+        Trajectory nine = drive.trajectoryBuilder(eight.end())
                 .lineToLinearHeading(new Pose2d(32.5, -0.3, Math.toRadians(-35)))
                 .build();
 
         // Zone trajs
-        Trajectory zone1 = drive.trajectoryBuilder(eleven.end())
+        Trajectory zone1 = drive.trajectoryBuilder(nine.end())
                 .lineToLinearHeading(new Pose2d(2.3, -11.3, Math.toRadians(90)))
                 .build();
-        Trajectory zone3 = drive.trajectoryBuilder(eleven.end())
+        Trajectory zone3 = drive.trajectoryBuilder(nine.end())
                 .lineToLinearHeading(new Pose2d(69, -12, Math.toRadians(90)))
                 .build();
 
@@ -146,25 +138,25 @@ public class HoustonAuto extends LinearOpMode {
         // Auto Code
         drive.followTrajectory(one);
         drive.followTrajectory(two);
-        fastLiftLower(false, 0.55);
+        fastLiftLower(false, 0.7);
         delay(0.2);
         drive.followTrajectory(three);
         openClaw();
+        drive.turn(Math.toRadians(-48));
         drive.followTrajectory(four);
-        drive.followTrajectory(five);
         closeClaw();
         liftSlightly();
         delay(0.2);
+        drive.followTrajectory(five);
         drive.followTrajectory(six);
-        drive.followTrajectory(seven);
+        delay(1);
         openClaw();
+        drive.followTrajectory(seven);
+        closeClaw();
+        liftSlightly();
+        delay(0.2);
         drive.followTrajectory(eight);
         drive.followTrajectory(nine);
-        closeClaw();
-        liftSlightly();
-        delay(0.2);
-        drive.followTrajectory(ten);
-        drive.followTrajectory(eleven);
         openClaw();
 
 
@@ -209,10 +201,10 @@ public class HoustonAuto extends LinearOpMode {
     }
     public void fastLiftHigh(boolean depositBackwards, double power) {
         if(depositBackwards){
-            sliderRunTo(Fields.sliderBackwardsHigh, power);
+            sliderRunTo(Fields.sliderBackwardsHigh-75, power);
             armRunTo(Fields.armBackwardsHigh, power);
         } else {
-            sliderRunTo(Fields.sliderForwardHigh, power);
+            sliderRunTo(Fields.sliderForwardHigh-70, power);
             armRunTo(Fields.armForwardHigh, power);
         }
     }
@@ -221,7 +213,7 @@ public class HoustonAuto extends LinearOpMode {
             sliderRunTo(Fields.sliderBackwardsHigh+50);
             armRunTo(Fields.armBackwardsHigh);
         } else {
-            sliderRunTo(Fields.sliderForwardHigh+50);
+            sliderRunTo(Fields.sliderForwardHigh);
             armRunTo(Fields.armForwardHigh);
         }
     }
@@ -236,19 +228,19 @@ public class HoustonAuto extends LinearOpMode {
     }
     public void fastLiftLower(boolean depositBackwards) {
         if(depositBackwards){
-            sliderRunTo(Fields.sliderBackwardsHigh-30);
+            sliderRunTo(Fields.sliderBackwardsHigh-150);
             armRunTo(Fields.armBackwardsHigh);
         } else {
-            sliderRunTo(Fields.sliderForwardHigh+30);
+            sliderRunTo(Fields.sliderForwardHigh-200);
             armRunTo(Fields.armForwardHigh);
         }
     }
     public void fastLiftLower(boolean depositBackwards, double power) {
         if(depositBackwards){
-            sliderRunTo(Fields.sliderBackwardsHigh-80, power);
+            sliderRunTo(Fields.sliderBackwardsHigh-150, power);
             armRunTo(Fields.armBackwardsHigh, power);
         } else {
-            sliderRunTo(Fields.sliderForwardHigh-80, power);
+            sliderRunTo(Fields.sliderForwardHigh-140, power);
             armRunTo(Fields.armForwardHigh, power);
         }
     }
@@ -257,8 +249,8 @@ public class HoustonAuto extends LinearOpMode {
         armRunTo(Fields.armConeStack);
     }
     public void liftConeStackLess() {
-        sliderRunTo(Fields.sliderConeStack-100);
-        armRunTo(Fields.armConeStack+50);
+        sliderRunTo(Fields.sliderConeStack-200);
+        armRunTo(Fields.armConeStack);
     }
     public void liftSlightly() {
         sliderRunTo(Fields.sliderForwardLow);

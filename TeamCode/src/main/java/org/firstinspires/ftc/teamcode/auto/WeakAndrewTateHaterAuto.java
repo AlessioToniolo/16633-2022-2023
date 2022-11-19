@@ -105,7 +105,7 @@ public class WeakAndrewTateHaterAuto extends LinearOpMode {
 
         // Zone trajs
         Trajectory zone3 = drive.trajectoryBuilder(new Pose2d(seven.end().getX(), seven.end().getY(), Math.toRadians(0)))
-                .forward(26)
+                .forward(24.5)
                 .build();
 
         Trajectory zone1 = drive.trajectoryBuilder(new Pose2d(seven.end().getX(), seven.end().getY(), Math.toRadians(0)))

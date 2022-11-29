@@ -64,7 +64,7 @@ public class WeakAndrewTateHaterAuto extends LinearOpMode {
                 .build();
         // FIRST DEPOSIT
         Trajectory three = drive.trajectoryBuilder(two.end())
-                .lineToLinearHeading(new Pose2d(11.5, -4.8, Math.toRadians(48)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .lineToLinearHeading(new Pose2d(11.5, -3, Math.toRadians(48)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
         // SECOND PICKUP
         Trajectory four = drive.trajectoryBuilder(new Pose2d(three.end().getX(), three.end().getY(), Math.toRadians(0)))
@@ -86,7 +86,7 @@ public class WeakAndrewTateHaterAuto extends LinearOpMode {
                 .build();
         // SECOND DEPOSIT
         Trajectory six = drive.trajectoryBuilder(five.end())
-                .lineToLinearHeading(new Pose2d(26, -3, Math.toRadians(-35)))
+                .lineToLinearHeading(new Pose2d(28, -2, Math.toRadians(-35)))
                 .addTemporalMarker(0.5, () -> lowerChainBar(1, 40))
                 .build();
         /*
@@ -109,7 +109,7 @@ public class WeakAndrewTateHaterAuto extends LinearOpMode {
                 .build();
 
         Trajectory zone1 = drive.trajectoryBuilder(new Pose2d(seven.end().getX(), seven.end().getY(), Math.toRadians(0)))
-                .back(23)
+                .back(23.5)
                 .build();
         Trajectory zone2 = drive.trajectoryBuilder(new Pose2d(seven.end().getX(), seven.end().getY(), Math.toRadians(0)))
                 .back(4)

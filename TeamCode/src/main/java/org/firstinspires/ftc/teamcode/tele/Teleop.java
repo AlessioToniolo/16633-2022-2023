@@ -84,6 +84,7 @@ public class Teleop extends LinearOpMode {
     int armState = 0;//0=pickup 1=forwardDeliver, 2 =backwardDeliver
 
     boolean sliderTestMode = false;
+    private double sliderSpeedModifier;
 
 
     @Override
@@ -119,11 +120,30 @@ public class Teleop extends LinearOpMode {
     }
     public void runEverythingElseLoop(){
         while (!isStopRequested() && opModeIsActive()) {
+            telemetry.addLine();
+            telemetry.addLine("_________________" );
+            telemetry.addLine("SPEED DATA:");
+            telemetry.addLine("BaseSpeed: "+baseSpeed);
+            telemetry.addLine("speedModifier: "+triggerSpeedModifier);
+            telemetry.addLine("Speed: "+speed);
+            telemetry.addLine("_________________" );
+            telemetry.addLine();
+            telemetry.addLine();
+            telemetry.addLine("__________________________________");
+            telemetry.addLine("DRIVE INFO");
+            String modeName = imuInitialized?"FIELDCENTRIC":"FIELDCENTRIC: IMU UNITIALIZED";
+            telemetry.addLine("DRIVE MODE: "+modeName);
+            telemetry.addLine("Robot Degree: "+robotDegree);
+            telemetry.addLine("Gamepad Degree: "+gamepadDegree);
+            telemetry.addLine("_________________" );
+            telemetry.addLine();
+            telemetry.addLine();
             checkSlider();
             checkClaw();
             recenterIMU();
             //checkColor();
             doTelemetry();
+
         }
     }
     public void checkColor() {
@@ -140,8 +160,15 @@ public class Teleop extends LinearOpMode {
 
     public void checkSlider(){
         //manual Control
-        sliderTargetPos+=10*-gamepad2.left_stick_y;//if pressed up then will add between 0 and positive 10 if pressed down will dubsttract between 0 and 10
-        armTargetPos+=10*-gamepad2.right_stick_y;//if pressed up then will add between 0 and positive 10 if pressed down will dubsttract between 0 and 10
+        if(gamepad2.left_stick_button){
+            sliderTargetPos+=50*-gamepad2.left_stick_y;//if pressed up then will add between 0 and positive 10 if pressed down will dubsttract between 0 and 1
+            sliderSpeedModifier = .5;
+        }
+        else {
+            sliderSpeedModifier=0;
+            sliderTargetPos += 10 * -gamepad2.left_stick_y;//if pressed up then will add between 0 and positive 10 if pressed down will dubsttract between 0 and 10
+            armTargetPos += 10 * -gamepad2.right_stick_y;//if pressed up then will add between 0 and positive 10 if pressed down will dubsttract between 0 and 10
+        }
 
         //safety
         if(armTargetPos < Fields.armMinimumTarget)armTargetPos = Fields.armMinimumTarget;
@@ -160,8 +187,8 @@ public class Teleop extends LinearOpMode {
             }
         }
         prevGuide=gamepad2.guide;
-        telemetry.addLine("PracticeMode: "+sliderTestMode);
-        telemetry.addLine();
+//        telemetry.addLine("PracticeMode: "+sliderTestMode);
+//        telemetry.addLine();
 
 
         //automatic controls
@@ -176,7 +203,7 @@ public class Teleop extends LinearOpMode {
 
         //motor functionality
         armRunTo((int)armTargetPos, Fields.armSpeed);
-        sliderRunTo((int)sliderTargetPos, Fields.sliderSpeed);
+        sliderRunTo((int)sliderTargetPos, Fields.sliderSpeed+ sliderSpeedModifier);
         
 
 
@@ -209,24 +236,24 @@ public class Teleop extends LinearOpMode {
         else if(rightStickX>0)rightStickX=speed;
 
         telemetry.addLine();
-        telemetry.addLine("__________________________________");
-        telemetry.addLine("DRIVE INFO");
-        String modeName = imuInitialized?"FIELDCENTRIC":"FIELDCENTRIC: IMU UNITIALIZED";
-        telemetry.addLine("DRIVE MODE: "+modeName);
+//        telemetry.addLine("__________________________________");
+//        telemetry.addLine("DRIVE INFO");
+//        String modeName = imuInitialized?"FIELDCENTRIC":"FIELDCENTRIC: IMU UNITIALIZED";
+//        telemetry.addLine("DRIVE MODE: "+modeName);
 
 
             //get degree of the robot from the imu
             robotDegree = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
             robotDegree-=changeDegree;
-            telemetry.addLine("Robot Degree: "+robotDegree);
+//            telemetry.addLine("Robot Degree: "+robotDegree);
 
             //compute degree of joystick using atan of y/x
             gamepadDegree = Math.atan2(Math.toRadians(leftStickY),Math.toRadians(leftStickX)); //normal way of doing it
             gamepadDegree = Math.toDegrees(gamepadDegree);
 
-            telemetry.addLine("Gamepad Degree: "+gamepadDegree);
-        telemetry.addLine("_________________" );
-        telemetry.addLine();
+//            telemetry.addLine("Gamepad Degree: "+gamepadDegree);
+//        telemetry.addLine("_________________" );
+//        telemetry.addLine();
 
             double turnDegrees = gamepadDegree-robotDegree;//determine what heading relative to the robot we want to drive
 
@@ -246,15 +273,15 @@ public class Teleop extends LinearOpMode {
         double leftFrontPower = y + x + rightStickX;
         double rightRearPower = y + x - rightStickX;
         double rightFrontPower = y - x - rightStickX;
-        telemetry.addLine();
-        telemetry.addLine("______________________________________");
-        telemetry.addLine("MOTOR DATA");
-        telemetry.addData("leftRear", leftRearPower);
-        telemetry.addData("leftFront", leftFrontPower);
-        telemetry.addData("rightRear", rightRearPower);
-        telemetry.addData("rightFront", rightFrontPower);
-        telemetry.addLine("_______________________________________" );
-        telemetry.addLine();
+//        telemetry.addLine();
+//        telemetry.addLine("______________________________________");
+//        telemetry.addLine("MOTOR DATA");
+//        telemetry.addData("leftRear", leftRearPower);
+//        telemetry.addData("leftFront", leftFrontPower);
+//        telemetry.addData("rightRear", rightRearPower);
+//        telemetry.addData("rightFront", rightFrontPower);
+//        telemetry.addLine("_______________________________________" );
+//        telemetry.addLine();
         robot.drive.leftFront.setPower(leftFrontPower);
         robot.drive.leftRear.setPower(leftRearPower);
         robot.drive.rightFront.setPower(rightFrontPower);
@@ -283,14 +310,7 @@ public class Teleop extends LinearOpMode {
 
         if(speed>1)speed=1;
         else if(speed<0)speed=0;
-        telemetry.addLine();
-        telemetry.addLine("_________________" );
-        telemetry.addLine("SPEED DATA:");
-        telemetry.addLine("BaseSpeed: "+baseSpeed);
-        telemetry.addLine("speedModifier: "+triggerSpeedModifier);
-        telemetry.addLine("Speed: "+speed);
-        telemetry.addLine("_________________" );
-        telemetry.addLine();
+
     }
     public void checkClaw(){
         if(gamepad2.a && gamepad2.a != prevA2){
@@ -461,10 +481,10 @@ public class Teleop extends LinearOpMode {
     }
     public void checkXB(){
         if(gamepad2.x&& gamepad2.x!=prevX){
-            sliderState=Fields.referenceSliderForwardLow;
-            sliderTargetPos=Fields.sliderForwardLow;
-            armState=Fields.referenceArmForwardLow;
-            armTargetPos=Fields.armForwardLow;
+            sliderState=Fields.referenceSliderBackwardsLow;
+            sliderTargetPos=Fields.sliderBackLow;
+            armState=Fields.referenceArmBackwardsLow;
+            armTargetPos=Fields.armBackwardsLow;
         }
         prevX=gamepad2.x;
         if(gamepad2.b&& gamepad2.b!=prevB){
@@ -485,10 +505,10 @@ public class Teleop extends LinearOpMode {
         }
         prevRBumper2=gamepad2.right_bumper;
         if(gamepad2.left_bumper && gamepad2.left_bumper!=prevLBumper2){
-            sliderState = Fields.referenceSliderForwardMid;
-            sliderTargetPos=Fields.sliderForwardMid;
-            armState = Fields.referenceArmForwardMid;
-            armTargetPos = Fields.armForwardMid;
+            sliderState = Fields.referenceSliderForwardLow;
+            sliderTargetPos=Fields.sliderForwardLow;
+            armState = Fields.referenceArmForwardLow;
+            armTargetPos = Fields.armForwardLow;
         }
         prevLBumper2=gamepad2.left_bumper;
 

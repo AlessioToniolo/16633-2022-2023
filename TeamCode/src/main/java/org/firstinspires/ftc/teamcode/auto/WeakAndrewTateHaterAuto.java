@@ -64,11 +64,11 @@ public class WeakAndrewTateHaterAuto extends LinearOpMode {
                 .build();
         // FIRST DEPOSIT
         Trajectory three = drive.trajectoryBuilder(two.end())
-                .lineToLinearHeading(new Pose2d(11.5, -3, Math.toRadians(48)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .lineToLinearHeading(new Pose2d(10, -5, Math.toRadians(48)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
         // SECOND PICKUP
         Trajectory four = drive.trajectoryBuilder(new Pose2d(three.end().getX(), three.end().getY(), Math.toRadians(0)))
-                .lineTo(new Vector2d(52.5, -9.2))
+                .lineTo(new Vector2d(51, -9.2))
                 .addTemporalMarker(0.2, ()->{
                     fastOpenClaw();
                     liftConeStack();
@@ -86,7 +86,7 @@ public class WeakAndrewTateHaterAuto extends LinearOpMode {
                 .build();
         // SECOND DEPOSIT
         Trajectory six = drive.trajectoryBuilder(five.end())
-                .lineToLinearHeading(new Pose2d(28, -2, Math.toRadians(-35)))
+                .lineToLinearHeading(new Pose2d(26, -2.3, Math.toRadians(-35)))
                 .addTemporalMarker(0.5, () -> lowerChainBar(1, 40))
                 .build();
         /*

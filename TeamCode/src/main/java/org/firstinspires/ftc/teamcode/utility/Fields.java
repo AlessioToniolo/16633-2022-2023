@@ -40,7 +40,7 @@ public class Fields {
 
 
     public static int sliderGround=0;
-    public static int sliderConeStack=400;
+    public static int sliderConeStack=560;
     public static int sliderForwardLow=150;
     public static int sliderForwardMid=1150;
     public static int sliderForwardHigh=1574;
@@ -67,12 +67,14 @@ public class Fields {
     public static int armBackwardsMid = 1481;
     public static int armBackwardsLow = 1742;
 
-    //public static int armDepositForwardsMid = 1454;
+    public static int LowCycleTurnAngle = 70;
+    public static int LowCycleMove = 2;
 
+    //public static int armDepositForwardsMid = 1454;
     //Fields for cone stack
-    public static int coneStack5 = 400;
-    public static int coneStack4 = 220;
-    public static int coneStack3 = 110;
+    public static int coneStack5 = 560;
+    public static int coneStack4 = 320;
+    public static int coneStack3 = 230;
     public static int coneStack2 = 85;
     public static int coneStack1 = Fields.sliderGround;
     //set arm to ground too

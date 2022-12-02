@@ -46,7 +46,7 @@ public class Teleop extends LinearOpMode {
     //claw vars
     double leftClawPos = 0;
     double rightClawPos = 0;
-    boolean closed = false;
+    volatile boolean closed = false;
 
     boolean prevGuide = false;
 
@@ -194,8 +194,10 @@ public class Teleop extends LinearOpMode {
         //automatic controls
 
         checkY();
-        checkXB();
-        checkBumpers();
+        if(closed) {
+            checkXB();
+            checkBumpers();
+        }
         checkDDownandUp();
         checkDRightandLeft();
         checkRightTrigger();
@@ -235,7 +237,6 @@ public class Teleop extends LinearOpMode {
         if(rightStickX<0)rightStickX=-speed;
         else if(rightStickX>0)rightStickX=speed;
 
-        telemetry.addLine();
 //        telemetry.addLine("__________________________________");
 //        telemetry.addLine("DRIVE INFO");
 //        String modeName = imuInitialized?"FIELDCENTRIC":"FIELDCENTRIC: IMU UNITIALIZED";
@@ -342,6 +343,7 @@ public class Teleop extends LinearOpMode {
         telemetry.addLine("CLAW INFO");
         telemetry.addLine("LEFT: Position:"+robot.leftClaw.getPosition()+"Port:"+robot.leftClaw.getPortNumber());
         telemetry.addLine("Right: Position:"+robot.rightClaw.getPosition()+"Port:"+robot.rightClaw.getPortNumber());
+        telemetry.addLine("Closed: " + closed);
         telemetry.addLine("_________________" );
         telemetry.addLine();
     }
@@ -543,13 +545,14 @@ public class Teleop extends LinearOpMode {
         sliderRunTo(position, Fields.sliderSpeed);
     }
     public void sliderRunTo(int position, double power){
-        sliderTargetPos=position;
-        robot.slider.setTargetPosition(position);
-        robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.slider.setPower(power);
-        robot.sideSlider.setTargetPosition(position);
-        robot.sideSlider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.sideSlider.setPower(power);
+
+            sliderTargetPos = position;
+            robot.slider.setTargetPosition(position);
+            robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.slider.setPower(power);
+            robot.sideSlider.setTargetPosition(position);
+            robot.sideSlider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.sideSlider.setPower(power);
     }
     public static double round(double in){
         return ((int)(in*1000))/1000.0;

@@ -18,8 +18,8 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous
-public class HoustonAuto extends LinearOpMode {
+@Autonomous(group = "old")
+public class OldThreeHighAuto extends LinearOpMode {
     // robot with drive
     BaseRobot robot = new BaseRobot();
     // OpenCV

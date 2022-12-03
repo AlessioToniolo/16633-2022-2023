@@ -64,12 +64,14 @@ public class Fields {
     public static int armForwardLow=485;
     public static int armForwardMid=550;
     public static int armForwardHigh = 780;
-    public static  int armBackwardsHigh = 1504;
+    public static  int armBackwardsHigh = 1440;
     public static int armBackwardsMid = 1481;
     public static int armBackwardsLow = 1742;
 
     public static int LowCycleTurnAngle = 70;
     public static int LowCycleMove = 2;
+    public static double highBackAngle = -30;
+    public static double autoConePickup = 52;
 
     //public static int armDepositForwardsMid = 1454;
     //Fields for cone stack

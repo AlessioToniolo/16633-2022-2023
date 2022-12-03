@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.tele;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.utility.BaseRobot;
 
 @TeleOp
+@Disabled
 public class SliderRestringTeleop extends LinearOpMode {
 
 

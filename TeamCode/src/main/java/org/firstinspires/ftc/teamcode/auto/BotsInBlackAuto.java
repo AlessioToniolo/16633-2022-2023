@@ -19,7 +19,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Autonomous
-public class WeakAndrewTateHaterAuto extends LinearOpMode {
+public class BotsInBlackAuto extends LinearOpMode {
     // robot with drive
     BaseRobot robot = new BaseRobot();
     // OpenCV
@@ -64,11 +64,14 @@ public class WeakAndrewTateHaterAuto extends LinearOpMode {
                 .build();
         // FIRST DEPOSIT
         Trajectory three = drive.trajectoryBuilder(two.end())
-                .lineToLinearHeading(new Pose2d(11.5, -3, Math.toRadians(48)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .lineToLinearHeading(new Pose2d(8.5, -3.5, Math.toRadians(49)), SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .addTemporalMarker(1, ()->{
+                    //dunk();
+                })
                 .build();
-        // SECOND PICKUP
+        // PICKUP
         Trajectory four = drive.trajectoryBuilder(new Pose2d(three.end().getX(), three.end().getY(), Math.toRadians(0)))
-                .lineTo(new Vector2d(52.5, -9.2))
+                .lineTo(new Vector2d(51.3, -7))
                 .addTemporalMarker(0.2, ()->{
                     fastOpenClaw();
                     liftConeStack();
@@ -78,16 +81,12 @@ public class WeakAndrewTateHaterAuto extends LinearOpMode {
         Trajectory five = drive.trajectoryBuilder(four.end())
                 .lineTo(new Vector2d(45, -7))
                 .addTemporalMarker(0.1, () -> {
-                    fastLiftHigher(true, 0.5);
-                })/*
-                .addTemporalMarker(1, () -> {
-                    fastLiftHigher(true, 0.5);
-                })*/
+                    fastLiftLower(true, 0.25);
+                })
                 .build();
         // SECOND DEPOSIT
         Trajectory six = drive.trajectoryBuilder(five.end())
-                .lineToLinearHeading(new Pose2d(28, -2, Math.toRadians(-35)))
-                .addTemporalMarker(0.5, () -> lowerChainBar(1, 40))
+                .lineToLinearHeading(new Pose2d(25.7, -2.2, Math.toRadians(-36.5)))
                 .build();
         /*
         Trajectory sixHalf = drive.trajectoryBuilder(six.end())
@@ -138,16 +137,19 @@ public class WeakAndrewTateHaterAuto extends LinearOpMode {
         delay(0.2);
         drive.followTrajectory(three);
         openClaw();
+        //dunk();
         drive.turn(Math.toRadians(-48));
+        actuallyOpenClaw();
         drive.followTrajectory(four);
         closeClaw();
-        liftSlightly();
-        delay(0.2);
+        clearConeFromStack();
+        delay(0.5);
         drive.followTrajectory(five);
         drive.followTrajectory(six);
         //drive.followTrajectory(sixHalf);
-        delay(0.7);
+        delay(2);
         openClaw();
+        dunk();
         drive.followTrajectory(seven);
         drive.turn(Math.toRadians(35));
         resetLift();
@@ -166,6 +168,10 @@ public class WeakAndrewTateHaterAuto extends LinearOpMode {
     }
 
     // FUNCTIONS
+    public void clearConeFromStack() {
+        sliderRunTo(Fields.sliderForwardMid);
+    }
+
     public void liftHighGoal(boolean depositBackwards) {
         if(depositBackwards){
             sliderRunTo(Fields.sliderBackwardsHigh);
@@ -240,6 +246,9 @@ public class WeakAndrewTateHaterAuto extends LinearOpMode {
             armRunTo(Fields.armForwardHigh, power);
         }
     }
+    public void dunk() {
+        sliderRunTo(robot.slider.getCurrentPosition()+200);
+    }
     public void liftConeStack() {
         sliderRunTo(Fields.sliderConeStack+60);
         armRunTo(Fields.armConeStack);
@@ -252,6 +261,10 @@ public class WeakAndrewTateHaterAuto extends LinearOpMode {
         sliderRunTo(Fields.sliderForwardLow);
     }
     public void liftSuperSlightly() {sliderRunTo(Fields.sliderSuperLow);}
+    public void liftHalfway(double power) {
+        sliderRunTo(Fields.sliderBackMid, power);
+        armRunTo(Fields.armBackwardsMid-300, power);
+    }
     public void openClaw() {
         robot.rightClaw.setPosition(Fields.rightClawPickup);
         robot.leftClaw.setPosition(Fields.leftClawPickup);
@@ -259,10 +272,14 @@ public class WeakAndrewTateHaterAuto extends LinearOpMode {
     }
     public void fastOpenClaw() {
         robot.rightClaw.setPosition(Fields.rightClawPickup);
-        robot.leftClaw.setPosition(Fields.rightClawPickup);
+        robot.leftClaw.setPosition(Fields.leftClawPickup);
+    }
+    public void actuallyOpenClaw() {
+        robot.rightClaw.setPosition(Fields.rightClawPickup);
+        robot.leftClaw.setPosition(Fields.leftClawPickup);
     }
     public void resetLift() {
-        armRunTo(Fields.armGround, 0.8);
+        armRunTo(Fields.armAutoGround, 0.8);
         sliderRunTo(Fields.sliderGround);
         delay(1.5);
     }

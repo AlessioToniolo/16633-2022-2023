@@ -13,6 +13,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @TeleOp
+@Disabled
 public class CameraTesterTeleop extends LinearOpMode {
     WebcamName webcamName;
     OpenCvCamera camera;

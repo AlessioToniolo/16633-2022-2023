@@ -59,6 +59,7 @@ public class Fields {
     public static final int referenceArmBackwardsLow = 7;
 
     public static int armGround = 0;
+    public static int armAutoGround = 50;
     public static int armConeStack = 95;
     public static int armForwardLow=485;
     public static int armForwardMid=550;

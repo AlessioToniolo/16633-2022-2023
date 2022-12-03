@@ -19,8 +19,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.Vector;
 
-@Autonomous
-public class GriddyAuto extends LinearOpMode {
+@Autonomous(group = "old")
+public class RightPathAuto extends LinearOpMode {
     // robot with drive
     BaseRobot robot = new BaseRobot();
     //opencv

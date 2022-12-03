@@ -19,7 +19,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Autonomous
-public class BotsInBlackAuto extends LinearOpMode {
+public class TestBotsInBlackAuto extends LinearOpMode {
     // robot with drive
     BaseRobot robot = new BaseRobot();
     // OpenCV
@@ -64,14 +64,14 @@ public class BotsInBlackAuto extends LinearOpMode {
                 .build();
         // FIRST DEPOSIT
         Trajectory three = drive.trajectoryBuilder(two.end())
-                .lineToLinearHeading(new Pose2d(8.5, -3.5, Math.toRadians(49)), SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .lineToLinearHeading(new Pose2d(8.5, -3.5, Math.toRadians(Fields.highFrontAngle)), SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .addTemporalMarker(1, ()->{
                     //dunk();
                 })
                 .build();
         // PICKUP
         Trajectory four = drive.trajectoryBuilder(new Pose2d(three.end().getX(), three.end().getY(), Math.toRadians(0)))
-                .lineTo(new Vector2d(52, -7))
+                .lineTo(new Vector2d(Fields.autoConePickup, -7))
                 .addTemporalMarker(0.2, ()->{
                     fastOpenClaw();
                     liftConeStack();
@@ -86,7 +86,7 @@ public class BotsInBlackAuto extends LinearOpMode {
                 .build();
         // SECOND DEPOSIT
         Trajectory six = drive.trajectoryBuilder(five.end())
-                .lineToLinearHeading(new Pose2d(25.7, -2.2, Math.toRadians(-30)))
+                .lineToLinearHeading(new Pose2d(25.7, -2.2, Math.toRadians(Fields.highBackAngle)))
                 .build();
         /*
         Trajectory sixHalf = drive.trajectoryBuilder(six.end())

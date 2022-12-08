@@ -328,7 +328,6 @@ public class Teleop extends LinearOpMode {
         if(triggerSpeedModifier ==0)triggerSpeedModifier=.1;
         speed = triggerSpeedModifier*baseSpeed;
 
-
         if(gamepad1.left_stick_button)speed = 1;//set speed to 1
 
         if(gamepad1.right_stick_button||gamepad1.right_trigger>0)speed=.2;

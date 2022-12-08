@@ -56,7 +56,7 @@ public class TripleConeAuto extends LinearOpMode {
 
         // Go to leftmost square
         Trajectory one = drive.trajectoryBuilder(startPose)
-                .lineTo(new Vector2d(3, -56))
+                .lineTo(new Vector2d(3, -56), SampleMecanumDrive.getVelocityConstraint(AutoFields.speedySpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(AutoFields.speedyAccel))
                 .build();
         // Drive near pole on left side of field
         Trajectory two = drive.trajectoryBuilder(one.end())//speed this guy up
@@ -65,13 +65,16 @@ public class TripleConeAuto extends LinearOpMode {
                     fastLiftLower(false, .6);
                 })
                 .build();
+        /**
+         * Altrenative to ONe and Two-val trajOne = builder1.splineToConstantHeading(Vector2d(3.0, -56.0), begginingStartPos.heading).splineToConstantHeading( Vector2d(3.0, -20.0), 90.0.toRadians).build()
+         */
         // FIRST DEPOSIT
         Trajectory three = drive.trajectoryBuilder(two.end())
-                .lineToLinearHeading(new Pose2d(8.5, -3.5, Math.toRadians(AutoFields.highFrontAngle)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(AutoFields.speedyAccel))
+                .lineToLinearHeading(new Pose2d(8.5, -3, Math.toRadians(AutoFields.highFrontAngle)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(AutoFields.speedyAccel))
                 .build();
         // PICKUP
         Trajectory four = drive.trajectoryBuilder(new Pose2d(three.end().getX(), three.end().getY(), Math.toRadians(0)))
-                .lineTo(new Vector2d(AutoFields.autoConePickup, -7), SampleMecanumDrive.getVelocityConstraint(AutoFields.speedySpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .lineTo(new Vector2d(AutoFields.autoConePickup, -7), SampleMecanumDrive.getVelocityConstraint(AutoFields.speedySpeed-20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .addTemporalMarker(0.1, ()->{
                     liftConeStack();
                 })
@@ -87,7 +90,21 @@ public class TripleConeAuto extends LinearOpMode {
         Trajectory six = drive.trajectoryBuilder(five.end())
                 .lineToLinearHeading(new Pose2d(25.7, -2.2, Math.toRadians(AutoFields.highBackAngle)))
                 .build();
+
         Trajectory alternativeFive = drive.trajectoryBuilder(four.end())
+                .lineToLinearHeading(new Pose2d(25.7, -2.2, Math.toRadians(AutoFields.highBackAngle)))
+                .addTemporalMarker(0.1, () -> {
+                    fastLiftLower(true, .5);
+                })
+                .build();
+        Trajectory backToConeStack = drive.trajectoryBuilder(alternativeFive.end())
+                .splineToSplineHeading(new Pose2d(36.0, -10.0, Math.toRadians(0)), 0)
+                .splineToConstantHeading(new Vector2d(52.0, -7.0), 0.0)
+                .addTemporalMarker(0.1, () -> {
+                    liftConeStack4();})
+
+                .build();
+        Trajectory alternativeFive2 = drive.trajectoryBuilder(backToConeStack.end())
                 .lineToLinearHeading(new Pose2d(25.7, -2.2, Math.toRadians(AutoFields.highBackAngle)))
                 .addTemporalMarker(0.1, () -> {
                     fastLiftLower(true, .5);
@@ -98,11 +115,17 @@ public class TripleConeAuto extends LinearOpMode {
 //                .addTemporalMarker(0.1, () -> {
 //                    liftConeStack4();})
                 .build();
-        Trajectory recenter = drive.trajectoryBuilder(alternativeFive.end())
-                .lineTo(new Vector2d(26, -7))
+        Trajectory splineRecenter = drive.trajectoryBuilder(alternativeFive.end())
+                .splineToLinearHeading(new Pose2d(52.0, -8, Math.toRadians(0)), 0, SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .addTemporalMarker(0.1, () -> {
                     liftConeStack4();})
                 .build();
+
+
+
+        /**
+         *         val trajOne = builder1.splineToSplineHeading( Pose2d(36.0, -10.0, 0.0.toRadians), 0.0).splineToConstantHeading( Vector2d(52.0, -7.0), 0.0).build()
+         */
         /*
         Trajectory sixHalf = drive.trajectoryBuilder(six.end())
                 .addTemporalMarker(0, () -> lowerChainBar(0.8, 80))
@@ -113,13 +136,18 @@ public class TripleConeAuto extends LinearOpMode {
         Trajectory seven = drive.trajectoryBuilder(six.end())
                 .lineTo(new Vector2d(33, -14))//11
                 .build();
-
+        //Recenter us
+        Trajectory prepZone = drive.trajectoryBuilder(new Pose2d(alternativeFive.end().getX(), alternativeFive.end().getY(), Math.toRadians(0)))
+                .strafeRight(4)
+                .build();
         // Zone trajs
         Trajectory zone3 = drive.trajectoryBuilder(new Pose2d(seven.end().getX(), seven.end().getY(), Math.toRadians(0)))
                 .forward(24.5)
                 .build();
+        /**        val trajOne = builder1.splineToSplineHeading( Pose2d(36.0, -10.0, 0.0.toRadians), 0.0.toRadians).splineToConstantHeading( Vector2d(52.0, -7.0), 0.0).build()
+        **/
 
-        Trajectory zone1 = drive.trajectoryBuilder(new Pose2d(seven.end().getX(), seven.end().getY(), Math.toRadians(0)))
+         Trajectory zone1 = drive.trajectoryBuilder(new Pose2d(seven.end().getX(), seven.end().getY(), Math.toRadians(0)))
                 .back(25)
                 .build();
         Trajectory zone2 = drive.trajectoryBuilder(new Pose2d(seven.end().getX(), seven.end().getY(), Math.toRadians(0)))
@@ -150,26 +178,28 @@ public class TripleConeAuto extends LinearOpMode {
         openClaw();//drop cone
         drive.turn(Math.toRadians(-48));//turn
         drive.followTrajectory(four);//run to cone stack
+        delay(.5);
         closeClaw();//close claw
         clearConeFromStack();//lift slider a bit
         delay(0.5);
-//        drive.followTrajectory(five);
-//        drive.followTrajectory(six);
-        //drive.followTrajectory(sixHalf);
-        drive.followTrajectory(alternativeFive);//deliver from the back
+        drive.followTrajectory(alternativeFive2);//deliver from the back
         delay(.5);
         openClaw();
-        drive.followTrajectory(recenter);
-        drive.followTrajectory(alternativeSeven);
+
+//        drive.followTrajectory(splineRecenter);
+//        drive.followTrajectory(alternativeSeven);
+        drive.followTrajectory(backToConeStack);
         closeClaw();//close claw
+        delay(.2);
         clearConeFromStack();//lift slider a bit
         delay(0.5);
         drive.followTrajectory(alternativeFive);//deliver from the back
-        delay(1);
+        delay(.5);
         openClaw();
         delay(.5);
         resetLift();
         drive.turn(Math.toRadians(35));
+        drive.followTrajectory(prepZone);//deliver from the back
 
 
 
@@ -296,7 +326,7 @@ public class TripleConeAuto extends LinearOpMode {
     public void resetLift() {
         armRunTo(Fields.armAutoGround, 0.8);
         sliderRunTo(Fields.sliderGround);
-        delay(1.5);
+
     }
     public void fastResetLift() {
         armRunTo(Fields.armGround);
@@ -305,12 +335,10 @@ public class TripleConeAuto extends LinearOpMode {
     public void closeClaw() {
         robot.rightClaw.setPosition(Fields.rightClawClose);
         robot.leftClaw.setPosition(Fields.leftClawClose);
-        delay(.5);
     }
     public void fastCloseClaw() {
         robot.rightClaw.setPosition(Fields.rightClawClose);
         robot.leftClaw.setPosition(Fields.leftClawClose);
-        delay(.5);
     }
     public void lowerChainBar(double power, int difference) {
         armRunTo(Fields.armBackwardsHigh+difference, power);

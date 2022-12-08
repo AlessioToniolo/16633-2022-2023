@@ -64,7 +64,7 @@ public class Fields {
     public static int armForwardLow=485;
     public static int armForwardMid=550;
     public static int armForwardHigh = 780;
-    public static  int armBackwardsHigh = 1440;
+    public static  int armBackwardsHigh = 1496;
     public static int armBackwardsMid = 1481;
     public static int armBackwardsLow = 1742;
 

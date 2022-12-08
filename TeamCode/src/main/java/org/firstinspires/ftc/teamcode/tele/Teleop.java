@@ -85,6 +85,7 @@ public class Teleop extends LinearOpMode {
 
     boolean sliderTestMode = false;
     private double sliderSpeedModifier;
+    private boolean preValueGuide;
 
 
     @Override
@@ -201,6 +202,7 @@ public class Teleop extends LinearOpMode {
         checkDDownandUp();
         checkDRightandLeft();
         checkRightTrigger();
+        //checkResetEncoderPosition();
 
 
         //motor functionality
@@ -211,6 +213,29 @@ public class Teleop extends LinearOpMode {
 
 
 
+    }
+    public void checkResetEncoderPosition(){
+        if(gamepad2.guide&&gamepad2.guide != preValueGuide){
+            robot.slider.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+           double sliderPower = 0;
+           double armPower = 0;
+            while(true){
+                sliderPower=gamepad2.left_stick_y;
+                armPower=gamepad2.right_stick_y;
+                robot.slider.setPower(sliderPower);
+                robot.arm.setPower(armPower);
+                if(gamepad1.a && gamepad2.a != prevA2){
+                    break;
+                }
+            }
+            robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.slider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        }
+        preValueGuide=gamepad2.guide;
     }
     public void fieldCentricDrive(){
         double leftStickX;

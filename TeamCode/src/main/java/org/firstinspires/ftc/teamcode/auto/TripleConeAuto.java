@@ -70,7 +70,7 @@ public class TripleConeAuto extends LinearOpMode {
          */
         // FIRST DEPOSIT
         Trajectory three = drive.trajectoryBuilder(two.end())
-                .lineToLinearHeading(new Pose2d(8.5, -3, Math.toRadians(AutoFields.highFrontAngle)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(AutoFields.speedyAccel))
+                .lineToLinearHeading(new Pose2d(8.5, -5, Math.toRadians(AutoFields.highFrontAngle)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(AutoFields.speedyAccel))
                 .build();
         // PICKUP
         Trajectory four = drive.trajectoryBuilder(new Pose2d(three.end().getX(), three.end().getY(), Math.toRadians(0)))
@@ -88,7 +88,7 @@ public class TripleConeAuto extends LinearOpMode {
                 .build();
         // SECOND DEPOSIT
         Trajectory six = drive.trajectoryBuilder(five.end())
-                .lineToLinearHeading(new Pose2d(25.7, -2.2, Math.toRadians(AutoFields.highBackAngle)))
+                .lineToLinearHeading(new Pose2d(25.7, -1.8, Math.toRadians(AutoFields.highBackAngle)))
                 .build();
 
         Trajectory alternativeFive = drive.trajectoryBuilder(four.end())
@@ -98,8 +98,8 @@ public class TripleConeAuto extends LinearOpMode {
                 })
                 .build();
         Trajectory backToConeStack = drive.trajectoryBuilder(alternativeFive.end())
-                .splineToSplineHeading(new Pose2d(36.0, -10.0, Math.toRadians(0)), 0)
-                .splineToConstantHeading(new Vector2d(52.0, -7.0), 0.0)
+                .splineToConstantHeading(new Vector2d(35.0, -14.0), 0)
+                .splineToSplineHeading(new Pose2d(54.5, -12, Math.toRadians(0)), 0.0,  SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .addTemporalMarker(0.1, () -> {
                     liftConeStack4();})
 
@@ -138,7 +138,7 @@ public class TripleConeAuto extends LinearOpMode {
                 .build();
         //Recenter us
         Trajectory prepZone = drive.trajectoryBuilder(new Pose2d(alternativeFive.end().getX(), alternativeFive.end().getY(), Math.toRadians(0)))
-                .strafeRight(4)
+                .strafeRight(12)
                 .build();
         // Zone trajs
         Trajectory zone3 = drive.trajectoryBuilder(new Pose2d(seven.end().getX(), seven.end().getY(), Math.toRadians(0)))
@@ -148,7 +148,7 @@ public class TripleConeAuto extends LinearOpMode {
         **/
 
          Trajectory zone1 = drive.trajectoryBuilder(new Pose2d(seven.end().getX(), seven.end().getY(), Math.toRadians(0)))
-                .back(25)
+                .back(27)
                 .build();
         Trajectory zone2 = drive.trajectoryBuilder(new Pose2d(seven.end().getX(), seven.end().getY(), Math.toRadians(0)))
                 .back(4)
@@ -178,8 +178,9 @@ public class TripleConeAuto extends LinearOpMode {
         openClaw();//drop cone
         drive.turn(Math.toRadians(-48));//turn
         drive.followTrajectory(four);//run to cone stack
-        delay(.5);
         closeClaw();//close claw
+        delay(.5);
+
         clearConeFromStack();//lift slider a bit
         delay(0.5);
         drive.followTrajectory(alternativeFive2);//deliver from the back
@@ -190,7 +191,7 @@ public class TripleConeAuto extends LinearOpMode {
 //        drive.followTrajectory(alternativeSeven);
         drive.followTrajectory(backToConeStack);
         closeClaw();//close claw
-        delay(.2);
+        delay(.5);
         clearConeFromStack();//lift slider a bit
         delay(0.5);
         drive.followTrajectory(alternativeFive);//deliver from the back
@@ -200,9 +201,6 @@ public class TripleConeAuto extends LinearOpMode {
         resetLift();
         drive.turn(Math.toRadians(35));
         drive.followTrajectory(prepZone);//deliver from the back
-
-
-
         if (zone == 1) {
             drive.followTrajectory(zone1);
             openClaw();
@@ -210,7 +208,6 @@ public class TripleConeAuto extends LinearOpMode {
             drive.followTrajectory(zone3);
             openClaw();
         } else {
-
             drive.followTrajectory(zone2);
         }
     }

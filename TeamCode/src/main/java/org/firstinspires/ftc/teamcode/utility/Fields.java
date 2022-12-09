@@ -76,7 +76,7 @@ public class Fields {
 
     //public static int armDepositForwardsMid = 1454;
     //Fields for cone stack
-    public static int coneStack5 = 523;
+    public static int coneStack5 = 480;//522
     public static int coneStack4 = 320;
     public static int coneStack3 = 230;
     public static int coneStack2 = 85;

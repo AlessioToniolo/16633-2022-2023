@@ -58,7 +58,7 @@ public class Teleop extends LinearOpMode {
     BNO055IMU.Parameters imuParameters = robot.imuParameters;
     double robotDegree;
     double gamepadDegree;
-    double changeDegree = 0;
+    double changeDegree = 90;
     boolean imuInitialized= false;
 
     //dpad

@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -53,6 +54,10 @@ public class ZoneAuto extends LinearOpMode{
         // Build Trajectories
         Pose2d startPose = new Pose2d(36, -60, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
+        closeClaw();
+        delay(.5);
+        sliderRunTo(300, 1);
+        armRunTo(100,.5);
 
 
 
@@ -72,6 +77,8 @@ public class ZoneAuto extends LinearOpMode{
         if(zone==3)drive.followTrajectory(zone3);
         else if(zone ==1)drive.followTrajectory(zone1);
 
+        drive.turn(Math.toRadians(0));
+
 
 
     }
@@ -79,5 +86,22 @@ public class ZoneAuto extends LinearOpMode{
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < t)) {
         }
+    }
+    public void closeClaw() {
+        robot.rightClaw.setPosition(Fields.rightClawClose);
+        robot.leftClaw.setPosition(Fields.leftClawClose);
+    }
+    private void sliderRunTo(int position, double power){
+        robot.slider.setTargetPosition(position);
+        robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.slider.setPower(power);
+        robot.sideSlider.setTargetPosition(position);
+        robot.sideSlider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.sideSlider.setPower(power);
+    }
+    private void armRunTo(int position, double power){
+        robot.arm.setTargetPosition(position);
+        robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.arm.setPower(power);
     }
 }

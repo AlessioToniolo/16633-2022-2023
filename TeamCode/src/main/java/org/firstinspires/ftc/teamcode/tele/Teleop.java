@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.tele;
 
+import android.graphics.Color;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -10,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -18,6 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 import org.firstinspires.ftc.teamcode.utility.BaseRobot;
+import org.firstinspires.ftc.teamcode.utility.ColorfulTelemetry;
 import org.firstinspires.ftc.teamcode.utility.Fields;
 
 import java.lang.reflect.Field;
@@ -87,10 +91,13 @@ public class Teleop extends LinearOpMode {
     private double sliderSpeedModifier;
     private boolean preValueGuide;
 
+    ColorfulTelemetry pen;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
         FtcDashboard dashboard = FtcDashboard.getInstance();
+
 
         robot.init(hardwareMap);
         initializeImuParameters();
@@ -99,8 +106,9 @@ public class Teleop extends LinearOpMode {
 
         robot.rightClaw.setPosition(Fields.rightClawPickup);
         robot.leftClaw.setPosition(Fields.leftClawPickup);
-        telemetry.addLine("ready to Go");
-        telemetry.update();
+        pen = new ColorfulTelemetry(telemetry);
+        pen.addLine("ready to Go");
+        pen.update();
 
         waitForStart();
 
@@ -121,24 +129,24 @@ public class Teleop extends LinearOpMode {
     }
     public void runEverythingElseLoop(){
         while (!isStopRequested() && opModeIsActive()) {
-            telemetry.addLine();
-            telemetry.addLine("_________________" );
-            telemetry.addLine("SPEED DATA:");
-            telemetry.addLine("BaseSpeed: "+baseSpeed);
-            telemetry.addLine("speedModifier: "+triggerSpeedModifier);
-            telemetry.addLine("Speed: "+speed);
-            telemetry.addLine("_________________" );
-            telemetry.addLine();
-            telemetry.addLine();
-            telemetry.addLine("__________________________________");
-            telemetry.addLine("DRIVE INFO");
+            pen.setColor(ColorfulTelemetry.Black).addLine("_________________" );
+            pen.setColor(ColorfulTelemetry.Red).setBold(true).addLine("SPEED DATA🏃💨");
+            pen.reset().addData("BaseSpeed",baseSpeed);
+            pen.addData("speedModifier", triggerSpeedModifier);
+            pen.addLine("Speed: "+speed);
+            pen.setColor(ColorfulTelemetry.Black).addLine("_________________" );
+            pen.addLine();
+            pen.addLine("__________________________________");
+            pen.setBold(true).setColor(ColorfulTelemetry.Blue).addLine("DRIVE INFO🧭");
+            pen.reset();
+
             String modeName = imuInitialized?"FIELDCENTRIC":"FIELDCENTRIC: IMU UNITIALIZED";
-            telemetry.addLine("DRIVE MODE: "+modeName);
-            telemetry.addLine("Robot Degree: "+robotDegree);
-            telemetry.addLine("Gamepad Degree: "+gamepadDegree);
-            telemetry.addLine("_________________" );
-            telemetry.addLine();
-            telemetry.addLine();
+            pen.addLine("DRIVE MODE: "+modeName);
+            pen.addLine("Robot Degree: "+robotDegree);
+            pen.addLine("Gamepad Degree: "+gamepadDegree);
+            pen.setColor(ColorfulTelemetry.Black).addLine("_________________" );
+            pen.addLine();
+
             checkSlider();
             checkClaw();
             recenterIMU();
@@ -156,7 +164,7 @@ public class Teleop extends LinearOpMode {
             robot.leftClaw.setPosition(Fields.leftClawClose);
         }
 
-        telemetry.addLine(String.valueOf(currentDistance));
+        //pen.addLine(String.valueOf(currentDistance));
     }
 
     public void checkSlider(){
@@ -188,8 +196,8 @@ public class Teleop extends LinearOpMode {
             }
         }
         prevGuide=gamepad2.guide;
-//        telemetry.addLine("PracticeMode: "+sliderTestMode);
-//        telemetry.addLine();
+//        pen.addLine("PracticeMode: "+sliderTestMode);
+//        pen.addLine();
 
 
         //automatic controls
@@ -262,24 +270,24 @@ public class Teleop extends LinearOpMode {
         if(rightStickX<0)rightStickX=-speed;
         else if(rightStickX>0)rightStickX=speed;
 
-//        telemetry.addLine("__________________________________");
-//        telemetry.addLine("DRIVE INFO");
+//        pen.addLine("__________________________________");
+//        pen.addLine("DRIVE INFO");
 //        String modeName = imuInitialized?"FIELDCENTRIC":"FIELDCENTRIC: IMU UNITIALIZED";
-//        telemetry.addLine("DRIVE MODE: "+modeName);
+//        pen.addLine("DRIVE MODE: "+modeName);
 
 
             //get degree of the robot from the imu
             robotDegree = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
             robotDegree-=changeDegree;
-//            telemetry.addLine("Robot Degree: "+robotDegree);
+//            pen.addLine("Robot Degree: "+robotDegree);
 
             //compute degree of joystick using atan of y/x
             gamepadDegree = Math.atan2(Math.toRadians(leftStickY),Math.toRadians(leftStickX)); //normal way of doing it
             gamepadDegree = Math.toDegrees(gamepadDegree);
 
-//            telemetry.addLine("Gamepad Degree: "+gamepadDegree);
-//        telemetry.addLine("_________________" );
-//        telemetry.addLine();
+//            pen.addLine("Gamepad Degree: "+gamepadDegree);
+//        pen.addLine("_________________" );
+//        pen.addLine();
 
             double turnDegrees = gamepadDegree-robotDegree;//determine what heading relative to the robot we want to drive
 
@@ -299,15 +307,15 @@ public class Teleop extends LinearOpMode {
         double leftFrontPower = y + x + rightStickX;
         double rightRearPower = y + x - rightStickX;
         double rightFrontPower = y - x - rightStickX;
-//        telemetry.addLine();
-//        telemetry.addLine("______________________________________");
-//        telemetry.addLine("MOTOR DATA");
-//        telemetry.addData("leftRear", leftRearPower);
-//        telemetry.addData("leftFront", leftFrontPower);
-//        telemetry.addData("rightRear", rightRearPower);
-//        telemetry.addData("rightFront", rightFrontPower);
-//        telemetry.addLine("_______________________________________" );
-//        telemetry.addLine();
+//        pen.addLine();
+//        pen.addLine("______________________________________");
+//        pen.addLine("MOTOR DATA");
+//        pen.addData("leftRear", leftRearPower);
+//        pen.addData("leftFront", leftFrontPower);
+//        pen.addData("rightRear", rightRearPower);
+//        pen.addData("rightFront", rightFrontPower);
+//        pen.addLine("_______________________________________" );
+//        pen.addLine();
         robot.drive.leftFront.setPower(leftFrontPower);
         robot.drive.leftRear.setPower(leftRearPower);
         robot.drive.rightFront.setPower(rightFrontPower);
@@ -362,14 +370,15 @@ public class Teleop extends LinearOpMode {
 
         }
         prevA2 = gamepad2.a;
-        telemetry.addLine();
-        telemetry.addLine("__________________________");
-        telemetry.addLine("CLAW INFO");
-        telemetry.addLine("LEFT: Position:"+robot.leftClaw.getPosition()+"Port:"+robot.leftClaw.getPortNumber());
-        telemetry.addLine("Right: Position:"+robot.rightClaw.getPosition()+"Port:"+robot.rightClaw.getPortNumber());
-        telemetry.addLine("Closed: " + closed);
-        telemetry.addLine("_________________" );
-        telemetry.addLine();
+        pen.addLine();
+        pen.setColor(ColorfulTelemetry.Black).addLine("__________________________");
+        pen.setColor(ColorfulTelemetry.Orange).setBold(true).addLine("CLAW INFO");
+        pen.reset();
+        pen.addLine("LEFT: Position:"+robot.leftClaw.getPosition()+"Port:"+robot.leftClaw.getPortNumber());
+        pen.addLine("Right: Position:"+robot.rightClaw.getPosition()+"Port:"+robot.rightClaw.getPortNumber());
+        pen.addLine("Closed: " + closed);
+        pen.setColor(ColorfulTelemetry.Black).addLine("_________________" );
+        pen.reset().addLine();
     }
     public void recenterIMU(){
         if(gamepad1.a && gamepad1.a != prevA){
@@ -412,13 +421,13 @@ public class Teleop extends LinearOpMode {
         else if(sliderState==-1)sliderState = 7;
 
 
-        telemetry.addLine();
-        telemetry.addLine("_________________" );
-        telemetry.addLine("Slider :" );
-        telemetry.addLine("SliderTargetPos: "+sliderTargetPos + "Estimaed: " + robot.slider.getTargetPosition());
-        telemetry.addLine("SliderState: "+sliderStateStr);
-        telemetry.addLine("_________________" );
-        telemetry.addLine();
+        pen.addLine();
+        pen.setColor(ColorfulTelemetry.Black).addLine("_________________" );
+        pen.setBold(true).setColor(ColorfulTelemetry.Green).addLine("Slider :" );
+        pen.reset().addLine("SliderTargetPos: "+sliderTargetPos + "Estimaed: " + robot.slider.getTargetPosition());
+        pen.addLine("SliderState: "+sliderStateStr);
+        pen.setColor(ColorfulTelemetry.Black).addLine("_________________" );
+        pen.reset().addLine();
     }
     public void checkDRightandLeft() {
         if(sliderTestMode) {
@@ -438,13 +447,13 @@ public class Teleop extends LinearOpMode {
             if((gamepad2.dpad_left||gamepad2.dpad_right)&&sliderTestMode){
                 updateArmStates();
             }
-            telemetry.addLine();
-            telemetry.addLine("_________________" );
-            telemetry.addLine("ARM :" );
-            telemetry.addLine("armTargetPos: "+armTargetPos + "Estimated " + robot.arm.getTargetPosition());
-            telemetry.addLine("armState: "+armStateStr);
-            telemetry.addLine("_________________" );
-            telemetry.addLine();
+            pen.addLine();
+            pen.setColor(ColorfulTelemetry.Black).addLine("_________________" );
+            pen.setColor(ColorfulTelemetry.Purple).setBold(true).addLine("ARM :" );
+            pen.reset().addLine("armTargetPos: "+armTargetPos + "Estimated " + robot.arm.getTargetPosition());
+            pen.addLine("armState: "+armStateStr);
+            pen.setColor(ColorfulTelemetry.Black).addLine("_________________" );
+            pen.reset().addLine();
 
 
         if(!sliderTestMode){
@@ -475,14 +484,14 @@ public class Teleop extends LinearOpMode {
         }
         prevDLeft = gamepad2.dpad_left;
         prevDRight = gamepad2.dpad_right;
-        telemetry.addLine();
-        telemetry.addLine("___________________");
+        pen.addLine();
+        pen.addLine("___________________");
         String coneStackPosString = "";
         if(coneStackPos==-1)coneStackPosString = "NOT IN USE";
-        else coneStackPosString = coneStackPos + " Cones Lft";
-        telemetry.addLine("CONE STACK POS: " + coneStackPosString);
-        telemetry.addLine("___________________");
-        telemetry.addLine();
+        else coneStackPosString = coneStackPos + " Cones Left";
+        pen.addLine("CONE STACK POS: " + coneStackPosString);
+        pen.addLine("___________________");
+        pen.addLine();
 
 
 
@@ -551,7 +560,7 @@ public class Teleop extends LinearOpMode {
     }
     public void doTelemetry() {
 
-        telemetry.update();
+        pen.update();
 
 
     }

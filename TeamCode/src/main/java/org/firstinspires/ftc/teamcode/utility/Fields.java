@@ -94,13 +94,13 @@ public class Fields {
 
 
     //claw varaiables
-    public static double leftClawClose = .35;
-    public static double leftClawPickup = .1;
-    public static double leftClawDeliver = .1;
+    public static double leftClawClose = .6;
+    public static double leftClawPickup = .5;
+    public static double leftClawDeliver = .5;
 
 
-    public static double rightClawPickup = .2;
-    public static double rightClawDeliver = .45;
+    public static double rightClawPickup = 1;
+    public static double rightClawDeliver = .8;
     public static double rightClawClose = .5 ;
 
 

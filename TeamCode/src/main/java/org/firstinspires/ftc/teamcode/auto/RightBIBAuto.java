@@ -65,7 +65,7 @@ public class RightBIBAuto extends LinearOpMode {
                 .build();
         // FIRST DEPOSIT
         Trajectory three = drive.trajectoryBuilder(two.end())
-                .lineToLinearHeading(new Pose2d(8.5, -3.5, Math.toRadians(49)), SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .lineToLinearHeading(new Pose2d(8.5, -3, Math.toRadians(49)), SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .addTemporalMarker(1, ()->{
                     //dunk();
                 })
@@ -75,14 +75,20 @@ public class RightBIBAuto extends LinearOpMode {
                 .lineTo(new Vector2d(52, -7))
                 .addTemporalMarker(0.2, ()->{
                     fastOpenClaw();
-                    liftConeStack();
+                    //liftConeStack();
+                    sliderRunTo(Fields.sliderConeStack);
+                    armRunTo(Fields.armConeStack);
                 })
                 .build();
         // Drive out of pickup and lift cone
         Trajectory five = drive.trajectoryBuilder(four.end())
+                //45, -7
                 .lineTo(new Vector2d(45, -7))
                 .addTemporalMarker(0.1, () -> {
-                    fastLiftLower(true, 0.25);
+                    // .2
+                    sliderRunTo(Fields.sliderBackwardsHigh-150, 0.25);
+                    armRunTo(Fields.armBackwardsHigh, 0.25);
+                    //fastLiftLower(true, 0.25);
                 })
                 .build();
         // SECOND DEPOSIT
@@ -109,7 +115,7 @@ public class RightBIBAuto extends LinearOpMode {
                 .build();
 
         Trajectory zone1 = drive.trajectoryBuilder(new Pose2d(seven.end().getX(), seven.end().getY(), Math.toRadians(0)))
-                .back(25)
+                .back(26.5)
                 .build();
         Trajectory zone2 = drive.trajectoryBuilder(new Pose2d(seven.end().getX(), seven.end().getY(), Math.toRadians(0)))
                 .back(4)
@@ -137,6 +143,7 @@ public class RightBIBAuto extends LinearOpMode {
         fastLiftLower(false, 0.7);
         delay(0.2);
         drive.followTrajectory(three);
+        delay(1);
         openClaw();
         //dunk();
         drive.turn(Math.toRadians(-48));

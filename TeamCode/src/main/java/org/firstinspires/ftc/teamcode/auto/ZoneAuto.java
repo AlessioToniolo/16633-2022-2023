@@ -16,6 +16,8 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+import java.util.Vector;
+
 @Autonomous
 public class ZoneAuto extends LinearOpMode{
     BaseRobot robot = new BaseRobot();
@@ -54,16 +56,16 @@ public class ZoneAuto extends LinearOpMode{
         // Build Trajectories
         Pose2d startPose = new Pose2d(36, -60, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
-        closeClaw();
-        delay(.5);
-        sliderRunTo(300, 1);
-        armRunTo(100,.5);
+
 
 
 
         // Zone trajs
-        Trajectory zone2 = drive.trajectoryBuilder(startPose)
-                .lineTo(new Vector2d(36, -12))
+        Trajectory forward = drive.trajectoryBuilder(startPose)
+                .lineTo(new Vector2d(36, -8))
+                .build();
+        Trajectory zone2 = drive.trajectoryBuilder(forward.end())
+                .lineTo(new Vector2d(36, -11))
                 .build();
         Trajectory zone3 = drive.trajectoryBuilder(zone2.end())
                 .lineToLinearHeading(new Pose2d(69, -12, Math.toRadians(90)))
@@ -73,11 +75,15 @@ public class ZoneAuto extends LinearOpMode{
                 .lineToLinearHeading(new Pose2d(2.3, -12, Math.toRadians(90)))
                 .build();
 
-        drive.followTrajectory(zone2);
+        drive.followTrajectory(forward);
         if(zone==3)drive.followTrajectory(zone3);
         else if(zone ==1)drive.followTrajectory(zone1);
+        else {
+            drive.followTrajectory(zone2);
+        }
 
         drive.turn(Math.toRadians(0));
+        openClaw();
 
 
 
@@ -86,6 +92,11 @@ public class ZoneAuto extends LinearOpMode{
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < t)) {
         }
+    }
+    public void openClaw() {
+        robot.rightClaw.setPosition(Fields.rightClawPickup);
+        robot.leftClaw.setPosition(Fields.leftClawPickup);
+        delay(1);
     }
     public void closeClaw() {
         robot.rightClaw.setPosition(Fields.rightClawClose);

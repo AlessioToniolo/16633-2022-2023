@@ -1,10 +1,9 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.auto.old;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -19,9 +18,8 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Disabled
 @Autonomous
-public class TestBotsInBlackAuto extends LinearOpMode {
+public class LeftBIBAuto extends LinearOpMode {
     // robot with drive
     BaseRobot robot = new BaseRobot();
     // OpenCV
@@ -36,6 +34,7 @@ public class TestBotsInBlackAuto extends LinearOpMode {
         robot.init(hardwareMap);
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+
 
         // OPEN CV
         webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
@@ -53,27 +52,27 @@ public class TestBotsInBlackAuto extends LinearOpMode {
         });
 
         // Build Trajectories
-        Pose2d startPose = new Pose2d(36, -60, Math.toRadians(90));
+        Pose2d startPose = new Pose2d(-34, -60, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
 
         // Go to leftmost square
         Trajectory one = drive.trajectoryBuilder(startPose)
-                .lineTo(new Vector2d(3, -56))
+                .lineTo(new Vector2d(-3, -56))
                 .build();
         // Drive near pole on left side of field
         Trajectory two = drive.trajectoryBuilder(one.end())
-                .lineTo(new Vector2d(12, -20))
+                .lineTo(new Vector2d(-12, -20))
                 .build();
         // FIRST DEPOSIT
         Trajectory three = drive.trajectoryBuilder(two.end())
-                .lineToLinearHeading(new Pose2d(8.5, -3.5, Math.toRadians(Fields.highFrontAngle)), SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .lineToLinearHeading(new Pose2d(-8.5, -3.5, Math.toRadians(131)), SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .addTemporalMarker(1, ()->{
                     //dunk();
                 })
                 .build();
         // PICKUP
-        Trajectory four = drive.trajectoryBuilder(new Pose2d(three.end().getX(), three.end().getY(), Math.toRadians(0)))
-                .lineTo(new Vector2d(Fields.autoConePickup, -7))
+        Trajectory four = drive.trajectoryBuilder(new Pose2d(three.end().getX(), three.end().getY(), Math.toRadians(180)))
+                .lineTo(new Vector2d(-52, -7))
                 .addTemporalMarker(0.2, ()->{
                     fastOpenClaw();
                     liftConeStack();
@@ -81,14 +80,14 @@ public class TestBotsInBlackAuto extends LinearOpMode {
                 .build();
         // Drive out of pickup and lift cone
         Trajectory five = drive.trajectoryBuilder(four.end())
-                .lineTo(new Vector2d(45, -7))
+                .lineTo(new Vector2d(-45, -7))
                 .addTemporalMarker(0.1, () -> {
                     fastLiftLower(true, 0.25);
                 })
                 .build();
         // SECOND DEPOSIT
         Trajectory six = drive.trajectoryBuilder(five.end())
-                .lineToLinearHeading(new Pose2d(25.7, -2.2, Math.toRadians(Fields.highBackAngle)))
+                .lineToLinearHeading(new Pose2d(-25.7, -2.2, Math.toRadians(-150)))
                 .build();
         /*
         Trajectory sixHalf = drive.trajectoryBuilder(six.end())
@@ -98,21 +97,21 @@ public class TestBotsInBlackAuto extends LinearOpMode {
 
          */
         Trajectory seven = drive.trajectoryBuilder(six.end())
-                .lineTo(new Vector2d(33, -11))
+                .lineTo(new Vector2d(-33, -11))
                 .addTemporalMarker(0.8, ()->{
                     // nothing
                 })
                 .build();
 
         // Zone trajs
-        Trajectory zone3 = drive.trajectoryBuilder(new Pose2d(seven.end().getX(), seven.end().getY(), Math.toRadians(0)))
+        Trajectory zone3 = drive.trajectoryBuilder(new Pose2d(seven.end().getX(), seven.end().getY(), Math.toRadians(180)))
                 .forward(24.5)
                 .build();
 
-        Trajectory zone1 = drive.trajectoryBuilder(new Pose2d(seven.end().getX(), seven.end().getY(), Math.toRadians(0)))
+        Trajectory zone1 = drive.trajectoryBuilder(new Pose2d(seven.end().getX(), seven.end().getY(), Math.toRadians(180)))
                 .back(25)
                 .build();
-        Trajectory zone2 = drive.trajectoryBuilder(new Pose2d(seven.end().getX(), seven.end().getY(), Math.toRadians(0)))
+        Trajectory zone2 = drive.trajectoryBuilder(new Pose2d(seven.end().getX(), seven.end().getY(), Math.toRadians(180)))
                 .back(4)
                 .build();
 
@@ -140,7 +139,7 @@ public class TestBotsInBlackAuto extends LinearOpMode {
         drive.followTrajectory(three);
         openClaw();
         //dunk();
-        drive.turn(Math.toRadians(-48));
+        drive.turn(Math.toRadians(48));
         actuallyOpenClaw();
         drive.followTrajectory(four);
         closeClaw();
@@ -153,7 +152,7 @@ public class TestBotsInBlackAuto extends LinearOpMode {
         openClaw();
         dunk();
         drive.followTrajectory(seven);
-        drive.turn(Math.toRadians(35));
+        drive.turn(Math.toRadians(-35));
         resetLift();
 
         if (zone == 1) {

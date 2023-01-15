@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.auto.old;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -20,7 +20,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.Vector;
 
 @Autonomous(group = "old")
-public class SingleHighAuto extends LinearOpMode {
+public class RightPathAuto extends LinearOpMode {
     // robot with drive
     BaseRobot robot = new BaseRobot();
     //opencv
@@ -52,67 +52,133 @@ public class SingleHighAuto extends LinearOpMode {
             }
         });
 
+        // Build Trajectories
+        Pose2d startPose = new Pose2d(36, -60, Math.toRadians(90));
+        drive.setPoseEstimate(startPose);
+
+        Trajectory one = drive.trajectoryBuilder(startPose)
+                .lineToSplineHeading(new Pose2d(61, -54, Math.toRadians(0)))
+                .build();
+        Trajectory two = drive.trajectoryBuilder(one.end())
+                .lineTo(new Vector2d(62, -10))
+                .addTemporalMarker(1.2, this::resetLift)
+                .build();
+        Trajectory three = drive.trajectoryBuilder(two.end())
+                .lineTo(new Vector2d(65, -10))
+                .build();
+        Trajectory four = drive.trajectoryBuilder(three.end())
+                .lineToSplineHeading(new Pose2d(60, -15, Math.toRadians(45)))
+                .build();
+        Trajectory five = drive.trajectoryBuilder(four.end())
+                .lineToSplineHeading(new Pose2d(62, -10, Math.toRadians(0)))
+                .splineTo(new Vector2d(65, -10), 0)
+                .addTemporalMarker(0.5, this::liftConeStack)
+                .build();
+        Trajectory six = drive.trajectoryBuilder(five.end())
+                .lineToSplineHeading(new Pose2d(32, -10, Math.toRadians(135)))
+                .build();
+        Trajectory seven = drive.trajectoryBuilder(six.end())
+                .lineToSplineHeading(new Pose2d(35, -6, Math.toRadians(135)))
+                .build();
+        Trajectory eight = drive.trajectoryBuilder(new Pose2d(seven.end().getX(), seven.end().getY(), Math.toRadians(90)))
+                .lineTo(new Vector2d(36, -10))
+                .build();
+
+        // Zone trajs
+        Trajectory zone3 = drive.trajectoryBuilder(eight.end())
+                .lineTo(new Vector2d(69, -12))
+                .build();
+        Trajectory zone1 = drive.trajectoryBuilder(eight.end())
+                .lineTo(new Vector2d(2.3, -11.3))
+                .build();
+
+        /*
+        Trajectory two = drive.trajectoryBuilder(one.end())
+                .forward(-5)
+                .build();
+        Trajectory three = drive.trajectoryBuilder(two.end())
+                .lineToSplineHeading(new Pose2d(54, -9, Math.toRadians(35)))
+                .build();
+        Trajectory four = drive.trajectoryBuilder(three.end())
+                .lineTo(new Vector2d(58, -5))
+                .build();
+        Trajectory five = drive.trajectoryBuilder(four.end())
+                .forward(-1.5)
+                .build();
+        Trajectory six = drive.trajectoryBuilder(five.end())
+                .lineTo(new Vector2d(55, -7))
+                .build();
+        Trajectory seven = drive.trajectoryBuilder(six.end())
+                        .forward(-1.5).build();
+
+         */
+
         waitForStart();
 
         if (isStopRequested()) return;
 
         robot.closeClaw();
+        delay(0.15);
 
-        robot.delay(.5);
         double zone = ZoneDetectionPipeline.getZone();
         camera.stopStreaming();
         camera.closeCameraDevice();
 
-        Pose2d startPose = new Pose2d(36, -60, Math.toRadians(90));
-        drive.setPoseEstimate(startPose);
-
-        Trajectory traj1 = drive.trajectoryBuilder(startPose)
-                .lineTo(new Vector2d(70, -57))
-                .build();
-        Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
-                .lineTo(new Vector2d(62, -10))
-                .build();
-
-        Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
-                .lineToSplineHeading(new Pose2d(32, -10, Math.toRadians(135)))
-                .build();
-        Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
-                .lineToSplineHeading(new Pose2d(38, -3.5, Math.toRadians(135)))
-                .build();
-        Trajectory traj7 = drive.trajectoryBuilder(new Pose2d(traj4.end().getX(), traj4.end().getY(), Math.toRadians(90)))
-                .lineTo(new Vector2d(36, -12))
-                .build();
-
-        // Zone trajs
-        Trajectory zone3 = drive.trajectoryBuilder(traj7.end())
-                .lineTo(new Vector2d(69, -12))
-                .build();
-
-        Trajectory zone1 = drive.trajectoryBuilder(traj7.end())
-                .lineTo(new Vector2d(2.3, -11.3))
-                .build();
-
-        sliderRunTo(150,Fields.sliderSpeed);
-        drive.followTrajectory(traj1);
-        drive.followTrajectory(traj2);
-        drive.followTrajectory(traj3);
-        liftHighGoal(false);
-        drive.followTrajectory(traj4);
-
-        deposit();
+        // NEW STUFF
+        drive.followTrajectory(one);
+        openClaw();
+        liftSlightly();
+        delay(0.5);
+        drive.followTrajectory(two);
+        liftConeStack();
+        drive.followTrajectory(three);
         closeClaw();
-        // hits pole
-        clearLift();
-        drive.turn(Math.toRadians(-43));
+        liftSmallGoal();
+        drive.followTrajectory(four);
+        openClaw();
+        drive.followTrajectory(five);
+        closeClaw();
 
-        drive.followTrajectory(traj7);
-        resetLift();
+
+
+
+        // AUTO CODE
+        /*
+        delay(0.15);
+        drive.followTrajectory(terminal);
+        openClaw();
+        liftSlightly();
+        delay(1);
+        drive.followTrajectory(goBack);
+        drive.followTrajectory(toConeStack);
+        liftConeStack();
+        delay(0.5);
+        drive.followTrajectory(intoConeStack);
+        closeClaw();
+        delay(0.5);
+        drive.followTrajectory(backUpALittle);
+        liftSmallGoal();
+        delay(2);
+        drive.followTrajectory(depositSecond);
+        openClaw();
+        delay(0.5);
+        liftConeStack();
+        openClaw();
+        delay(1);
+        closeClaw();
+        drive.followTrajectory(backUpAgain);
+        liftOut();
+        delay(1);
+
+         */
+
+
 
         if (zone == 1) {
-            drive.followTrajectory(zone1);
         }
-        if (zone == 3) {
-            drive.followTrajectory(zone3);
+        if (zone == 2) {
+        } else {
+            // zone 3
         }
     }
     // Auto robot functions
@@ -121,29 +187,41 @@ public class SingleHighAuto extends LinearOpMode {
             sliderRunTo(Fields.sliderBackwardsHigh);
             armRunTo(Fields.armBackwardsHigh);
         } else {
-            sliderRunTo(Fields.sliderForwardHigh-100);
+            sliderRunTo(Fields.sliderForwardHigh);
             armRunTo(Fields.armForwardHigh);
         }
-        delay(4);
+        delay(3);
     }
-    public void deposit() {
-        delay(2);
+    public void liftOut() {
+        sliderRunTo(Fields.sliderBackMid);
+        armRunTo(Fields.sliderBackwardsHigh);
+    }
+    public void liftConeStack() {
+        sliderRunTo(Fields.sliderConeStack);
+        armRunTo(Fields.armConeStack);
+    }
+    public void liftSmallGoal() {
+        sliderRunTo(Fields.sliderBackMid);
+        armRunTo(Fields.armBackwardsLow);
+    }
+    public void liftSlightly() {
+        sliderRunTo(Fields.sliderForwardHigh);
+    }
+    public void openClaw() {
         robot.rightClaw.setPosition(Fields.rightClawDeliver);
         robot.leftClaw.setPosition(Fields.leftClawDeliver);
         delay(1);
     }
     // TODO this is the part that tips the entire robot over
     public void clearLift() {
-        armRunTo(Fields.armBackwardsHigh, Fields.armSpeed);
-        delay(1);
+
         sliderRunTo(Fields.sliderForwardLow);
         delay(1);
-        robot.rightClaw.setPosition(Fields.rightClawPickup);
-        robot.leftClaw.setPosition(Fields.leftClawPickup);
-
+        armRunTo(Fields.armBackwardsHigh, Fields.armSpeed);
+        delay(1);
     }
     public void resetLift() {
-        armRunTo(Fields.armGround, Fields.armSpeed);
+        armRunTo(Fields.armGround);
         sliderRunTo(Fields.sliderGround);
         delay(1.5);
     }

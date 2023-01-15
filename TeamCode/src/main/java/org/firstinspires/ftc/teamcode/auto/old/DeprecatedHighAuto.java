@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.auto.old;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -18,8 +18,8 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous
-public class LowConeCycle extends LinearOpMode {
+@Autonomous(group = "old")
+public class DeprecatedHighAuto extends LinearOpMode {
     // robot with drive
     BaseRobot robot = new BaseRobot();
     //opencv
@@ -50,42 +50,17 @@ public class LowConeCycle extends LinearOpMode {
             }
         });
 
+
         // Build Trajectories
         Pose2d startPose = new Pose2d(36, -60, Math.toRadians(90));
-        Pose2d testStart = new Pose2d(52.5, -12, Math.toRadians(0));
-        //drive.setPoseEstimate(startPose);
-        drive.setPoseEstimate(testStart);
-        openClaw();
-        sliderRunTo(Fields.coneStack5);
-        armRunTo(Fields.armConeStack);
-        delay(1);
-        closeClaw();
-        sliderRunTo(1400);
-        delay(1);
-        robot.drive.turn(Math.toRadians(Fields.LowCycleTurnAngle));
-        delay(1);
-        robot.drive.setPoseEstimate(new Pose2d(52.5, -12, Math.toRadians(Fields.LowCycleTurnAngle)));
-        robot.drive.followTrajectory(drive.trajectoryBuilder(new Pose2d()).back(Fields.LowCycleMove).build());
-        delay(1.5);
-        sliderRunTo(Fields.sliderBackLow);
-        armRunTo(Fields.armBackwardsLow, Fields.armSpeed);
-        delay(2.5);
-        openClaw();
-        delay(.1);
-        sliderRunTo(0);
-        armRunTo(0, Fields.armSpeed);
-        delay(1);
-        robot.drive.followTrajectory(drive.trajectoryBuilder(new Pose2d()).forward(Fields.LowCycleMove).build());
-        delay(1);
-        robot.drive.setPoseEstimate(new Pose2d(52.5, -12, Math.toRadians(Fields.LowCycleTurnAngle)));
-        robot.drive.turn(Math.toRadians(0));
-        delay(7);
+        drive.setPoseEstimate(startPose);
 
         Trajectory one = drive.trajectoryBuilder(startPose)
-                .lineTo(new Vector2d(36, -20))
+                .lineTo(new Vector2d(36, -20), SampleMecanumDrive.getVelocityConstraint(56, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
+        // FIRST DEPOSIT
         Trajectory two = drive.trajectoryBuilder(one.end())
-                .lineToLinearHeading(new Pose2d(38, -3.5, Math.toRadians(132)))
+                .lineToLinearHeading(new Pose2d(37.7, -4.5, Math.toRadians(132)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
         /*
         Trajectory three = drive.trajectoryBuilder(two.end())
@@ -94,26 +69,62 @@ public class LowConeCycle extends LinearOpMode {
 
          */
         Trajectory twoHalf = drive.trajectoryBuilder(two.end())
-                .lineTo(new Vector2d(33, -12))
+                .lineTo(new Vector2d(32, -13))
                 .build();
+        // SECOND PICKUP
         Trajectory three = drive.trajectoryBuilder(twoHalf.end())
-                .lineToLinearHeading(new Pose2d(60.5, -13, Math.toRadians(0)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .lineToLinearHeading(new Pose2d(60.5, -11, Math.toRadians(0)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .addTemporalMarker(0.2, ()->{
                     fastOpenClaw();
                     liftConeStack();
                 })
                 .build();
-
-
+        Trajectory threeHalf = drive.trajectoryBuilder(three.end())
+                .lineTo(new Vector2d(45, -7))
+                .addTemporalMarker(0.1, () -> {
+                    fastLiftHigh(false, 0.5);
+                })/*
+                .addTemporalMarker(1, () -> {
+                    fastLiftHigher(true, 0.5);
+                })*/
+                .build();
+        // SECOND DEPOSIT
+        Trajectory four = drive.trajectoryBuilder(threeHalf.end())
+                .lineToLinearHeading(new Pose2d(31.5, -2, Math.toRadians(-35)))
+                .build();
+        Trajectory fourHalf = drive.trajectoryBuilder(four.end())
+                .lineTo(new Vector2d(33, -8))
+                .build();
+        // THIRD PICKUP
+        Trajectory preFive = drive.trajectoryBuilder(fourHalf.end())
+                .lineToLinearHeading(new Pose2d(45, -6, Math.toRadians(0)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .addTemporalMarker(0.2, ()->{
+                    fastOpenClaw();
+                    liftConeStackLess();
+                })
+                .build();
+        Trajectory five = drive.trajectoryBuilder(preFive.end())
+                .lineTo(new Vector2d(61, -8))
+                .build();
+        Trajectory fiveHalf = drive.trajectoryBuilder(five.end())
+                .lineTo(new Vector2d(45, -7))
+                .addTemporalMarker(0.1, () -> {
+                    fastLiftHigh(true, 0.5);
+                })
+                .build();
+        // Third Deposit
+        Trajectory six = drive.trajectoryBuilder(fiveHalf.end())
+                .lineToLinearHeading(new Pose2d(32.5, -0.3, Math.toRadians(-35)))
+                .build();
 
         // Zone trajs
-//        Trajectory zone3 = drive.trajectoryBuilder(six.end())
-//                .lineToLinearHeading(new Pose2d(69, -12, Math.toRadians(90)))
-//                .build();
-//
-//        Trajectory zone1 = drive.trajectoryBuilder(six.end())
-//                .lineToLinearHeading(new Pose2d(2.3, -11.3, Math.toRadians(90)))
-//                .build();
+        Trajectory zone3 = drive.trajectoryBuilder(six.end())
+                .lineToLinearHeading(new Pose2d(69, -12, Math.toRadians(90)))
+                .build();
+
+        Trajectory zone1 = drive.trajectoryBuilder(six.end())
+                .lineToLinearHeading(new Pose2d(2.3, -11.3, Math.toRadians(90)))
+                .build();
 
 
         // Zone trajs
@@ -139,40 +150,37 @@ public class LowConeCycle extends LinearOpMode {
 
         // NEW STUFF
         drive.followTrajectory(one);
-        fastLiftHigh(false, 0.5);
+        fastLiftLower(false, 0.55);
+        delay(0.2);
         drive.followTrajectory(two);
         openClaw();
         drive.followTrajectory(twoHalf);
         drive.followTrajectory(three);
         closeClaw();
         liftSlightly();
-        delay(.5);
-        drive.turn(Math.toRadians(60));
-        sliderRunTo(Fields.sliderBackLow, Fields.sliderSpeed);
-        armRunTo(Fields.armBackwardsLow, Fields.armSpeed);
-        delay(2);
-        depositClaw();
-        delay(1);
-        sliderRunTo(Fields.coneStack4, Fields.sliderSpeed);
-        armRunTo(Fields.armConeStack, Fields.armSpeed);
-        drive.turn(0);
+        delay(0.2);
+        drive.followTrajectory(threeHalf);
+        drive.followTrajectory(four);
+        openClaw();
+        drive.followTrajectory(fourHalf);
+        drive.followTrajectory(preFive);
+        drive.followTrajectory(five);
         closeClaw();
         liftSlightly();
-        delay(.2);
-        drive.turn(Math.toRadians(60));
-        sliderRunTo(Fields.sliderBackLow, Fields.sliderSpeed);
-        armRunTo(Fields.armBackwardsLow, Fields.armSpeed);
-
-        delay(20);
-
+        delay(0.2);
+        // TODO
+        drive.followTrajectory(fiveHalf);
+        drive.followTrajectory(six);
+        openClaw();
 
 
-//        if (zone == 1) {
-//            drive.followTrajectory(zone1);
-//        }
-//        if (zone == 3) {
-//            drive.followTrajectory(zone3);
-//        }
+        if (zone == 1) {
+            drive.followTrajectory(zone1);
+        }
+        if (zone == 3) {
+            drive.followTrajectory(zone3);
+        }
+        resetLift();
     }
     // Auto robot functions
     public void liftHighGoal(boolean depositBackwards) {
@@ -213,6 +221,43 @@ public class LowConeCycle extends LinearOpMode {
             armRunTo(Fields.armForwardHigh, power);
         }
     }
+    public void fastLiftHigher(boolean depositBackwards) {
+        if(depositBackwards){
+            sliderRunTo(Fields.sliderBackwardsHigh+50);
+            armRunTo(Fields.armBackwardsHigh);
+        } else {
+            sliderRunTo(Fields.sliderForwardHigh+50);
+            armRunTo(Fields.armForwardHigh);
+        }
+    }
+    public void fastLiftHigher(boolean depositBackwards, double power) {
+        if(depositBackwards){
+            sliderRunTo(Fields.sliderBackwardsHigh+50, power);
+            armRunTo(Fields.armBackwardsHigh, power);
+        } else {
+            sliderRunTo(Fields.sliderForwardHigh+50, power);
+            armRunTo(Fields.armForwardHigh, power);
+        }
+    }
+
+    public void fastLiftLower(boolean depositBackwards) {
+        if(depositBackwards){
+            sliderRunTo(Fields.sliderBackwardsHigh-30);
+            armRunTo(Fields.armBackwardsHigh);
+        } else {
+            sliderRunTo(Fields.sliderForwardHigh+30);
+            armRunTo(Fields.armForwardHigh);
+        }
+    }
+    public void fastLiftLower(boolean depositBackwards, double power) {
+        if(depositBackwards){
+            sliderRunTo(Fields.sliderBackwardsHigh-50, power);
+            armRunTo(Fields.armBackwardsHigh, power);
+        } else {
+            sliderRunTo(Fields.sliderForwardHigh+50, power);
+            armRunTo(Fields.armForwardHigh, power);
+        }
+    }
 
 
     public void liftOut() {
@@ -220,19 +265,23 @@ public class LowConeCycle extends LinearOpMode {
         armRunTo(Fields.sliderBackwardsHigh);
     }
     public void liftConeStack() {
-        sliderRunTo(Fields.sliderConeStack);
+        sliderRunTo(Fields.sliderConeStack+10);
         armRunTo(Fields.armConeStack);
     }
     public void liftConeStackLess() {
-        sliderRunTo(Fields.sliderConeStack-50);
-        armRunTo(Fields.armConeStack-50);
+        sliderRunTo(Fields.sliderConeStack-100);
+        armRunTo(Fields.armConeStack+50);
+    }
+    public void liftConeStackLessLess() {
+        sliderRunTo(Fields.sliderConeStack-100);
+        armRunTo(Fields.armConeStack-100);
     }
     public void liftSmallGoal() {
         sliderRunTo(Fields.sliderBackMid);
         armRunTo(Fields.armBackwardsLow);
     }
     public void liftSlightly() {
-        sliderRunTo(Fields.sliderForwardHigh-100);
+        sliderRunTo(Fields.sliderForwardLow);
     }
     public void liftSuperSlightly() {sliderRunTo(Fields.sliderSuperLow);}
     public void openClaw() {
@@ -248,14 +297,7 @@ public class LowConeCycle extends LinearOpMode {
         robot.rightClaw.setPosition(Fields.rightClawDeliver);
         robot.leftClaw.setPosition(Fields.rightClawDeliver);
     }
-    // TODO this is the part that tips the entire robot over
-    public void clearLift() {
 
-        sliderRunTo(Fields.sliderForwardLow);
-        delay(1);
-        armRunTo(Fields.armBackwardsHigh, Fields.armSpeed);
-        delay(1);
-    }
     public void resetLift() {
         armRunTo(Fields.armGround);
         sliderRunTo(Fields.sliderGround);
@@ -294,8 +336,8 @@ public class LowConeCycle extends LinearOpMode {
     public void delay(double t) {
         runtime.reset();
         while (runtime.seconds() < t && !isStopRequested()) {
+            telemetry.addLine("something");
         }
     }
-
 }
 

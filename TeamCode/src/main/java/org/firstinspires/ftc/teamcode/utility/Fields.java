@@ -94,14 +94,16 @@ public class Fields {
 
 
     //claw varaiables
-    public static double leftClawClose = .6;
-    public static double leftClawPickup = .5;
+    // todo oriented as if you were loking directly at
+    // the front of the robot for left and right
+    public static double leftClawClose = .465;
+    public static double leftClawPickup = .6;
     public static double leftClawDeliver = .5;
 
 
-    public static double rightClawPickup = 1;
+    public static double rightClawPickup = .4;
     public static double rightClawDeliver = .8;
-    public static double rightClawClose = .5 ;
+    public static double rightClawClose = .56;
 
 
 

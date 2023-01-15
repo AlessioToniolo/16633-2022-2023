@@ -34,20 +34,25 @@ public class ColorfulTelemetry  {
      * @param message
      * @param color
      */
-    public void addLine(String message, String color){
+    public  ColorfulTelemetry addLine(String message, String color){
         telemetry.addData("<font color = \""+color+"\">" + message, "");
+        return this;
     }
-    public void addLine(String message){
+    public ColorfulTelemetry addLine(String message){
         telemetry.addLine(format(message));
+        return this;
     }
-    public void addData(String title, Object data){
+    public ColorfulTelemetry addData(String title, Object data){
         telemetry.addData(format(title),data);
+        return this;
     }
-    public void addData(String title, int data){
+    public ColorfulTelemetry addData(String title, int data){
         telemetry.addData(format(title),data);
+        return this;
     }
-    public void addLine(){
+    public ColorfulTelemetry addLine(){
         telemetry.addLine();
+        return this;
     }
 
     private String format(String message){
@@ -77,12 +82,24 @@ public class ColorfulTelemetry  {
         isUnderline = in;
         return this;
     }
+    public ColorfulTelemetry underLine(){
+        isUnderline = true;
+        return this;
+    }
     public ColorfulTelemetry setBold(boolean in){
         isBold = in;
         return this;
     }
+    public ColorfulTelemetry bold(){
+        isBold = true;
+        return this;
+    }
     public ColorfulTelemetry setItalic(boolean in){
         isItalic=in;
+        return this;
+    }
+    public ColorfulTelemetry italic(){
+        isItalic = true;
         return this;
     }
     public ColorfulTelemetry setColor(String in){

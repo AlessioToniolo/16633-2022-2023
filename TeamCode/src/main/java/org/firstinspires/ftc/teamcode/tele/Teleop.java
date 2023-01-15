@@ -127,46 +127,28 @@ public class Teleop extends LinearOpMode {
             fieldCentricDrive();
         }
     }
-    public void runEverythingElseLoop(){
+    public void runEverythingElseLoop() {
         while (!isStopRequested() && opModeIsActive()) {
-            pen.setColor(ColorfulTelemetry.Black).addLine("_________________" );
+           lineBreak();
             pen.setColor(ColorfulTelemetry.Red).setBold(true).addLine("SPEED DATA🏃💨");
-            pen.reset().addData("BaseSpeed",baseSpeed);
+            pen.reset().addData("BaseSpeed", baseSpeed);
             pen.addData("speedModifier", triggerSpeedModifier);
-            pen.addLine("Speed: "+speed);
-            pen.setColor(ColorfulTelemetry.Black).addLine("_________________" );
-            pen.addLine();
-            pen.addLine("__________________________________");
-            pen.setBold(true).setColor(ColorfulTelemetry.Blue).addLine("DRIVE INFO🧭");
-            pen.reset();
+            pen.addLine("Speed: " + speed);
+            lineBreak();
+            pen.setBold(true).setColor(ColorfulTelemetry.Blue).addLine("DRIVE INFO🧭").reset();
 
-            String modeName = imuInitialized?"FIELDCENTRIC":"FIELDCENTRIC: IMU UNITIALIZED";
-            pen.addLine("DRIVE MODE: "+modeName);
-            pen.addLine("Robot Degree: "+robotDegree);
-            pen.addLine("Gamepad Degree: "+gamepadDegree);
-            pen.setColor(ColorfulTelemetry.Black).addLine("_________________" );
-            pen.addLine();
+            String modeName = imuInitialized ? "FIELDCENTRIC" : "FIELDCENTRIC: IMU UNITIALIZED";
+            pen.addLine("DRIVE MODE: " + modeName);
+            pen.addLine("Robot Degree: " + robotDegree);
+            pen.addLine("Gamepad Degree: " + gamepadDegree);
 
             checkSlider();
             checkClaw();
             recenterIMU();
-            //checkColor();
             doTelemetry();
 
         }
     }
-    public void checkColor() {
-        double currentDistance = robot.distanceSensor.getDistance(DistanceUnit.CM);
-
-        if (currentDistance <= Fields.distanceToClose && sliderState==Fields.referenceArmGround) {
-            closed = true;
-            robot.rightClaw.setPosition(Fields.rightClawClose);
-            robot.leftClaw.setPosition(Fields.leftClawClose);
-        }
-
-        //pen.addLine(String.valueOf(currentDistance));
-    }
-
     public void checkSlider(){
         //manual Control
         if(gamepad2.left_stick_button){
@@ -186,22 +168,6 @@ public class Teleop extends LinearOpMode {
         if(sliderTargetPos>Fields.sliderMaximumTarget) sliderTargetPos = Fields.sliderMaximumTarget;
         else if(sliderTargetPos<Fields.sliderMinimumTarget) sliderTargetPos=Fields.sliderMinimumTarget;
 
-
-        if(gamepad2.guide && gamepad2.guide != prevGuide){
-            if(sliderTestMode){
-                sliderTestMode=false;
-            }
-            else{
-                sliderTestMode=true;
-            }
-        }
-        prevGuide=gamepad2.guide;
-//        pen.addLine("PracticeMode: "+sliderTestMode);
-//        pen.addLine();
-
-
-        //automatic controls
-
         checkY();
         if(closed) {
             checkXB();
@@ -212,15 +178,9 @@ public class Teleop extends LinearOpMode {
         checkRightTrigger();
         //checkResetEncoderPosition();
 
-
         //motor functionality
         armRunTo((int)armTargetPos, Fields.armSpeed);
         sliderRunTo((int)sliderTargetPos, Fields.sliderSpeed+ sliderSpeedModifier);
-        
-
-
-
-
     }
     public void checkResetEncoderPosition(){
         if(gamepad2.guide&&gamepad2.guide != preValueGuide){
@@ -352,17 +312,13 @@ public class Teleop extends LinearOpMode {
                 if (armTargetPos > 200) {
                     robot.rightClaw.setPosition(Fields.rightClawDeliver);
                     robot.leftClaw.setPosition(Fields.leftClawDeliver);
-
                 }
                 else {
                     robot.rightClaw.setPosition(Fields.rightClawPickup);
                     robot.leftClaw.setPosition(Fields.leftClawPickup);
                 }
-
-
             }
             else{
-
                 closed = true;
                 robot.rightClaw.setPosition(Fields.rightClawClose);
                 robot.leftClaw.setPosition(Fields.leftClawClose);
@@ -370,15 +326,12 @@ public class Teleop extends LinearOpMode {
 
         }
         prevA2 = gamepad2.a;
-        pen.addLine();
-        pen.setColor(ColorfulTelemetry.Black).addLine("__________________________");
-        pen.setColor(ColorfulTelemetry.Orange).setBold(true).addLine("CLAW INFO");
-        pen.reset();
+        /**___________________TELEMETRY_________________**/
+        lineBreak();
+        pen.setColor(ColorfulTelemetry.Orange).setBold(true).addLine("CLAW INFO").reset();
         pen.addLine("LEFT: Position:"+robot.leftClaw.getPosition()+"Port:"+robot.leftClaw.getPortNumber());
-        pen.addLine("Right: Position:"+robot.rightClaw.getPosition()+"Port:"+robot.rightClaw.getPortNumber());
+        pen.addLine("RIGHT: Position:"+robot.rightClaw.getPosition()+"Port:"+robot.rightClaw.getPortNumber());
         pen.addLine("Closed: " + closed);
-        pen.setColor(ColorfulTelemetry.Black).addLine("_________________" );
-        pen.reset().addLine();
     }
     public void recenterIMU(){
         if(gamepad1.a && gamepad1.a != prevA){
@@ -387,120 +340,78 @@ public class Teleop extends LinearOpMode {
         prevA = gamepad1.a;
     }
     public void checkDDownandUp(){
-        if(sliderTestMode) {
-            if (gamepad2.dpad_down && gamepad2.dpad_down != prevDDown) {
-                sliderState--;
-            }
-            prevDDown = gamepad2.dpad_down;
-            if (gamepad2.dpad_up && gamepad2.dpad_up != prevDUp) {
-                sliderState++;
-            }
-            prevDUp = gamepad2.dpad_up;
-            if(gamepad2.dpad_up||gamepad2.dpad_down){
-                updateSliderStates();}
+        //move arm and slider state down by one
+        if (gamepad2.dpad_down && gamepad2.dpad_down != prevDDown) {
+            sliderState--;
+            armState--;
         }
-        else{
-            if (gamepad2.dpad_down && gamepad2.dpad_down != prevDDown) {
-                sliderState--;
-                armState--;
-            }
-            prevDDown = gamepad2.dpad_down;
-            if (gamepad2.dpad_up && gamepad2.dpad_up != prevDUp) {
-                sliderState++;
-                armState++;
-            }
-            prevDUp = gamepad2.dpad_up;
-            if(gamepad2.dpad_up||gamepad2.dpad_down) {
-                updateArmStates();
-                updateSliderStates();
-            }
+        prevDDown = gamepad2.dpad_down;
+        //move arm and slider state up by one
+        if (gamepad2.dpad_up && gamepad2.dpad_up != prevDUp) {
+            sliderState++;
+            armState++;
         }
+        prevDUp = gamepad2.dpad_up;
 
         //allows cycle to circle around
         if(sliderState ==8)sliderState = 0;
         else if(sliderState==-1)sliderState = 7;
+        if (armState == -1) armState = 7;
+        else if (armState == 8) armState = 0;
 
+        /**
+         * when updateArmState and updateSliderStates are called they will run the slider and arm to
+         * the position indicated by the sliderState and armState variables. Therefore these methods must only
+         * be called if the dpad up or dpad down button are pressed, else the drivers wouldnt be able to make fine
+         * adjustments because the arm and slider would be constantly being set to the arm & slider state position
+         */
+        if(gamepad2.dpad_up||gamepad2.dpad_down) {
+            updateArmStates();
+            updateSliderStates();
+        }
 
-        pen.addLine();
-        pen.setColor(ColorfulTelemetry.Black).addLine("_________________" );
-        pen.setBold(true).setColor(ColorfulTelemetry.Green).addLine("Slider :" );
+        /**___________________________TELEMETRY__________________**/
+        lineBreak();
+        pen.bold().setColor(ColorfulTelemetry.Green).addLine("Slider :" );
         pen.reset().addLine("SliderTargetPos: "+sliderTargetPos + "Estimaed: " + robot.slider.getTargetPosition());
         pen.addLine("SliderState: "+sliderStateStr);
-        pen.setColor(ColorfulTelemetry.Black).addLine("_________________" );
-        pen.reset().addLine();
+        lineBreak();
+        pen.setColor(ColorfulTelemetry.Purple).bold().addLine("ARM :" );
+        pen.reset().addLine("armTargetPos: "+armTargetPos + "Estimated " + robot.arm.getTargetPosition());
+        pen.addLine("armState: "+armStateStr);
+
     }
     public void checkDRightandLeft() {
-        if(sliderTestMode) {
-            if (gamepad2.dpad_right && gamepad2.dpad_right != prevDRight) {
-                armState++;//incrase the armState
-            }
-            prevDRight = gamepad2.dpad_right;
-            if (gamepad2.dpad_left && gamepad2.dpad_left != prevDLeft) {
-                armState--;//decrease the arm state
-            }
+        //if the arm and slider states indicate the cone stack
+        if(armState == Fields.referenceArmConeStack && sliderState == Fields.referenceSliderConeStack){
+            if(coneStackPos == -1)coneStackPos=5;//defulat value for conestack pos
+
+            if(gamepad2.dpad_left && gamepad2.dpad_left != prevDLeft)coneStackPos--;
             prevDLeft = gamepad2.dpad_left;
+
+            if(gamepad2.dpad_right && gamepad2.dpad_right != prevDRight)coneStackPos++;
+            prevDRight = gamepad2.dpad_right;
+
+            //make sure conestackPos doesnt go out of bounds and instead cycles around
+            if(coneStackPos == 0)coneStackPos=5;
+            else if(coneStackPos == 6)coneStackPos=1;
+
+
+            if(gamepad2.dpad_left && gamepad2.dpad_right)updateConeStackPos();
+        }
+        else{
+            coneStackPos=-1;//if we arent at the conestack state then set conestackpos to -1
         }
 
-            //arm State is 0,1, or 2; this allows armState to circle from 2 -> 0 or from 0 ->2 in case armState ever becomes -1 or 3
-            if (armState == -1) armState = 7;
-            else if (armState == 8) armState = 0;
-            if((gamepad2.dpad_left||gamepad2.dpad_right)&&sliderTestMode){
-                updateArmStates();
-            }
-            pen.addLine();
-            pen.setColor(ColorfulTelemetry.Black).addLine("_________________" );
-            pen.setColor(ColorfulTelemetry.Purple).setBold(true).addLine("ARM :" );
-            pen.reset().addLine("armTargetPos: "+armTargetPos + "Estimated " + robot.arm.getTargetPosition());
-            pen.addLine("armState: "+armStateStr);
-            pen.setColor(ColorfulTelemetry.Black).addLine("_________________" );
-            pen.reset().addLine();
-
-
-        if(!sliderTestMode){
-            if(armState == Fields.referenceArmConeStack && sliderState == Fields.referenceSliderConeStack){
-                if(coneStackPos==-1)coneStackPos=5;
-
-                if(gamepad2.dpad_left && gamepad2.dpad_left != prevDLeft){
-                    coneStackPos--;
-                    updateConeStackPos();
-                }
-                
-                if(gamepad2.dpad_right && gamepad2.dpad_right != prevDRight){
-                    coneStackPos++;
-                    updateConeStackPos();
-                }
-                if(coneStackPos == 0)coneStackPos=5;
-                else if(coneStackPos == 6)coneStackPos=1;
-
-
-
-
-
-
-            }
-            else{
-                coneStackPos=-1;
-            }
-        }
-        prevDLeft = gamepad2.dpad_left;
-        prevDRight = gamepad2.dpad_right;
-        pen.addLine();
-        pen.addLine("___________________");
+        /**_________________TELEMETRY___________________**/
+        lineBreak();
         String coneStackPosString = "";
         if(coneStackPos==-1)coneStackPosString = "NOT IN USE";
         else coneStackPosString = coneStackPos + " Cones Left";
         pen.addLine("CONE STACK POS: " + coneStackPosString);
-        pen.addLine("___________________");
-        pen.addLine();
-
-
-
-
-        
     }
     public void checkY(){
         if(gamepad2.y && gamepad2.y != prevY){
-
             sliderState = Fields.referenceSliderGround;
             sliderTargetPos=Fields.sliderGround;
             armState = Fields.referenceArmGround;
@@ -529,7 +440,6 @@ public class Teleop extends LinearOpMode {
             armTargetPos=Fields.armBackwardsHigh;
         }
         prevB=gamepad2.b;
-
     }
     public void checkBumpers(){
         if(gamepad2.right_bumper && gamepad2.right_bumper!=prevRBumper2){
@@ -549,21 +459,19 @@ public class Teleop extends LinearOpMode {
 
     }
     public void checkRightTrigger(){
+        //right trigger sets state to beacon level
         if(gamepad2.right_trigger > 0 && gamepad2.right_trigger>0 != prevRTrigger){
             sliderTargetPos = Fields.sliderBeacon;
             armTargetPos = Fields.armBeacon;
             sliderState = Fields.referenceSliderGround;
             armState = Fields.referenceArmGround;
-
         }
         prevRTrigger = gamepad2.right_trigger>0;
     }
     public void doTelemetry() {
-
         pen.update();
-
-
     }
+
     //helper functions
     public void armRunTo(int position){
         armRunTo(position, 1);
@@ -691,4 +599,14 @@ public class Teleop extends LinearOpMode {
         else if(coneStackPos == 2)sliderTargetPos = Fields.coneStack2;
         else if(coneStackPos == 1){sliderTargetPos = Fields.coneStack1;armTargetPos=Fields.armGround;}
     }
+
+    /**
+     * Helper Methods for telemetry
+     */
+    private void lineBreak(){
+        pen.addLine();
+        pen.setColor(ColorfulTelemetry.Black).addLine("_________________" );
+        pen.addLine();
+    }
+
 }

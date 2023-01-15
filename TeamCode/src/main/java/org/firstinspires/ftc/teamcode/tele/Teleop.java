@@ -36,11 +36,25 @@ public class Teleop extends LinearOpMode {
     double baseSpeed = .5;
     double speed = 0;
     double triggerSpeedModifier = 1;
-    boolean prevRBumper=false;
-    boolean prevLBumper = false;
-    boolean prevRBumper2=false;
-    boolean prevLBumper2 = false;
-    boolean prevRTrigger = false;
+
+    //Bumpers and triggers
+    boolean prevRBumper, prevRBumper2=false;
+    boolean prevLBumper,prevLBumper2 = false;
+    boolean prevRTrigger, prevRTrigger2 = false;
+    boolean prevLTrigger, prevLTrigger2 = false;
+
+    //buttons
+    boolean prevY, prevY2 = false;
+    boolean prevX, prevX2 = false;
+    boolean prevB, prevB2 = false;
+    boolean prevA, prevA2=false;
+    //dpad
+    boolean prevDUp, prevDUp2 = false;
+    boolean prevDLeft, prevDLeft2 = false;
+    boolean prevDRight, prevDRight2 = false;
+    boolean prevDDown, prevDDown2 = false;
+    //MISC
+    boolean prevGuide, prevGuide2 = false;
 
     //slider vars
     int sliderState = 0;
@@ -52,7 +66,6 @@ public class Teleop extends LinearOpMode {
     double rightClawPos = 0;
     volatile boolean closed = false;
 
-    boolean prevGuide = false;
 
     ElapsedTime runtime = new ElapsedTime();
 
@@ -65,19 +78,10 @@ public class Teleop extends LinearOpMode {
     double changeDegree = 90;
     boolean imuInitialized= false;
 
-    //dpad
-    boolean prevDUp = false;
-    boolean prevDLeft = false;
-    boolean prevDRight = false;
-    boolean prevDDown = false;
 
 
-    //buttons booleand
-    boolean prevY = false;
-    boolean prevX = false;
-    boolean prevB= false;
-    boolean prevA2=false;
-    boolean prevA=false;
+
+
 
     String armStateStr = "GROUND";
     String sliderStateStr = "GROUND";
@@ -341,17 +345,17 @@ public class Teleop extends LinearOpMode {
     }
     public void checkDDownandUp(){
         //move arm and slider state down by one
-        if (gamepad2.dpad_down && gamepad2.dpad_down != prevDDown) {
+        if (gamepad2.dpad_down && gamepad2.dpad_down != prevDDown2) {
             sliderState--;
             armState--;
         }
-        prevDDown = gamepad2.dpad_down;
+        prevDDown2 = gamepad2.dpad_down;
         //move arm and slider state up by one
-        if (gamepad2.dpad_up && gamepad2.dpad_up != prevDUp) {
+        if (gamepad2.dpad_up && gamepad2.dpad_up != prevDUp2) {
             sliderState++;
             armState++;
         }
-        prevDUp = gamepad2.dpad_up;
+        prevDUp2 = gamepad2.dpad_up;
 
         //allows cycle to circle around
         if(sliderState ==8)sliderState = 0;
@@ -386,11 +390,11 @@ public class Teleop extends LinearOpMode {
         if(armState == Fields.referenceArmConeStack && sliderState == Fields.referenceSliderConeStack){
             if(coneStackPos == -1)coneStackPos=5;//defulat value for conestack pos
 
-            if(gamepad2.dpad_left && gamepad2.dpad_left != prevDLeft)coneStackPos--;
-            prevDLeft = gamepad2.dpad_left;
+            if(gamepad2.dpad_left && gamepad2.dpad_left != prevDLeft2)coneStackPos--;
+            prevDLeft2 = gamepad2.dpad_left;
 
-            if(gamepad2.dpad_right && gamepad2.dpad_right != prevDRight)coneStackPos++;
-            prevDRight = gamepad2.dpad_right;
+            if(gamepad2.dpad_right && gamepad2.dpad_right != prevDRight2)coneStackPos++;
+            prevDRight2 = gamepad2.dpad_right;
 
             //make sure conestackPos doesnt go out of bounds and instead cycles around
             if(coneStackPos == 0)coneStackPos=5;
@@ -411,7 +415,7 @@ public class Teleop extends LinearOpMode {
         pen.addLine("CONE STACK POS: " + coneStackPosString);
     }
     public void checkY(){
-        if(gamepad2.y && gamepad2.y != prevY){
+        if(gamepad2.y && gamepad2.y != prevY2){
             sliderState = Fields.referenceSliderGround;
             sliderTargetPos=Fields.sliderGround;
             armState = Fields.referenceArmGround;
@@ -423,23 +427,23 @@ public class Teleop extends LinearOpMode {
             robot.rightClaw.setPosition(Fields.rightClawPickup);
             closed=false;
         }
-        prevY = gamepad2.y;
+        prevY2 = gamepad2.y;
     }
     public void checkXB(){
-        if(gamepad2.x&& gamepad2.x!=prevX){
+        if(gamepad2.x&& gamepad2.x!=prevX2){
             sliderState=Fields.referenceSliderBackwardsLow;
             sliderTargetPos=Fields.sliderBackLow;
             armState=Fields.referenceArmBackwardsLow;
             armTargetPos=Fields.armBackwardsLow;
         }
-        prevX=gamepad2.x;
-        if(gamepad2.b&& gamepad2.b!=prevB){
+        prevX2=gamepad2.x;
+        if(gamepad2.b&& gamepad2.b!=prevB2){
             sliderState=Fields.referenceSliderBackwardsHigh;
             sliderTargetPos=Fields.sliderBackwardsHigh;
             armState=Fields.referenceArmBackwardsHigh;
             armTargetPos=Fields.armBackwardsHigh;
         }
-        prevB=gamepad2.b;
+        prevB2=gamepad2.b;
     }
     public void checkBumpers(){
         if(gamepad2.right_bumper && gamepad2.right_bumper!=prevRBumper2){
@@ -460,13 +464,13 @@ public class Teleop extends LinearOpMode {
     }
     public void checkRightTrigger(){
         //right trigger sets state to beacon level
-        if(gamepad2.right_trigger > 0 && gamepad2.right_trigger>0 != prevRTrigger){
+        if(gamepad2.right_trigger > 0 && gamepad2.right_trigger>0 != prevRTrigger2){
             sliderTargetPos = Fields.sliderBeacon;
             armTargetPos = Fields.armBeacon;
             sliderState = Fields.referenceSliderGround;
             armState = Fields.referenceArmGround;
         }
-        prevRTrigger = gamepad2.right_trigger>0;
+        prevRTrigger2 = gamepad2.right_trigger>0;
     }
     public void doTelemetry() {
         pen.update();
@@ -474,7 +478,7 @@ public class Teleop extends LinearOpMode {
 
     //helper functions
     public void armRunTo(int position){
-        armRunTo(position, 1);
+        armRunTo(position, Fields.armSpeed);
     }
     public void armRunTo(int position, double power){
         armTargetPos=position;

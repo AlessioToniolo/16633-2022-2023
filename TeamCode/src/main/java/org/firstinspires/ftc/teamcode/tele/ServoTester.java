@@ -21,12 +21,12 @@ public class ServoTester extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-
+        robot.init(hardwareMap);
         waitForStart();
         pen.setColor("black").setUnderLine(true);
         while(!isStopRequested() && opModeIsActive()){
-            rightServoPosition += gamepad1.left_stick_x*.1;
-            leftServoPosition += gamepad1.right_stick_x*.1;
+            rightServoPosition += gamepad1.left_stick_x*.001;
+            leftServoPosition += gamepad1.right_stick_x*.001;
             if(rightServoPosition >1)rightServoPosition=1;
             else if(rightServoPosition<0)rightServoPosition=0;
             if(leftServoPosition > 1)leftServoPosition=1;

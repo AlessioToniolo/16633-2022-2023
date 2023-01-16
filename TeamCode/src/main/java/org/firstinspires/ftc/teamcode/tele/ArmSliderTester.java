@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.utility.Fields;
 @TeleOp
 public class ArmSliderTester extends LinearOpMode {
     BaseRobot robot = new BaseRobot();
-    ColorfulTelemetry pen  = new ColorfulTelemetry(telemetry);
+    ColorfulTelemetry pen;
     int sliderPos = 0;
     int armPos = 0;
 
@@ -22,7 +22,8 @@ public class ArmSliderTester extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-
+        robot.init(hardwareMap);
+        pen = new ColorfulTelemetry(telemetry);
         waitForStart();
         pen.setColor("black").setUnderLine(true);
         while(!isStopRequested() && opModeIsActive()){

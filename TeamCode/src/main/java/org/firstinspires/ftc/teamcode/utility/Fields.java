@@ -41,12 +41,12 @@ public class Fields {
 
     public static int sliderGround=0;
     public static int sliderConeStack=523;
-    public static int sliderForwardLow=150;
-    public static int sliderForwardMid=1150;
+    public static int sliderForwardLow=0;//updated 1/16
+    public static int sliderForwardMid=1145;//updated 1/16
     public static int sliderForwardHigh=1574;
     public static int sliderBackwardsHigh=1780;
     public static int sliderBackMid=587;
-    public static int sliderBackLow = 400;
+    public static int sliderBackLow = 0;//updated 1/16
     public static int sliderSuperLow = 200;
 
     public static final int referenceArmGround = 0;
@@ -61,12 +61,12 @@ public class Fields {
     public static int armGround = 0;
     public static int armAutoGround = 50;
     public static int armConeStack = 95;
-    public static int armForwardLow=485;
-    public static int armForwardMid=550;
+    public static int armForwardLow=657;//updated 1/16
+    public static int armForwardMid=657;//updated 1/16
     public static int armForwardHigh = 780;
     public static  int armBackwardsHigh = 1496;
     public static int armBackwardsMid = 1481;
-    public static int armBackwardsLow = 1742;
+    public static int armBackwardsLow = 1484;//updated 1/16
 
     public static int LowCycleTurnAngle = 70;
     public static int LowCycleMove = 2;
@@ -96,14 +96,14 @@ public class Fields {
     //claw varaiables
     // todo oriented as if you were loking directly at
     // the front of the robot for left and right
-    public static double leftClawClose = .465;
-    public static double leftClawPickup = .6;
-    public static double leftClawDeliver = .5;
+    public static double leftClawClose = .55;
+    public static double leftClawPickup = .45;
+    public static double leftClawDeliver = .4;
 
 
-    public static double rightClawPickup = .4;
-    public static double rightClawDeliver = .8;
-    public static double rightClawClose = .56;
+    public static double rightClawPickup = .67;
+    public static double rightClawDeliver = .46;
+    public static double rightClawClose = .46;
 
 
 

@@ -5,29 +5,22 @@ import com.acmerobotics.dashboard.FtcDashboard;
 
 @Config
 public class Fields {
-    // Use `public static`
+    // Use `public static` to show up on DashBoard
 
-    //Auto
-    public static  int subRectX = 0;
-    public static  int subRectY = 0;
-    public static  int subRectWidth=170;
-    public static  int subRectHeight=55;
 
+    /**________________MISCELLANOUS ARM AND SLIDER VARIABLES___________________________**/
+    //Max and Min Slider
+    public static int sliderMinimumTarget = 0;
+    public static int sliderMaximumTarget=1800;
+    //Max and Min arm
+    public static int armMinimumTarget = 0;
+    public static int armMaximumTarget = 2000;
+    //ARM AND SLIDER SPEED
     public static double armSpeed = .5;
     public static double sliderSpeed = 1;
 
-    // Color sensor
-    public static double distanceToClose = 2.5;
 
-    //Slider
-    public static int sliderMinimumTarget = 0;
-    public static int sliderMaximumTarget=1800;
-
-    public static int armMinimumTarget = 0;
-    public static int armMaximumTarget = 2000;
-
-    //refrence variables
-    //slider
+    /**________________________________REFERENCE AND ENCODER SLIDER VARIABLES__________________________**/
     public static final int referenceSliderGround =0;
     public static final int referenceSliderConeStack=1;
     public static final int referenceSliderForwardLow = 2;
@@ -45,9 +38,11 @@ public class Fields {
     public static int sliderForwardMid=1145;//updated 1/16
     public static int sliderForwardHigh=1574;
     public static int sliderBackwardsHigh=1780;
-    public static int sliderBackMid=587;
+    public static int sliderBackMid=1530;//updates 1/17
     public static int sliderBackLow = 0;//updated 1/16
     public static int sliderSuperLow = 200;
+
+    /**_______________________REFERENCE AND ENCODER ARM VARIABLES___________________________**/
 
     public static final int referenceArmGround = 0;
     public static final int referenceArmConeStack = 1;
@@ -60,42 +55,33 @@ public class Fields {
 
     public static int armGround = 0;
     public static int armAutoGround = 50;
-    public static int armConeStack = 95;
+    public static int armConeStack = 281;
     public static int armForwardLow=657;//updated 1/16
     public static int armForwardMid=657;//updated 1/16
     public static int armForwardHigh = 780;
     public static  int armBackwardsHigh = 1496;
-    public static int armBackwardsMid = 1481;
+    public static int armBackwardsMid = 1574;//updated 1/17
     public static int armBackwardsLow = 1484;//updated 1/16
 
-    public static int LowCycleTurnAngle = 70;
-    public static int LowCycleMove = 2;
-    public static double highBackAngle = -30;
-    public static double highFrontAngle = 49;
-    public static double autoConePickup = 52;
-
-    //public static int armDepositForwardsMid = 1454;
+    /**________________________CONE STACK ARM AND SLIDER VARIABLES___________________________________**/
     //Fields for cone stack
-    public static int coneStack5 = 480;//522
+    public static int coneStack5 = 480;
     public static int coneStack4 = 320;
     public static int coneStack3 = 230;
     public static int coneStack2 = 85;
     public static int coneStack1 = Fields.sliderGround;
-    //set arm to ground too
 
+
+
+    /**___________________BEACON VARIABLES________________________**/
     public static int sliderBeacon = 170;
     public static int armBeacon = 0;
 
 
 
-
-
-
-
-
-    //claw varaiables
-    // todo oriented as if you were loking directly at
-    // the front of the robot for left and right
+    /**______________________________CLAW VARIABLES_______________________**/
+    //If you are looking at the robot from the front then the right claw will be on the left an dhte left claw will be on the right. Just Remember
+    //the left and right corrsepond to the robots perspective of front and back
     public static double leftClawClose = .55;
     public static double leftClawPickup = .45;
     public static double leftClawDeliver = .4;
@@ -105,6 +91,20 @@ public class Fields {
     public static double rightClawDeliver = .46;
     public static double rightClawClose = .46;
 
+    /**_________________________AUTO VISION VARIABLES_______________________**/
+    //variables for rectangle to searchIn
+    public static  int subRectX = 0;
+    public static  int subRectY = 0;
+    public static  int subRectWidth=170;
+    public static  int subRectHeight=55;
+
+
+    /**_________________________OLD AUTO VARIABLES______________________**/
+    public static int LowCycleTurnAngle = 70;
+    public static int LowCycleMove = 2;
+    public static double highBackAngle = -30;
+    public static double highFrontAngle = 49;
+    public static double autoConePickup = 52;
 
 
 }

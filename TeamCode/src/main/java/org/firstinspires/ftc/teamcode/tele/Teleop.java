@@ -313,7 +313,7 @@ public class Teleop extends LinearOpMode {
         if(gamepad2.a && gamepad2.a != prevA2){
             if(closed) {
                 closed = false;
-                if (armTargetPos > 200) {
+                if (armTargetPos > 500) {
                     robot.rightClaw.setPosition(Fields.rightClawDeliver);
                     robot.leftClaw.setPosition(Fields.leftClawDeliver);
                 }
@@ -426,8 +426,12 @@ public class Teleop extends LinearOpMode {
             robot.leftClaw.setPosition(Fields.leftClawPickup);
             robot.rightClaw.setPosition(Fields.rightClawPickup);
             closed=false;
+            //updates the arm and slider String telemetry
+            updateSliderStates();
+            updateArmStates();
         }
         prevY2 = gamepad2.y;
+
     }
     public void checkXB(){
         if(gamepad2.x&& gamepad2.x!=prevX2){
@@ -435,6 +439,9 @@ public class Teleop extends LinearOpMode {
             sliderTargetPos=Fields.sliderBackLow;
             armState=Fields.referenceArmBackwardsLow;
             armTargetPos=Fields.armBackwardsLow;
+            //updates the arm and slider String telemetry
+            updateSliderStates();
+            updateArmStates();
         }
         prevX2=gamepad2.x;
         if(gamepad2.b&& gamepad2.b!=prevB2){
@@ -442,6 +449,9 @@ public class Teleop extends LinearOpMode {
             sliderTargetPos=Fields.sliderBackwardsHigh;
             armState=Fields.referenceArmBackwardsHigh;
             armTargetPos=Fields.armBackwardsHigh;
+            //updates the arm and slider String telemetry
+            updateSliderStates();
+            updateArmStates();
         }
         prevB2=gamepad2.b;
     }
@@ -451,6 +461,9 @@ public class Teleop extends LinearOpMode {
             sliderTargetPos=Fields.sliderBackMid;
             armState = Fields.referenceArmBackwardsMid;
             armTargetPos = Fields.armBackwardsMid;
+            //updates the arm and slider String telemetry
+            updateSliderStates();
+            updateArmStates();
         }
         prevRBumper2=gamepad2.right_bumper;
         if(gamepad2.left_bumper && gamepad2.left_bumper!=prevLBumper2){
@@ -458,6 +471,9 @@ public class Teleop extends LinearOpMode {
             sliderTargetPos=Fields.sliderForwardLow;
             armState = Fields.referenceArmForwardLow;
             armTargetPos = Fields.armForwardLow;
+            //updates the arm and slider String telemetry
+            updateSliderStates();
+            updateArmStates();
         }
         prevLBumper2=gamepad2.left_bumper;
 
@@ -469,6 +485,7 @@ public class Teleop extends LinearOpMode {
             armTargetPos = Fields.armBeacon;
             sliderState = Fields.referenceSliderGround;
             armState = Fields.referenceArmGround;
+
         }
         prevRTrigger2 = gamepad2.right_trigger>0;
     }

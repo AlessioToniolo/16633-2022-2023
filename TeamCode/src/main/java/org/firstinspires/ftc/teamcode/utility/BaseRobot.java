@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 public class BaseRobot {
@@ -26,6 +27,10 @@ public class BaseRobot {
     public DcMotor arm;
     public Servo leftClaw;
     public Servo rightClaw;
+
+    public CRServo rightOdoServo;
+    public CRServo leftOdoServo;
+    public CRServo middleOdoServo;
 
     // Local OpMode members
     HardwareMap hwMap;
@@ -82,6 +87,14 @@ public class BaseRobot {
 
         leftClaw = hwMap.servo.get("leftclaw");
         rightClaw = hwMap.servo.get("rightclaw");
+
+        leftOdoServo = hwMap.crservo.get("leftOdoServo");
+        rightOdoServo = hwMap.crservo.get("rightOdoServo");
+        //middleOdoServo = hwMap.crservo.get("middleOdoServo");
+
+        rightOdoServo.setDirection(Fields.rightOdoDirection);
+        leftOdoServo.setDirection(Fields.leftOdoDirection);
+        //middleOdoServo.setDirection(Fields.middleOdoDirection);
 
         // Initialize IMU
         imu = hwMap.get(BNO055IMU.class, "imu");
@@ -272,6 +285,51 @@ public class BaseRobot {
     public double inchesToTicks(double inches) {
         return TICKS_PER_REV * WHEEL_RADIUS * 2 * Math.PI * inches;
     }
+    public void retractOdoPods(Telemetry telemetry){
+        Thread t = new Thread(new Runnable(){
+            @Override
+            public void run() {
+                runOdoPodsAsync(1, telemetry);
+            }
+        });
+        t.start();
+    }
+    public void lowerOdoPods(Telemetry telemetry){
+        Thread t = new Thread(new Runnable(){
+            @Override
+            public void run() {
+                runOdoPodsAsync(-1, telemetry);
+            }
+        });
+        t.start();
+    }
+
+    public void runOdoPodsAsync(int power, Telemetry telemetry){
+        rightOdoServo.setPower(power);
+        //middleOdoServo.setPower(power);
+        leftOdoServo.setPower(power);
+        wait(Fields.odoRetractDelay, telemetry);
+        rightOdoServo.setPower(0);
+        leftOdoServo.setPower(0);
+        //middleOdoServo.setPower(0);
+        telemetry.addLine("Motors Off");
+        telemetry.update();
+    }
+
+
+
+    private void wait(int delay, Telemetry telemetry){
+        ElapsedTime t = new ElapsedTime();
+        t.reset();
+        int filler = 5;
+        while(t.seconds()<delay){
+            telemetry.addLine("Seconds: " + t.seconds());
+            telemetry.update();
+            filler=5;
+        }
+        return;
+    }
+
 
 
 

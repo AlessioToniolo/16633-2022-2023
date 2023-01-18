@@ -33,10 +33,15 @@ public class ServoTester extends LinearOpMode {
             else if(leftServoPosition < 0)leftServoPosition=0;
             robot.leftClaw.setPosition(leftServoPosition);
             robot.rightClaw.setPosition(rightServoPosition);
+
+
             pen.addLine("LEFT ClAW: " + leftServoPosition);
             pen.addLine("RIGHT CLAW: " + rightServoPosition);
             pen.update();
         }
     }
+
+
+
 
 }

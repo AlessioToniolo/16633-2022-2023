@@ -2,10 +2,21 @@ package org.firstinspires.ftc.teamcode.utility;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Config
 public class Fields {
     // Use `public static` to show up on DashBoard
+
+
+    //odo variable
+    public static int odoRetractDelay = 4;
+    //the directions which would retract the odo pods
+    public static final CRServo.Direction rightOdoDirection = CRServo.Direction.REVERSE;
+    public static final CRServo.Direction leftOdoDirection = CRServo.Direction.FORWARD;//unknown
+    public static final CRServo.Direction middleOdoDirection = CRServo.Direction.FORWARD;//unknown
+
 
 
     /**________________MISCELLANOUS ARM AND SLIDER VARIABLES___________________________**/

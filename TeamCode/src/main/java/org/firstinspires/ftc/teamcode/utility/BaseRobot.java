@@ -90,11 +90,11 @@ public class BaseRobot {
 
         leftOdoServo = hwMap.crservo.get("leftOdoServo");
         rightOdoServo = hwMap.crservo.get("rightOdoServo");
-        //middleOdoServo = hwMap.crservo.get("middleOdoServo");
+        middleOdoServo = hwMap.crservo.get("middleOdoServo");
 
         rightOdoServo.setDirection(Fields.rightOdoDirection);
         leftOdoServo.setDirection(Fields.leftOdoDirection);
-        //middleOdoServo.setDirection(Fields.middleOdoDirection);
+        middleOdoServo.setDirection(Fields.middleOdoDirection);
 
         // Initialize IMU
         imu = hwMap.get(BNO055IMU.class, "imu");
@@ -306,19 +306,19 @@ public class BaseRobot {
 
     public void runOdoPodsAsync(int power, Telemetry telemetry){
         rightOdoServo.setPower(power);
-        //middleOdoServo.setPower(power);
+        middleOdoServo.setPower(power);
         leftOdoServo.setPower(power);
         wait(Fields.odoRetractDelay, telemetry);
         rightOdoServo.setPower(0);
         leftOdoServo.setPower(0);
-        //middleOdoServo.setPower(0);
+        middleOdoServo.setPower(0);
         telemetry.addLine("Motors Off");
         telemetry.update();
     }
 
 
 
-    private void wait(int delay, Telemetry telemetry){
+    private void wait(double delay, Telemetry telemetry){
         ElapsedTime t = new ElapsedTime();
         t.reset();
         int filler = 5;

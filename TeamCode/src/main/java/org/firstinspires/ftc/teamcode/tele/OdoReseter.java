@@ -65,13 +65,15 @@ public class OdoReseter extends LinearOpMode {
             prevDDown = gamepad1.dpad_down;
 
             telemetry.addLine("SERVO SELECTED: " + selectedServoString);
-            if(gamepad1.left_stick_y < 0){selectedServo.setPower(1); telemetry.addLine("STATE: RETRACTING");}
-            else if(gamepad1.left_stick_y>0){selectedServo.setPower(-1);telemetry.addLine("STATE: RELEASING");}
-            else {selectedServo.setPower(0);telemetry.addLine("STATE: PAUSED");}
+            if(gamepad1.left_stick_y < 0&&selectedServo!=null){selectedServo.setPower(1); telemetry.addLine("STATE: RETRACTING");}
+            else if(gamepad1.left_stick_y>0&&selectedServo!=null){selectedServo.setPower(-1);telemetry.addLine("STATE: RELEASING");}
+            else if(selectedServo!=null){selectedServo.setPower(0);telemetry.addLine("STATE: PAUSED");}
 
 
             if(gamepad1.a && gamepad1.a != prevA){
                 robot.retractOdoPods(telemetry);
+                selectedServo = null;
+                selectedServoString = "NONE";
             }
             prevA = gamepad1.a;
 

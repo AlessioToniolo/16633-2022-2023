@@ -31,7 +31,7 @@ import java.lang.reflect.Field;
 public class Teleop extends LinearOpMode {
 
     BaseRobot robot = new BaseRobot();
-
+    boolean retracted = false;
     //speed variables
     double baseSpeed = .5;
     double speed = 0;
@@ -129,6 +129,7 @@ public class Teleop extends LinearOpMode {
         while (!isStopRequested() && opModeIsActive()) {
             checkSpeed();
             fieldCentricDrive();
+            checkOdoRetract();
         }
     }
     public void runEverythingElseLoop() {
@@ -493,6 +494,13 @@ public class Teleop extends LinearOpMode {
         pen.update();
     }
 
+    public void checkOdoRetract() {
+        if (!retracted&& gamepad1.y && gamepad1.y != prevY) {
+            robot.retractOdoPods(telemetry);
+            retracted=true;
+        }
+        prevY = gamepad1.y;
+    }
     //helper functions
     public void armRunTo(int position){
         armRunTo(position, Fields.armSpeed);

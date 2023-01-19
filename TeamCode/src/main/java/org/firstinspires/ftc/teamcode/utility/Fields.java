@@ -11,11 +11,11 @@ public class Fields {
 
 
     //odo variable
-    public static int odoRetractDelay = 4;
+    public static double odoRetractDelay = 3.5;
     //the directions which would retract the odo pods
     public static final CRServo.Direction rightOdoDirection = CRServo.Direction.REVERSE;
-    public static final CRServo.Direction leftOdoDirection = CRServo.Direction.FORWARD;//unknown
-    public static final CRServo.Direction middleOdoDirection = CRServo.Direction.FORWARD;//unknown
+    public static final CRServo.Direction leftOdoDirection = CRServo.Direction.FORWARD;
+    public static final CRServo.Direction middleOdoDirection = CRServo.Direction.REVERSE;
 
 
 

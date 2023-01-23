@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.utility.BaseRobot;
 import org.firstinspires.ftc.teamcode.utility.ColorfulTelemetry;
 
 @TeleOp
+@Disabled
 public class OdoPodRetractorTester extends LinearOpMode {
 
 

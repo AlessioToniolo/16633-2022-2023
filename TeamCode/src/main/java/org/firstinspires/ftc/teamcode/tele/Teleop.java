@@ -115,6 +115,7 @@ public class Teleop extends LinearOpMode {
         pen.update();
 
         waitForStart();
+        odoLoop();
 
         // TODO RR
         //robot.drive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(0)));
@@ -124,6 +125,19 @@ public class Teleop extends LinearOpMode {
         runEverythingElseLoop();
 
 
+    }
+
+    public void odoLoop(){
+        boolean overrided = false;
+        while(!retracted && !overrided) {
+            pen.addLine("Press Y to retract Odo wheels or A to Override");
+            pen.update();
+            checkOdoRetract();
+            if (gamepad1.a && gamepad1.a != prevA) {
+                overrided = true;
+            }
+            prevA = gamepad1.a;
+        }
     }
     public void runDriveLoop(){
         while (!isStopRequested() && opModeIsActive()) {
@@ -637,5 +651,7 @@ public class Teleop extends LinearOpMode {
         pen.setColor(ColorfulTelemetry.Black).addLine("_________________" );
         pen.addLine();
     }
+
+
 
 }

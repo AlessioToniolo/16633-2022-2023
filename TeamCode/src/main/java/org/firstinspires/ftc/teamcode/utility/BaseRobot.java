@@ -78,7 +78,7 @@ public class BaseRobot {
         drive = new SampleMecanumDrive(hwMap);
 
         // Initialize color sensor
-        distanceSensor = hwMap.get(RevColorSensorV3.class, "color");
+        //distanceSensor = hwMap.get(RevColorSensorV3.class, "color");
 
         // Define and Initialize Motors.  Assign Names that match the setup on the RC Phone
         slider = hwMap.dcMotor.get("slider");

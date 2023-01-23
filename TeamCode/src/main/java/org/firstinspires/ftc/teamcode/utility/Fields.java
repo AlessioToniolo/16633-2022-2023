@@ -22,7 +22,7 @@ public class Fields {
     /**________________MISCELLANOUS ARM AND SLIDER VARIABLES___________________________**/
     //Max and Min Slider
     public static int sliderMinimumTarget = 0;
-    public static int sliderMaximumTarget=1800;
+    public static int sliderMaximumTarget=3000;
     //Max and Min arm
     public static int armMinimumTarget = 0;
     public static int armMaximumTarget = 2000;
@@ -48,7 +48,7 @@ public class Fields {
     public static int sliderForwardLow=0;//updated 1/16
     public static int sliderForwardMid=1145;//updated 1/16
     public static int sliderForwardHigh=1574;
-    public static int sliderBackwardsHigh=1780;
+    public static int sliderBackwardsHigh=2367;//update1/23
     public static int sliderBackMid=1530;//updates 1/17
     public static int sliderBackLow = 0;//updated 1/16
     public static int sliderSuperLow = 200;
@@ -70,7 +70,7 @@ public class Fields {
     public static int armForwardLow=657;//updated 1/16
     public static int armForwardMid=657;//updated 1/16
     public static int armForwardHigh = 780;
-    public static  int armBackwardsHigh = 1496;
+    public static  int armBackwardsHigh = 1421;//updated 1/23
     public static int armBackwardsMid = 1574;//updated 1/17
     public static int armBackwardsLow = 1484;//updated 1/16
 

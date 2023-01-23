@@ -16,7 +16,7 @@ public class ColorfulTelemetry  {
    public static final String Black = "Black";
 
 
-   public String color = "black";
+   public String color = "white";
    public boolean isBold = false;
    public boolean isItalic = false;
    public boolean isUnderline = false;

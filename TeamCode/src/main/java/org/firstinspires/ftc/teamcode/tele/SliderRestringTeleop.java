@@ -21,8 +21,8 @@ public class SliderRestringTeleop extends LinearOpMode {
         while(!isStopRequested() && opModeIsActive()) {
             pen.addLine("Push both Joysticks up to reset slides and tighten the strings");
 
-            sliderPower = gamepad2.left_stick_y / 2.0;
-            sideSliderPower = gamepad2.right_stick_y / 2.0;
+            sliderPower = gamepad2.left_stick_y / 4.0;
+            sideSliderPower = gamepad2.right_stick_y / 4.0;
             robot.sideSlider.setPower(sideSliderPower);
             robot.slider.setPower(sliderPower);
             pen.addLine("Slider Power " + sliderPower);

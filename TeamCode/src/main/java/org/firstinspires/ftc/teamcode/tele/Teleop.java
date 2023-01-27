@@ -38,7 +38,7 @@ public class Teleop extends LinearOpMode {
     double triggerSpeedModifier = 1;
 
     //booleans for coneStack guessing algorithm
-    int coneStackPos = -1;//-1 is not in use, 0 is out of bounds for looping purposes 1 is 1 cone 2 is 2 cones and so on and so forth until 5 cones where it will then loop around to 1
+     int coneStackPos = -1;//-1 is not in use, 0 is out of bounds for looping purposes 1 is 1 cone 2 is 2 cones and so on and so forth until 5 cones where it will then loop around to 1
     int lastConeStackPos = 1;//records the last conestack position used
     boolean isGuessing = false;
 
@@ -197,15 +197,11 @@ public class Teleop extends LinearOpMode {
             checkXB();
             checkBumpers();
         }
-        pen.addLine("stack" + coneStackPos);
         checkDDownandUp();
-        pen.addLine("stack" + coneStackPos);
 
         checkDRightandLeft();
-        pen.addLine("stack" + coneStackPos);
 
         checkRightTrigger();
-        pen.addLine("stack" + coneStackPos);
 
         //checkResetEncoderPosition();
 
@@ -428,7 +424,6 @@ public class Teleop extends LinearOpMode {
             if(coneStackPos==-1) {
                 if (lastConeStackPos == 1) coneStackPos = 5;
                 else coneStackPos = lastConeStackPos - 1;
-                pen.addLine("stack" + coneStackPos);
                 updateConeStackPos();
             }
 
@@ -444,7 +439,7 @@ public class Teleop extends LinearOpMode {
             //make sure conestackPos doesnt go out of bounds and instead cycles around
             if(coneStackPos == 0)coneStackPos=5;
             else if(coneStackPos == 6)coneStackPos=1;
-
+            if(gamepad2.dpad_left || gamepad2.dpad_right)updateConeStackPos();
             if(isGuessing){
                 lastConeStackPos = coneStackPos;
             }
@@ -668,7 +663,17 @@ public class Teleop extends LinearOpMode {
         armStateStr=stateStr;
     }
     public void updateConeStackPos(){
-        pen.addLine("stack" + coneStackPos);
+//        while(!gamepad2.guide){
+//        pen.addLine("stack" + coneStackPos);
+//        pen.addLine("alstStack" + lastConeStackPos);
+//        pen.addLine("isGuessed: " + isGuessing);
+        //pen.update();
+//        }
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         if(coneStackPos != 1)armTargetPos = Fields.armConeStack;
         if(coneStackPos==5)sliderTargetPos=Fields.coneStack5;
         else if(coneStackPos ==4)sliderTargetPos = Fields.coneStack4;

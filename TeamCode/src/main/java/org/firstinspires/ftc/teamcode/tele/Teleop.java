@@ -37,6 +37,12 @@ public class Teleop extends LinearOpMode {
     double speed = 0;
     double triggerSpeedModifier = 1;
 
+    //booleans for coneStack guessing algorithm
+    int coneStackPos = -1;//-1 is not in use, 0 is out of bounds for looping purposes 1 is 1 cone 2 is 2 cones and so on and so forth until 5 cones where it will then loop around to 1
+    int lastConeStackPos = 1;//records the last conestack position used
+    boolean isGuessing = false;
+
+
     //Bumpers and triggers
     boolean prevRBumper, prevRBumper2=false;
     boolean prevLBumper,prevLBumper2 = false;
@@ -60,7 +66,6 @@ public class Teleop extends LinearOpMode {
     int sliderState = 0;
     double armTargetPos = 0;
     double sliderTargetPos = 0;
-    int coneStackPos = -1;//-1 is not in use, 0 is out of bounds for looping purposes 1 is 5 cones, 2 is 4 cones, 3 is 3 cones, 4 is 2 cones, 5 is 1 cone
     //claw vars
     double leftClawPos = 0;
     double rightClawPos = 0;
@@ -192,9 +197,16 @@ public class Teleop extends LinearOpMode {
             checkXB();
             checkBumpers();
         }
+        pen.addLine("stack" + coneStackPos);
         checkDDownandUp();
+        pen.addLine("stack" + coneStackPos);
+
         checkDRightandLeft();
+        pen.addLine("stack" + coneStackPos);
+
         checkRightTrigger();
+        pen.addLine("stack" + coneStackPos);
+
         //checkResetEncoderPosition();
 
         //motor functionality
@@ -333,6 +345,10 @@ public class Teleop extends LinearOpMode {
                     robot.leftClaw.setPosition(Fields.leftClawDeliver);
                 }
                 else {
+                    //if we are releasing a cone and we are currently guessing the conestack position
+                    if(isGuessing){
+                        isGuessing =false;//then we know the guessing is over
+                    }
                     robot.rightClaw.setPosition(Fields.rightClawPickup);
                     robot.leftClaw.setPosition(Fields.leftClawPickup);
                 }
@@ -385,6 +401,10 @@ public class Teleop extends LinearOpMode {
          * adjustments because the arm and slider would be constantly being set to the arm & slider state position
          */
         if(gamepad2.dpad_up||gamepad2.dpad_down) {
+            if(armState==Fields.referenceArmConeStack){
+                isGuessing=true;
+            }
+            else isGuessing=false;
             updateArmStates();
             updateSliderStates();
         }
@@ -395,7 +415,7 @@ public class Teleop extends LinearOpMode {
         pen.reset().addLine("SliderTargetPos: "+sliderTargetPos + "Estimaed: " + robot.slider.getTargetPosition());
         pen.addLine("SliderState: "+sliderStateStr);
         lineBreak();
-        pen.setColor(ColorfulTelemetry.Purple).bold().addLine("ARM :" );
+        pen.setColor("White").bold().addLine("ARM :" );
         pen.reset().addLine("armTargetPos: "+armTargetPos + "Estimated " + robot.arm.getTargetPosition());
         pen.addLine("armState: "+armStateStr);
 
@@ -403,6 +423,16 @@ public class Teleop extends LinearOpMode {
     public void checkDRightandLeft() {
         //if the arm and slider states indicate the cone stack
         if(armState == Fields.referenceArmConeStack && sliderState == Fields.referenceSliderConeStack){
+
+            //make our guessk
+            if(coneStackPos==-1) {
+                if (lastConeStackPos == 1) coneStackPos = 5;
+                else coneStackPos = lastConeStackPos - 1;
+                pen.addLine("stack" + coneStackPos);
+                updateConeStackPos();
+            }
+
+
             if(coneStackPos == -1)coneStackPos=5;//defulat value for conestack pos
 
             if(gamepad2.dpad_left && gamepad2.dpad_left != prevDLeft2)coneStackPos--;
@@ -415,8 +445,9 @@ public class Teleop extends LinearOpMode {
             if(coneStackPos == 0)coneStackPos=5;
             else if(coneStackPos == 6)coneStackPos=1;
 
-
-            if(gamepad2.dpad_left && gamepad2.dpad_right)updateConeStackPos();
+            if(isGuessing){
+                lastConeStackPos = coneStackPos;
+            }
         }
         else{
             coneStackPos=-1;//if we arent at the conestack state then set conestackpos to -1
@@ -428,6 +459,8 @@ public class Teleop extends LinearOpMode {
         if(coneStackPos==-1)coneStackPosString = "NOT IN USE";
         else coneStackPosString = coneStackPos + " Cones Left";
         pen.addLine("CONE STACK POS: " + coneStackPosString);
+        pen.addLine("isGuessing " + isGuessing);
+        pen.addLine("lasConeStackPos" + lastConeStackPos);
     }
     public void checkY(){
         if(gamepad2.y && gamepad2.y != prevY2){
@@ -635,6 +668,7 @@ public class Teleop extends LinearOpMode {
         armStateStr=stateStr;
     }
     public void updateConeStackPos(){
+        pen.addLine("stack" + coneStackPos);
         if(coneStackPos != 1)armTargetPos = Fields.armConeStack;
         if(coneStackPos==5)sliderTargetPos=Fields.coneStack5;
         else if(coneStackPos ==4)sliderTargetPos = Fields.coneStack4;
@@ -648,7 +682,7 @@ public class Teleop extends LinearOpMode {
      */
     private void lineBreak(){
         pen.addLine();
-        pen.setColor(ColorfulTelemetry.Black).addLine("_________________" );
+        pen.setColor("White").addLine("_________________" );
         pen.addLine();
     }
 

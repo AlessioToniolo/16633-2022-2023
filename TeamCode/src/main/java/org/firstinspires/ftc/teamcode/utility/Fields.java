@@ -44,10 +44,10 @@ public class Fields {
 
 
     public static int sliderGround=0;
-    public static int sliderConeStack=523;
+    public static int sliderConeStack=683;
     public static int sliderForwardLow=0;//updated 1/16
     public static int sliderForwardMid=1145;//updated 1/16
-    public static int sliderForwardHigh=1574;
+    public static int sliderForwardHigh=2900;//updated 1/24
     public static int sliderBackwardsHigh=2367;//update1/23
     public static int sliderBackMid=1530;//updates 1/17
     public static int sliderBackLow = 0;//updated 1/16
@@ -66,20 +66,20 @@ public class Fields {
 
     public static int armGround = 0;
     public static int armAutoGround = 50;
-    public static int armConeStack = 281;
+    public static int armConeStack = 0;
     public static int armForwardLow=657;//updated 1/16
     public static int armForwardMid=657;//updated 1/16
-    public static int armForwardHigh = 780;
+    public static int armForwardHigh = 487;//updated 1/23
     public static  int armBackwardsHigh = 1421;//updated 1/23
     public static int armBackwardsMid = 1574;//updated 1/17
     public static int armBackwardsLow = 1484;//updated 1/16
 
     /**________________________CONE STACK ARM AND SLIDER VARIABLES___________________________________**/
     //Fields for cone stack
-    public static int coneStack5 = 480;
-    public static int coneStack4 = 320;
-    public static int coneStack3 = 230;
-    public static int coneStack2 = 85;
+    public static int coneStack5 = 683;
+    public static int coneStack4 = 456;
+    public static int coneStack3 = 331;
+    public static int coneStack2 = 155;
     public static int coneStack1 = Fields.sliderGround;
 
 

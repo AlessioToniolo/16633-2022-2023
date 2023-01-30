@@ -35,7 +35,6 @@ public class DarbotterAuto extends LinearOpMode {
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-
         // OPEN CV
         webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
         camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName);
@@ -51,19 +50,33 @@ public class DarbotterAuto extends LinearOpMode {
             }
         });
 
+        // Init
+        AutoFunctions fun = new AutoFunctions(hardwareMap);
+        fun.clawClose();
+
         // Build Trajectories
         Pose2d startPose = new Pose2d(35, -72+13.5, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
 
         // Go to leftmost square
-        Trajectory one = drive.trajectoryBuilder(startPose).splineTo(new Vector2d(29, -8.5), Math.toRadians(120)).build();
+        Trajectory one = drive.trajectoryBuilder(startPose).splineTo(new Vector2d(25, -9), Math.toRadians(120)).build();
+        Trajectory two = drive.trajectoryBuilder(one.end()).lineToSplineHeading(new Pose2d(53, -6, Math.toRadians(0)))
+                .addTemporalMarker(0.5, fun::liftConeStack).build();
+
+        telemetry.update();
+        telemetry.speak("READY! ??");
+        telemetry.addLine("READY! 🤡");
 
         waitForStart();
         if (isStopRequested()) return;
 
         // Start Code
-
+        fun.liftFrontHigh(0.5);
         drive.followTrajectory(one);
+        fun.clawOpen();
+        delay(0.5);
+        fun.resetAll();
+        drive.followTrajectory(two);
 
         // OpenCV Code
         double zone = ZoneDetectionPipeline.getZone();

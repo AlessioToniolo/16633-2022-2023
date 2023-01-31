@@ -47,7 +47,7 @@ public class Fields {
     public static int sliderConeStack=683;
     public static int sliderForwardLow=0;//updated 1/16
     public static int sliderForwardMid=1145;//updated 1/16
-    public static int sliderForwardHigh=2119;//updated 1/31
+    public static int sliderForwardHigh=2200;//updated 1/31
     public static int sliderBackwardsHigh=2658;//update1/31
     public static int sliderBackMid=1530;//updates 1/17
     public static int sliderBackLow = 0;//updated 1/16

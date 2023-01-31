@@ -25,9 +25,19 @@ public class AutoFunctions {
         armRunTo(Fields.armForwardHigh, power);
     }
 
+    public void liftFrontHigh(double sliderPower, double armPower) {
+        sliderRunTo(Fields.sliderForwardHigh, sliderPower);
+        armRunTo(Fields.armForwardHigh, armPower);
+    }
+
     public void liftConeStack() {
         sliderRunTo(Fields.sliderConeStack);
         armRunTo(Fields.armConeStack);
+    }
+
+    public void liftConeStack(double power) {
+        sliderRunTo(Fields.sliderConeStack, power);
+        armRunTo(Fields.armConeStack, power);
     }
 
     // TODO claw functions

@@ -59,9 +59,11 @@ public class DarbotterAuto extends LinearOpMode {
         drive.setPoseEstimate(startPose);
 
         // Go to leftmost square
-        Trajectory one = drive.trajectoryBuilder(startPose).splineTo(new Vector2d(25, -9), Math.toRadians(120)).build();
+        Trajectory one = drive.trajectoryBuilder(startPose).splineTo(new Vector2d(26, -6), Math.toRadians(120)).build();
         Trajectory two = drive.trajectoryBuilder(one.end()).lineToSplineHeading(new Pose2d(53, -6, Math.toRadians(0)))
-                .addTemporalMarker(0.5, fun::liftConeStack).build();
+                .addTemporalMarker(1, () -> {
+                    fun.liftConeStack(0.5);
+                }).build();
 
         telemetry.update();
         telemetry.speak("READY! ??");
@@ -71,12 +73,12 @@ public class DarbotterAuto extends LinearOpMode {
         if (isStopRequested()) return;
 
         // Start Code
-        fun.liftFrontHigh(0.5);
+        fun.liftFrontHigh(0.5, 0.35);
         drive.followTrajectory(one);
         fun.clawOpen();
         delay(0.5);
         fun.resetAll();
-        drive.followTrajectory(two);
+        //drive.followTrajectory(two);
 
         // OpenCV Code
         double zone = ZoneDetectionPipeline.getZone();

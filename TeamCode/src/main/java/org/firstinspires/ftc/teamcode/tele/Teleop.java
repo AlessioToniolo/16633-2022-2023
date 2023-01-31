@@ -120,7 +120,7 @@ public class Teleop extends LinearOpMode {
         pen.update();
 
         waitForStart();
-        odoLoop();
+        //odoLoop();
 
         // TODO RR
         //robot.drive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(0)));

@@ -30,6 +30,23 @@ public class AutoFunctions {
         armRunTo(Fields.armForwardHigh, armPower);
     }
 
+    public void liftBackHigh() {
+        sliderRunTo(Fields.sliderBackwardsHigh);
+        armRunTo(Fields.armBackwardsHigh);
+    }
+
+    public void liftBackHigh(double power) {
+        sliderRunTo(Fields.sliderBackwardsHigh, power);
+        armRunTo(Fields.armBackwardsHigh, power);
+    }
+
+    public void liftBackHigh(double sliderPower, double armPower) {
+        sliderRunTo(Fields.sliderBackwardsHigh, sliderPower);
+        armRunTo(Fields.armBackwardsHigh, armPower);
+    }
+
+
+
     public void liftConeStack() {
         sliderRunTo(Fields.sliderConeStack);
         armRunTo(Fields.armConeStack);
@@ -38,6 +55,19 @@ public class AutoFunctions {
     public void liftConeStack(double power) {
         sliderRunTo(Fields.sliderConeStack, power);
         armRunTo(Fields.armConeStack, power);
+    }
+
+    public void hoverForward() {
+        sliderRunTo(Fields.sliderForwardLow);
+        armRunTo(Fields.armForwardLow);
+    }
+
+    public void lowerArmFrontSlightlyFromHigh(int difference) {
+        armRunTo(Fields.armForwardHigh - difference);
+    }
+
+    public void lowerArmBackSlightlyFromHigh(int difference) {
+        armRunTo(Fields.armBackwardsHigh - difference);
     }
 
     // TODO claw functions

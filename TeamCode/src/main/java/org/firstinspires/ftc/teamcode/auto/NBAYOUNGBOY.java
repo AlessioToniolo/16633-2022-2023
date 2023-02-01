@@ -17,7 +17,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Autonomous
-public class DarbotterAuto extends LinearOpMode {
+public class NBAYOUNGBOY extends LinearOpMode {
     // robot with drive
     BaseRobot robot = new BaseRobot();
     // OpenCV
@@ -56,38 +56,6 @@ public class DarbotterAuto extends LinearOpMode {
         Pose2d startPose = new Pose2d(35, -72+13.5, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
 
-        // Go to junction
-        Trajectory one = drive.trajectoryBuilder(startPose).splineTo(new Vector2d(26, -4), Math.toRadians(120))
-                .addTemporalMarker(0.6, () -> {
-                    fun.liftFrontHigh(1, 0.3);
-                }).build();
-
-        // Go cone stack
-        Trajectory two = drive.trajectoryBuilder(one.end()).lineTo(new Vector2d(36, -10))
-                .addTemporalMarker(0.7, () -> {
-                    fun.liftConeStack(0.5);
-                }).build();
-        Trajectory three = drive.trajectoryBuilder(two.end()).lineToSplineHeading(new Pose2d(60, -9, Math.toRadians(0))).build();
-
-        // Deposit # 1
-        Trajectory four = drive.trajectoryBuilder(three.end()).lineTo(new Vector2d(36, -8))
-                .addTemporalMarker(0.7, () -> {
-                }).build();
-        Trajectory five = drive.trajectoryBuilder(four.end()).lineToSplineHeading(new Pose2d(24, -2, Math.toRadians(-60))).build();
-
-        // Cone stack # 2
-        Trajectory six = drive.trajectoryBuilder(five.end()).lineTo(new Vector2d(36, -10))
-                .addTemporalMarker(0.7, () -> {
-                    fun.liftConeStack(0.5);
-                }).build();
-        Trajectory seven = drive.trajectoryBuilder(six.end()).lineToSplineHeading(new Pose2d(60, -9, Math.toRadians(0))).build();
-
-        // Deposit # 2
-        Trajectory eight = drive.trajectoryBuilder(seven.end()).lineTo(new Vector2d(36, -8))
-                .addTemporalMarker(0.7, () -> {
-                }).build();
-
-
         telemetry.update();
         telemetry.speak("READY! ??");
         telemetry.addLine("READY! 🤡");
@@ -96,30 +64,6 @@ public class DarbotterAuto extends LinearOpMode {
         if (isStopRequested()) return;
 
         // Start Code
-        //fun.liftFrontHigh(0.5, 0.35);
-        fun.hoverForward();
-        drive.followTrajectory(one);
-        delay(1);
-        fun.lowerArmFrontSlightlyFromHigh(80);
-        fun.clawOpen();
-        delay(0.5);
-        drive.followTrajectory(two);
-        drive.followTrajectory(three);
-        fun.clawClose();
-        delay(0.5);
-        fun.liftBackHigh(.8, 0.3);
-        drive.followTrajectory(four);
-        drive.followTrajectory(five);
-        delay(0.5);
-        fun.lowerArmBackSlightlyFromHigh(-150);
-        fun.clawOpen();
-        delay(0.5);
-        drive.followTrajectory(six);
-        drive.followTrajectory(seven);
-        fun.clawClose();
-        delay(0.5);
-        fun.liftBackHigh(.8, 0.3);
-        //drive.followTrajectory(eight);
 
 
         // OpenCV Code
@@ -143,7 +87,6 @@ public class DarbotterAuto extends LinearOpMode {
     public void delay(double t) {
         runtime.reset();
         while (runtime.seconds() < t && !isStopRequested()) {
-            //dfsdfa
         }
     }
 }

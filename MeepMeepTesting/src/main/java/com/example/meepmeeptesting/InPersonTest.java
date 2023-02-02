@@ -18,8 +18,12 @@ public class InPersonTest {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(60, -9, Math.toRadians(0)))
                                 .setReversed(true)
-                                .splineTo(new Vector2d(58, -12), toRadians(0))
-                                .splineToSplineHeading(new Pose2d(26, -4, toRadians(-60)), toRadians(140))
+                                //.splineTo(new Vector2d(58, -12), toRadians(0))
+                                .splineToSplineHeading(new Pose2d(24, -2, toRadians(-60)), toRadians(170))
+                                .waitSeconds(1)
+
+                                .setReversed(false)
+                                .splineToLinearHeading(new Pose2d(60, -9, Math.toRadians(0)), toRadians(-15))
                                 .build()
                 );
 

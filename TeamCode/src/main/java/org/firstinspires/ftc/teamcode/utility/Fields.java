@@ -92,14 +92,14 @@ public class Fields {
     /**______________________________CLAW VARIABLES_______________________**/
     //If you are looking at the robot from the front then the right claw will be on the left an dhte left claw will be on the right. Just Remember
     //the left and right corrsepond to the robots perspective of front and back
-    public static double leftClawClose = .55;
-    public static double leftClawPickup = .45;
-    public static double leftClawDeliver = .4;
+    public static double leftClawClose = .9;
+    public static double leftClawPickup = .8;
+    public static double leftClawDeliver = .8;
 
 
-    public static double rightClawPickup = .67;
-    public static double rightClawDeliver = .46;
-    public static double rightClawClose = .46;
+    public static double rightClawPickup = .54;
+    public static double rightClawDeliver = .3;
+    public static double rightClawClose = .36;
 
     /**_________________________AUTO VISION VARIABLES_______________________**/
     //variables for rectangle to searchIn

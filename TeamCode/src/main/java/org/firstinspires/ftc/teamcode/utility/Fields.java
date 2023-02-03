@@ -94,12 +94,12 @@ public class Fields {
     //the left and right corrsepond to the robots perspective of front and back
     public static double leftClawClose = .9;
     public static double leftClawPickup = .8;
-    public static double leftClawDeliver = .8;
+    public static double leftClawDeliver = .76;
 
 
     public static double rightClawPickup = .54;
-    public static double rightClawDeliver = .3;
-    public static double rightClawClose = .36;
+    public static double rightClawDeliver = .39;
+    public static double rightClawClose = .38;
 
     /**_________________________AUTO VISION VARIABLES_______________________**/
     //variables for rectangle to searchIn

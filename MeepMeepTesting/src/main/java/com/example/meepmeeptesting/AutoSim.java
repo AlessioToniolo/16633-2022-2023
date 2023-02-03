@@ -29,16 +29,20 @@ public class AutoSim {
 
                                 // Deposit #1
                                 .setReversed(true)
-                                .splineToSplineHeading(new Pose2d(26, -4, toRadians(-60)), toRadians(120))
+                                // TODO EDITS ARE BEELOW ON THIS CYCLE
+                                .splineToSplineHeading(new Pose2d(24, -2, toRadians(-60)), toRadians(165))
+
 
                                 // Cone stack #2
                                 .setReversed(false)
-                                .splineToSplineHeading(new Pose2d(60, -12, Math.toRadians(0)), toRadians(5))
+                                .splineToSplineHeading(new Pose2d(60, -9, Math.toRadians(0)), toRadians(5))
                                 .waitSeconds(.5)
 
                                 // Deposit #2
                                 .setReversed(true)
-                                .splineToSplineHeading(new Pose2d(26, -4, toRadians(-60)), toRadians(120))
+                                .splineToSplineHeading(new Pose2d(24, -2, toRadians(-60)), toRadians(165))
+
+                                // TODO STOP HERE
 
                                 // Cone Stack #3
                                 .setReversed(false)

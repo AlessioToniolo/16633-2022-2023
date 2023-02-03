@@ -78,7 +78,12 @@ public class NBAYOUNGBOY extends LinearOpMode {
 
         // Cone Stack #2
         Trajectory five = drive.trajectoryBuilder(four.end(), false)
+                // below should be removed
                 .splineToLinearHeading(new Pose2d(60, -9, Math.toRadians(0)), Math.toRadians(15))
+
+                // TODO ALTERNATIVE WAY TO GO BACK TO CONE STACK MUST TRY!!!
+                .splineToSplineHeading(new Pose2d(60, -12/*todo OR 9!!!*/, Math.toRadians(0)), toRadians(5))
+
                 .addTemporalMarker(0.7, () -> {
                     fun.liftConeStack(0.5);
                     //TODO fun.clawOpen();

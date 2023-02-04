@@ -60,81 +60,38 @@ public class NBAYOUNGBOY extends LinearOpMode {
 
 
 
-        // Go to junction
+        // Go to junction (PRELOAD)
         Trajectory one = drive.trajectoryBuilder(startPose).splineTo(new Vector2d(28, -4), Math.toRadians(120))
-                .addTemporalMarker(0.6, () -> {
-                    fun.liftFrontHigh(1, 0.3);
+                .addTemporalMarker(1.3, () -> {
+                    fun.liftFrontHigh(1);
                 }).build();
 
-        // Go cone stack
-        Trajectory two = drive.trajectoryBuilder(one.end()).lineTo(new Vector2d(36, -10))
+        // Go cone stack #1
+        Trajectory two = drive.trajectoryBuilder(one.end()).lineToLinearHeading(new Pose2d(36, -10, Math.toRadians(0)))
                 .addTemporalMarker(0.7, () -> {
                     fun.liftConeStack(0.5);
                     fun.clawOpen();
                 }).build();
-        Trajectory three = drive.trajectoryBuilder(two.end()).lineToSplineHeading(new Pose2d(60, -9, Math.toRadians(0))).build();
+        Trajectory three = drive.trajectoryBuilder(two.end()).lineToSplineHeading(new Pose2d(60, -7, Math.toRadians(0))).build();
 
         // Deposit #1
         Trajectory four = drive.trajectoryBuilder(three.end(), true)
-                .splineToSplineHeading(new Pose2d(24, -2, toRadians(-60)), toRadians(150)).build(); // Todo editing this tangent
+                .splineToSplineHeading(new Pose2d(25, -3, toRadians(-60)), toRadians(150)).build();
 
         // Cone Stack #2
         Trajectory five = drive.trajectoryBuilder(four.end(), false)
-                // below should be removed
-                //.splineToLinearHeading(new Pose2d(60, -9, Math.toRadians(0)), Math.toRadians(15))
-
-                // TODO ALTERNATIVE WAY TO GO BACK TO CONE STACK MUST TRY!!!
-                .splineToSplineHeading(new Pose2d(60, -9/*todo OR 9!!!*/, Math.toRadians(0)), toRadians(0/*5*/))
-
-                .addTemporalMarker(0.7, () -> {
-                    fun.liftConeStack(0.5);
-                    //TODO fun.clawOpen();
-                }).build();
-
-        // 🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥 AVENGERS PHASE 5 🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥
+                .splineToSplineHeading(new Pose2d(61.5, -7, Math.toRadians(0)), toRadians(0))
+                .addTemporalMarker(0.2, () -> {
+                    fun.liftConeStack4(1);
+                })
+                .addTemporalMarker(2, () -> {
+                    fun.clawOpen();
+                })
+                .build();
 
         // Deposit #2
         Trajectory six = drive.trajectoryBuilder(five.end(), true)
-                .splineToSplineHeading(new Pose2d(24, -2, toRadians(-60)), toRadians(165)).build();
-
-        // Cone Stack #3
-        Trajectory seven = drive.trajectoryBuilder(six.end(), false)
-                .splineToLinearHeading(new Pose2d(60, -9, Math.toRadians(0)), Math.toRadians(0))
-                .addTemporalMarker(0.7, () -> {
-                    fun.liftConeStack(0.5);
-                    fun.clawOpen();
-                }).build();
-
-        // Deposit #3
-        Trajectory eight = drive.trajectoryBuilder(seven.end(), true)
-                .splineToSplineHeading(new Pose2d(24, -2, toRadians(-60)), toRadians(165)).build();
-
-        // Cone Stack #4
-        Trajectory nine = drive.trajectoryBuilder(eight.end(), false)
-                .splineToLinearHeading(new Pose2d(60, -9, Math.toRadians(0)), Math.toRadians(0))
-                .addTemporalMarker(0.7, () -> {
-                    fun.liftConeStack(0.5);
-                    fun.clawOpen();
-                }).build();
-
-        // Deposit #4
-        Trajectory ten = drive.trajectoryBuilder(nine.end(), true)
-                .splineToSplineHeading(new Pose2d(24, -2, toRadians(-60)), toRadians(165)).build();
-
-        // Cone Stack #5
-        Trajectory eleven = drive.trajectoryBuilder(ten.end(), false)
-                .splineToLinearHeading(new Pose2d(60, -9, Math.toRadians(0)), Math.toRadians(0))
-                .addTemporalMarker(0.7, () -> {
-                    fun.liftConeStack(0.5);
-                    fun.clawOpen();
-                }).build();
-
-        // Deposit #5
-        Trajectory twelve = drive.trajectoryBuilder(eleven.end(), true)
-                .splineToSplineHeading(new Pose2d(24, -2, toRadians(-60)), toRadians(165)).build();
-
-        // 🤡🤡🤡😈😈😈
-
+                .splineToSplineHeading(new Pose2d(25, -3, toRadians(-60)), toRadians(150)).build();
 
         telemetry.update();
         telemetry.speak("READY! ??");
@@ -144,68 +101,28 @@ public class NBAYOUNGBOY extends LinearOpMode {
         if (isStopRequested()) return;
 
         // Start Code
-        fun.hoverForward();
+        fun.hoverForward(0.5, 1);
         drive.followTrajectory(one);
-        delay(1);
         fun.lowerArmFrontSlightlyFromHigh(80);
         fun.clawOpen();
-        delay(0.5);
+        delay(0.25);
         drive.followTrajectory(two);
         drive.followTrajectory(three);
         fun.clawClose();
-        delay(0.5);
+        delay(0.25);
         fun.liftBackHigh(.8, 0.3);
         drive.followTrajectory(four);
-        delay(0.5);
-        fun.lowerArmBackSlightlyFromHigh(-150);
-        fun.clawOpen();
-        delay(0.5);
-        fun.clawClose();
+        fun.lowerArmBackSlightlyFromHigh(-120);
+        fun.clawDeliver();
+        delay(0.25);
         drive.followTrajectory(five);
         fun.clawClose();
-        delay(0.5);
-
-        /*
+        delay(0.25);
         fun.liftBackHigh(.8, 0.3);
         drive.followTrajectory(six);
-        delay(0.5);
-        fun.lowerArmBackSlightlyFromHigh(-150);
-        fun.clawOpen();
-        delay(0.5);
-        fun.clawClose();
-        drive.followTrajectory(seven);
-        fun.clawClose();
-        delay(0.5);
-        fun.liftBackHigh(.8, 0.3);
-        drive.followTrajectory(eight);
-        delay(0.5);
-        fun.lowerArmBackSlightlyFromHigh(-150);
-        fun.clawOpen();
-        delay(0.5);
-        fun.clawClose();
-        drive.followTrajectory(nine);
-        fun.clawClose();
-        delay(0.5);
-        fun.liftBackHigh(.8, 0.3);
-        drive.followTrajectory(ten);
-        delay(0.5);
-        fun.lowerArmBackSlightlyFromHigh(-150);
-        fun.clawOpen();
-        delay(0.5);
-        fun.clawClose();
-        drive.followTrajectory(eleven);
-        fun.clawClose();
-        delay(0.5);
-        fun.liftBackHigh(.8, 0.3);
-        drive.followTrajectory(twelve);
-        delay(0.5);
-        fun.lowerArmBackSlightlyFromHigh(-150);
-        fun.clawOpen();
-        delay(0.5);
-        fun.clawClose();
-
-         */
-        // 🟥🟥🟥🟥🤡🤡🤡🤡💵💵💵💹💹💹💹💹💹💹
+        fun.lowerArmBackSlightlyFromHigh(-120);
+        fun.clawDeliver();
+        delay(0.25);
 
         // OpenCV Code
         double zone = ZoneDetectionPipeline.getZone();

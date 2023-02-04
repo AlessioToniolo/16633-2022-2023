@@ -57,9 +57,49 @@ public class AutoFunctions {
         armRunTo(Fields.armConeStack, power);
     }
 
+    public void liftConeStack4() {
+        sliderRunTo(Fields.coneStack4);
+        armRunTo(Fields.armConeStack);
+    }
+
+    public void liftConeStack4(double power) {
+        sliderRunTo(Fields.coneStack4, power);
+        armRunTo(Fields.armConeStack, power);
+    }
+
+    public void liftConeStack3() {
+        sliderRunTo(Fields.coneStack3);
+        armRunTo(Fields.armConeStack);
+    }
+
+    public void liftConeStack3(double power) {
+        sliderRunTo(Fields.coneStack3, power);
+        armRunTo(Fields.armConeStack, power);
+    }
+
+    public void liftConeStack2() {
+        sliderRunTo(Fields.coneStack2);
+        armRunTo(Fields.armConeStack);
+    }
+
+    public void liftConeStack2(double power) {
+        sliderRunTo(Fields.coneStack2, power);
+        armRunTo(Fields.armConeStack, power);
+    }
+
     public void hoverForward() {
-        sliderRunTo(Fields.sliderForwardLow);
+        //sliderRunTo(Fields.sliderForwardLow);
         armRunTo(Fields.armForwardLow);
+    }
+
+    public void hoverForward(double power) {
+        sliderRunTo(Fields.sliderForwardMid, power);
+        armRunTo(Fields.armForwardMid, power);
+    }
+
+    public void hoverForward(double sliderPower, double armPower) {
+        sliderRunTo(Fields.sliderForwardMid, sliderPower);
+        armRunTo(Fields.armForwardMid, armPower);
     }
 
     public void lowerArmFrontSlightlyFromHigh(int difference) {
@@ -79,6 +119,11 @@ public class AutoFunctions {
     public void clawOpen() {
         robot.rightClaw.setPosition(Fields.rightClawPickup);
         robot.leftClaw.setPosition(Fields.leftClawPickup);
+    }
+
+    public void clawDeliver() {
+        robot.rightClaw.setPosition(Fields.rightClawDeliver);
+        robot.leftClaw.setPosition(Fields.leftClawDeliver);
     }
 
     // TODO Helper functions

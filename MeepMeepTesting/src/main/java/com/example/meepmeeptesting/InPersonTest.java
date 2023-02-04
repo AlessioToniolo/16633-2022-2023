@@ -16,14 +16,9 @@ public class InPersonTest {
 
                 .setConstraints(53.1324198, 53.1324198, toRadians(276.40123374613705), toRadians(184.02607784577722), 22)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(60, -9, Math.toRadians(0)))
+                        drive.trajectorySequenceBuilder(new Pose2d(61.5, -7, Math.toRadians(0)))
                                 .setReversed(true)
-                                //.splineTo(new Vector2d(58, -12), toRadians(0))
-                                .splineToSplineHeading(new Pose2d(24, -2, toRadians(-60)), toRadians(170))
-                                .waitSeconds(1)
-
-                                .setReversed(false)
-                                .splineToLinearHeading(new Pose2d(60, -9, Math.toRadians(0)), toRadians(-15))
+                                .splineToSplineHeading(new Pose2d(25, -3, toRadians(-60)), toRadians(150))// as tan decreases, curve away from top junction increases
                                 .build()
                 );
 

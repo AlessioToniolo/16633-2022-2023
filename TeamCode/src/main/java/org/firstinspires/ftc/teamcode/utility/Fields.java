@@ -98,15 +98,15 @@ public class Fields {
 
 
     public static double rightClawPickup = .54;
-    public static double rightClawDeliver = .39;
-    public static double rightClawClose = .38;
+    public static double rightClawDeliver = .36;
+    public static double rightClawClose = .32;
 
     /**_________________________AUTO VISION VARIABLES_______________________**/
     //variables for rectangle to searchIn
-    public static  int subRectX = 0;
-    public static  int subRectY = 0;
-    public static  int subRectWidth=170;
-    public static  int subRectHeight=55;
+    public static  int subRectX = 51;
+    public static  int subRectY = 87;
+    public static  int subRectWidth=96;
+    public static  int subRectHeight=114;
 
 
     /**_________________________OLD AUTO VARIABLES______________________**/
@@ -115,6 +115,9 @@ public class Fields {
     public static double highBackAngle = -30;
     public static double highFrontAngle = 49;
     public static double autoConePickup = 52;
+
+    /**______________________New Auto Variables_____________**/
+    public static int autoArmForwardHigh=860;
 
 
 }

@@ -61,22 +61,22 @@ public class NBAYOUNGBOY extends LinearOpMode {
 
 
         // Go to junction (PRELOAD)
-        Trajectory one = drive.trajectoryBuilder(startPose).splineTo(new Vector2d(28, -4), Math.toRadians(120))
+        Trajectory one = drive.trajectoryBuilder(startPose).splineTo(new Vector2d(27.5, -4.5), Math.toRadians(120))
                 .addTemporalMarker(1.3, () -> {
                     fun.liftFrontHigh(1);
                 }).build();
 
         // Go cone stack #1
-        Trajectory two = drive.trajectoryBuilder(one.end()).lineToLinearHeading(new Pose2d(36, -10, Math.toRadians(0)))
+        Trajectory two = drive.trajectoryBuilder(one.end()).lineToLinearHeading(new Pose2d(36.5, -9.8, Math.toRadians(0)))
                 .addTemporalMarker(0.7, () -> {
                     fun.liftConeStack(0.5);
                     fun.clawOpen();
                 }).build();
-        Trajectory three = drive.trajectoryBuilder(two.end()).lineToSplineHeading(new Pose2d(60, -7, Math.toRadians(0))).build();
+        Trajectory three = drive.trajectoryBuilder(two.end()).lineToSplineHeading(new Pose2d(60.5, -7, Math.toRadians(0))).build();
 
         // Deposit #1
         Trajectory four = drive.trajectoryBuilder(three.end(), true)
-                .splineToSplineHeading(new Pose2d(25, -3, toRadians(-60)), toRadians(150)).build();
+                .splineToSplineHeading(new Pose2d(26, -2, toRadians(-60)), toRadians(150)).build();
 
         // Cone Stack #2
         Trajectory five = drive.trajectoryBuilder(four.end(), false)
@@ -91,7 +91,7 @@ public class NBAYOUNGBOY extends LinearOpMode {
 
         // Deposit #2
         Trajectory six = drive.trajectoryBuilder(five.end(), true)
-                .splineToSplineHeading(new Pose2d(25, -3, toRadians(-60)), toRadians(150)).build();
+                .splineToSplineHeading(new Pose2d(26, -2, toRadians(-60)), toRadians(150)).build();
 
         telemetry.update();
         telemetry.speak("READY! ??");

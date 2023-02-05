@@ -27,7 +27,7 @@ public class AutoFunctions {
 
     public void liftFrontHigh(double sliderPower, double armPower) {
         sliderRunTo(Fields.sliderForwardHigh, sliderPower);
-        armRunTo(Fields.armForwardHigh, armPower);
+        armRunTo(Fields.autoArmForwardHigh, armPower);
     }
 
     public void liftBackHigh() {

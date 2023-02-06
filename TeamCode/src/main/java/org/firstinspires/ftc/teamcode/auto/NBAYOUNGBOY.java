@@ -90,9 +90,26 @@ public class NBAYOUNGBOY extends LinearOpMode {
                 .build();
 
         // Deposit #2
-        Trajectory six = drive.trajectoryBuilder(five.end(), true)
-                .splineToSplineHeading(new Pose2d(24.5, -2, toRadians(-60)), toRadians(150)).build();
+        /*Trajectory six = drive.trajectoryBuilder(five.end(), true)
+                .splineToSplineHeading(new Pose2d(30, -5, toRadians(-60)), toRadians(0)).build();*/
+        Trajectory seven = drive.trajectoryBuilder(five.end(), true)
+                .splineToSplineHeading(new Pose2d(29.5, 0.5, toRadians(-60)), toRadians(150)).build();
 
+        //Cone Stack #3
+        Trajectory eight = drive.trajectoryBuilder(seven.end(), false)
+                .splineToSplineHeading(new Pose2d(36.5, -5, Math.toRadians(0)), toRadians(0))
+                .addTemporalMarker(0.2, () -> {
+                    fun.liftConeStack3(1);
+                })
+                .addTemporalMarker(2, () -> {
+                    fun.clawOpen();
+                })
+                .build();
+        Trajectory nine = drive.trajectoryBuilder(eight.end()).lineToSplineHeading(new Pose2d(61.5, -6, Math.toRadians(0))).build();
+
+        //Deposit #3
+        Trajectory ten = drive.trajectoryBuilder(five.end(), true)
+                .splineToSplineHeading(new Pose2d(29.5, 0.5, toRadians(-60)), toRadians(150)).build();
         telemetry.update();
         telemetry.speak("READY! ??");
         telemetry.addLine("READY! 🤡");
@@ -101,28 +118,47 @@ public class NBAYOUNGBOY extends LinearOpMode {
         if (isStopRequested()) return;
 
         // Start Code
+        //Raise Arm to deposit position
         fun.hoverForward(0.5, 1);
+        //Go to first deposit position
         drive.followTrajectory(one);
         fun.lowerArmFrontSlightlyFromHigh(80);
+        //Open Claw for preload
         fun.clawOpen();
         delay(0.25);
+        //Go to cone stack #1
         drive.followTrajectory(two);
         drive.followTrajectory(three);
+        //Pick Up Cone Stack #1
         fun.clawClose();
         delay(0.25);
+        //Set lift to Position for deposit #2
         fun.liftBackHigh(.8, 0.3);
+        //Drive to deposit #1
         drive.followTrajectory(four);
+        //Set arm pos for deposit
         fun.lowerArmBackSlightlyFromHigh(-120);
+        //Drop cone
         fun.clawDeliver();
         delay(0.25);
         drive.followTrajectory(five);
         fun.clawClose();
         delay(0.25);
         fun.liftBackHigh(.8, 0.3);
-        drive.followTrajectory(six);
+        //drive.followTrajectory(six);
+        drive.followTrajectory(seven);
         fun.lowerArmBackSlightlyFromHigh(-120);
         fun.clawDeliver();
         delay(0.25);
+        drive.followTrajectory(eight);
+        drive.followTrajectory(nine);
+        fun.clawClose();
+        delay(.25);
+        fun.liftBackHigh();
+        drive.followTrajectory(ten);
+        delay(.25);
+        fun.clawDeliver();
+
 
         // OpenCV Code
         double zone = ZoneDetectionPipeline.getZone();

@@ -98,8 +98,8 @@ public class Fields {
 
 
     public static double rightClawPickup = .54;
-    public static double rightClawDeliver = .36;
-    public static double rightClawClose = .32;
+    public static double rightClawDeliver = .38;
+    public static double rightClawClose = .36;
 
     /**_________________________AUTO VISION VARIABLES_______________________**/
     //variables for rectangle to searchIn

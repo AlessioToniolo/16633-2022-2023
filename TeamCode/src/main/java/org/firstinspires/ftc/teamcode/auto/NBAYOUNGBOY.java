@@ -84,17 +84,31 @@ public class NBAYOUNGBOY extends LinearOpMode {
                 .addTemporalMarker(0.2, () -> {
                     fun.liftConeStack4(1);
                 })
+                /*
                 .addTemporalMarker(2, () -> {
                     fun.clawOpen();
                 })
+
+                 */
                 .build();
 
         // Deposit #2
         Trajectory six = drive.trajectoryBuilder(five.end(), true)
                 .splineToSplineHeading(new Pose2d(24.5, -2, toRadians(-60)), toRadians(150)).build();
 
+        // Cone Stack #3
+        Trajectory seven = drive.trajectoryBuilder(six.end(), false)
+                .splineToSplineHeading(new Pose2d(61.25, -7, Math.toRadians(0)), toRadians(0))
+                .addTemporalMarker(0.2, () -> {
+                    fun.liftConeStack4(1);
+                })
+                .addTemporalMarker(2, () -> {
+                    fun.clawOpen();
+                })
+                .build();
+
         telemetry.update();
-        telemetry.speak("READY! ??");
+        telemetry.speak("NBA YOUNGBOY");
         telemetry.addLine("READY! 🤡");
 
         waitForStart();
@@ -123,6 +137,10 @@ public class NBAYOUNGBOY extends LinearOpMode {
         fun.lowerArmBackSlightlyFromHigh(-120);
         fun.clawDeliver();
         delay(0.25);
+        drive.followTrajectory(seven);
+        fun.clawClose();
+        delay(0.25);
+        fun.liftBackHigh(.8, 0.3);
 
         // OpenCV Code
         double zone = ZoneDetectionPipeline.getZone();

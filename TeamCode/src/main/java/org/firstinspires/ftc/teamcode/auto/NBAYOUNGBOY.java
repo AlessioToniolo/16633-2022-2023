@@ -58,8 +58,6 @@ public class NBAYOUNGBOY extends LinearOpMode {
         Pose2d startPose = new Pose2d(35, -72+13.5, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
 
-
-
         // Go to junction (PRELOAD)
         Trajectory one = drive.trajectoryBuilder(startPose).splineTo(new Vector2d(27, -2), Math.toRadians(120))
                 .addTemporalMarker(1.3, () -> {
@@ -72,7 +70,7 @@ public class NBAYOUNGBOY extends LinearOpMode {
                     fun.liftConeStack(0.5);
                     fun.clawOpen();
                 }).build();
-        Trajectory three = drive.trajectoryBuilder(two.end()).lineToSplineHeading(new Pose2d(60.5, -7, Math.toRadians(0))).build();
+        Trajectory three = drive.trajectoryBuilder(two.end()).lineToSplineHeading(new Pose2d(61, -7, Math.toRadians(0))).build();
 
         // Deposit #1
         Trajectory four = drive.trajectoryBuilder(three.end(), true)
@@ -84,16 +82,15 @@ public class NBAYOUNGBOY extends LinearOpMode {
                 .addTemporalMarker(0.2, () -> {
                     fun.liftConeStack4(1);
                 })
-                .addTemporalMarker(2, () -> {
+                .addTemporalMarker(1.5, () -> {
                     fun.clawOpen();
                 })
                 .build();
 
         // Deposit #2
-        /*Trajectory six = drive.trajectoryBuilder(five.end(), true)
-                .splineToSplineHeading(new Pose2d(30, -5, toRadians(-60)), toRadians(0)).build();*/
         Trajectory seven = drive.trajectoryBuilder(five.end(), true)
-                .splineToSplineHeading(new Pose2d(29.5, 0.5, toRadians(-60)), toRadians(150)).build();
+                // splineToSpline before
+                .splineToLinearHeading(new Pose2d(29.5, 0.5, toRadians(-60)), toRadians(150)).build();
 
         //Cone Stack #3
         Trajectory eight = drive.trajectoryBuilder(seven.end(), false)
@@ -101,17 +98,19 @@ public class NBAYOUNGBOY extends LinearOpMode {
                 .addTemporalMarker(0.2, () -> {
                     fun.liftConeStack3(1);
                 })
-                .addTemporalMarker(2, () -> {
+                .addTemporalMarker(1.5, () -> {
                     fun.clawOpen();
                 })
                 .build();
         Trajectory nine = drive.trajectoryBuilder(eight.end()).lineToSplineHeading(new Pose2d(61.5, -6, Math.toRadians(0))).build();
 
         //Deposit #3
-        Trajectory ten = drive.trajectoryBuilder(five.end(), true)
+        Trajectory ten = drive.trajectoryBuilder(nine.end(), true)
                 .splineToSplineHeading(new Pose2d(29.5, 0.5, toRadians(-60)), toRadians(150)).build();
+
+
         telemetry.update();
-        telemetry.speak("READY! ??");
+        telemetry.speak("NBA YOUNGBOY");
         telemetry.addLine("READY! 🤡");
 
         waitForStart();

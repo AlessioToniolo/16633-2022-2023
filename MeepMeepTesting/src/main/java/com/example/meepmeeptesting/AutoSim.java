@@ -15,18 +15,24 @@ public class AutoSim {
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 .setConstraints(53.1324198, 53.1324198, toRadians(276.40123374613705), toRadians(184.02607784577722), 22)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(35, -72+13.6, toRadians(-90)))
+                        drive.trajectorySequenceBuilder(new Pose2d(60, -12, Math.toRadians(0)))
+                                /*
                                 .setReversed(true)
-
+                                new Pose2d(35, -72+13.6, toRadians(-90))
                                 // Preload Deposit
                                 .splineToSplineHeading(new Pose2d(26, -4, toRadians(-60)), toRadians(120))
                                 .waitSeconds(1)
-
+        */
                                 // Cone stack #1
+                                /*
                                 .setReversed(false)
                                 .splineToSplineHeading(new Pose2d(60, -12, Math.toRadians(0)), toRadians(5))
                                 .waitSeconds(.5)
+                                */
 
+                                .setReversed(true)
+                                .lineToSplineHeading(new Pose2d(24, -12, toRadians(-90)))
+                                /*
                                 // Deposit #1
                                 .setReversed(true)
                                 // TODO EDITS ARE BEELOW ON THIS CYCLE
@@ -71,22 +77,22 @@ public class AutoSim {
                                 .setReversed(true)
                                 .splineToSplineHeading(new Pose2d(26, -4, toRadians(-60)), toRadians(120))
 
-                                /* PARKING */
+                                 PARKING
 
                                 // Zone #1
                                 //.setReversed(false)
                                 //.splineToLinearHeading(new Pose2d(12, -12, Math.toRadians(-90)), toRadians(-300))
-                                /*
+
                                 .turn(toRadians(180))
                                 .waitSeconds(.5)
 
-                                 */
+
                                 // Zone #2
                                 //.lineToLinearHeading(new Pose2d(36, -12, toRadians(90)))
                                 // Zone #3
                                 .setReversed(false)
                                 .splineToSplineHeading(new Pose2d(60, -12, Math.toRadians(90)), toRadians(5))
-
+    */
                                 .build()
                 );
 

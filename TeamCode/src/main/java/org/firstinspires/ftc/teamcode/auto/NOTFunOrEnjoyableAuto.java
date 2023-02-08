@@ -70,12 +70,16 @@ public class NOTFunOrEnjoyableAuto extends LinearOpMode {
                     fun.liftConeStack(0.5);
                     fun.clawOpen();
                 }).build();
-        Trajectory three = drive.trajectoryBuilder(two.end()).lineToSplineHeading(new Pose2d(59, -7, Math.toRadians(0))).build();
+        Trajectory three = drive.trajectoryBuilder(two.end()).lineToSplineHeading(new Pose2d(60, -7, Math.toRadians(0))).build();
 
-
+        // Deposit #1
+        Trajectory four = drive.trajectoryBuilder(three.end(), true)
+                .lineToSplineHeading(new Pose2d(34, -8, toRadians(0))).build();
+        Trajectory five = drive.trajectoryBuilder(four.end(), true)
+                .lineToSplineHeading(new Pose2d(23, -3, toRadians(-90))).build();
 
         telemetry.update();
-        telemetry.speak("NBA YOUNGBOY");
+        telemetry.speak("NBA Nino Pequeno el mejor es verdad innit");
         telemetry.addLine("READY! 🤡");
 
         waitForStart();
@@ -96,8 +100,13 @@ public class NOTFunOrEnjoyableAuto extends LinearOpMode {
         //Pick Up Cone Stack #1
         fun.clawClose();
         delay(0.25);
+        fun.liftBackHigh(.8, 0.3);
         //Set lift to Position for deposit #2
-        
+        drive.followTrajectory(four);
+        drive.followTrajectory(five);
+        //fun.lowerArmFrontSlightlyFromHigh(80);
+        fun.clawDeliver();
+        delay(0.25);
 
         // OpenCV Code
         double zone = ZoneDetectionPipeline.getZone();

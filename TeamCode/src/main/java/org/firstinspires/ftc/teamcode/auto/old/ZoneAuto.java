@@ -57,9 +57,6 @@ public class ZoneAuto extends LinearOpMode{
         Pose2d startPose = new Pose2d(36, -60, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
 
-
-
-
         // Zone trajs
         Trajectory forward = drive.trajectoryBuilder(startPose)
                 .lineTo(new Vector2d(36, -8))
@@ -68,11 +65,11 @@ public class ZoneAuto extends LinearOpMode{
                 .lineTo(new Vector2d(36, -11))
                 .build();
         Trajectory zone3 = drive.trajectoryBuilder(zone2.end())
-                .lineToLinearHeading(new Pose2d(69, -12, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(58, -12, Math.toRadians(90)))
                 .build();
 
         Trajectory zone1 = drive.trajectoryBuilder(zone2.end())
-                .lineToLinearHeading(new Pose2d(2.3, -12, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(11, -12, Math.toRadians(90)))
                 .build();
 
         drive.followTrajectory(forward);

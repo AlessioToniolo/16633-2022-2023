@@ -97,8 +97,7 @@ public class DarbotterAuto extends LinearOpMode {
         if (isStopRequested()) return;
 
         // Start Code
-        //fun.liftFrontHigh(0.5, 0.35);
-        fun.hoverForward();
+        fun.hoverForward(0.5);
         drive.followTrajectory(one);
         delay(1);
         fun.lowerArmFrontSlightlyFromHigh(80);

@@ -87,19 +87,9 @@ public class AutoFunctions {
         armRunTo(Fields.armConeStack, power);
     }
 
-    public void hoverForward() {
-        //sliderRunTo(Fields.sliderForwardLow);
-        armRunTo(Fields.armForwardLow);
-    }
-
     public void hoverForward(double power) {
-        sliderRunTo(Fields.sliderForwardMid, power);
-        armRunTo(Fields.armForwardMid, power);
-    }
-
-    public void hoverForward(double sliderPower, double armPower) {
-        sliderRunTo(Fields.sliderForwardMid, sliderPower);
-        armRunTo(Fields.armForwardMid, armPower);
+        //sliderRunTo(Fields.sliderForwardLow);
+        armRunTo(Fields.armForwardLow, power);
     }
 
     public void lowerArmFrontSlightlyFromHigh(int difference) {

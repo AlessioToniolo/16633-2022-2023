@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.auto;
-//Hello Corporate Darbot Spies
+
 import static java.lang.Math.toRadians;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -19,7 +19,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Autonomous
-public class NBAYOUNGBOY extends LinearOpMode {
+public class NOTFunOrEnjoyableAuto extends LinearOpMode {
     // robot with drive
     BaseRobot robot = new BaseRobot();
     // OpenCV

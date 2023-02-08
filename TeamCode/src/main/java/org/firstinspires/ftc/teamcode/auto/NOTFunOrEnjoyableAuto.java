@@ -72,60 +72,7 @@ public class NOTFunOrEnjoyableAuto extends LinearOpMode {
                 }).build();
         Trajectory three = drive.trajectoryBuilder(two.end()).lineToSplineHeading(new Pose2d(59, -7, Math.toRadians(0))).build();
 
-        // Deposit #1
-        Trajectory four = drive.trajectoryBuilder(three.end(), true)
-                .splineToSplineHeading(new Pose2d(23, -3, toRadians(-60)), toRadians(150)).build();
 
-        // Cone Stack #2
-        Trajectory five = drive.trajectoryBuilder(four.end(), false)
-                .splineToSplineHeading(new Pose2d(61.25, -7, Math.toRadians(0)), toRadians(0))
-                .addTemporalMarker(0.2, () -> {
-                    fun.liftConeStack4(1);
-                })
-                /*
-                .addTemporalMarker(1.5, () -> {
-                    fun.clawOpen();
-                })
-                 */
-                .build();
-
-        // Deposit #2
-        Trajectory seven = drive.trajectoryBuilder(five.end(), true)
-                // splineToSpline before
-                .splineToLinearHeading(new Pose2d(29.5, 0.5, toRadians(-60)), toRadians(150)).build();
-
-        //Cone Stack #3
-        Trajectory eight = drive.trajectoryBuilder(seven.end(), false)
-                .splineToSplineHeading(new Pose2d(36.5, -5, Math.toRadians(0)), toRadians(0))
-                .addTemporalMarker(0.2, () -> {
-                    fun.liftConeStack3(1);
-                })
-                /*
-                .addTemporalMarker(2, () -> {
-                    fun.clawOpen();
-                })
-                 */
-                .build();
-        Trajectory nine = drive.trajectoryBuilder(eight.end()).lineToSplineHeading(new Pose2d(61.5, -7, Math.toRadians(0))).build();
-
-        //Deposit #3
-        Trajectory ten = drive.trajectoryBuilder(nine.end(), true)
-                .splineToSplineHeading(new Pose2d(29.5, 0.5, toRadians(-60)), toRadians(150)).build();
-
-        // Park Zone #1
-        Trajectory eleven = drive.trajectoryBuilder(ten.end(), false)
-                .splineToLinearHeading(new Pose2d(12, -12, Math.toRadians(-90)), toRadians(-300))
-                .build();
-
-        // Park Zone #2
-        Trajectory twelve = drive.trajectoryBuilder(ten.end(), false)
-                .lineToLinearHeading(new Pose2d(36, -12, toRadians(90)))
-                .build();
-
-        // Park Zone #3
-        Trajectory thirteen = drive.trajectoryBuilder(ten.end(), false)
-                .splineToSplineHeading(new Pose2d(60, -12, Math.toRadians(90)), toRadians(5))
-                .build();
 
         telemetry.update();
         telemetry.speak("NBA YOUNGBOY");
@@ -150,31 +97,7 @@ public class NOTFunOrEnjoyableAuto extends LinearOpMode {
         fun.clawClose();
         delay(0.25);
         //Set lift to Position for deposit #2
-        fun.liftBackHigh(.8, 0.3);
-        //Drive to deposit #1
-        drive.followTrajectory(four);
-        //Set arm pos for deposit
-        fun.lowerArmBackSlightlyFromHigh(-120);
-        //Drop cone
-        fun.clawDeliver();
-        delay(0.25);
-        drive.followTrajectory(five);
-        fun.clawClose();
-        delay(0.25);
-        fun.liftBackHigh(.8, 0.3);
-        //drive.followTrajectory(six);
-        drive.followTrajectory(seven);
-        fun.lowerArmBackSlightlyFromHigh(-120);
-        fun.clawDeliver();
-        delay(0.25);
-        drive.followTrajectory(eight);
-        drive.followTrajectory(nine);
-        fun.clawClose();
-        delay(.25);
-        fun.liftBackHigh();
-        drive.followTrajectory(ten);
-        delay(.25);
-        fun.clawDeliver();
+        
 
         // OpenCV Code
         double zone = ZoneDetectionPipeline.getZone();
@@ -186,6 +109,7 @@ public class NOTFunOrEnjoyableAuto extends LinearOpMode {
 
 
         fun.resetAll();
+        /*
         if (zone == 1) {
             // Zone 1
             drive.followTrajectory(eleven);
@@ -196,7 +120,7 @@ public class NOTFunOrEnjoyableAuto extends LinearOpMode {
         } else {
             // Zone 2
             drive.followTrajectory(twelve);
-        }
+        }*/
     }
 
     public void delay(double t) {

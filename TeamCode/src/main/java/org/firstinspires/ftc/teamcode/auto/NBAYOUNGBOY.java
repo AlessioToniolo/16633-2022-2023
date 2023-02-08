@@ -128,7 +128,7 @@ public class NBAYOUNGBOY extends LinearOpMode {
                 .build();
 
         telemetry.update();
-        telemetry.speak("NBA YOUNGBOY");
+        telemetry.speak("NBA Nino Pequeno");
         telemetry.addLine("READY! 🤡");
 
         waitForStart();

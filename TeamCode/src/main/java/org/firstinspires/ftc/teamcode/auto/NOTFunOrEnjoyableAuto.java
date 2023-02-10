@@ -76,7 +76,16 @@ public class NOTFunOrEnjoyableAuto extends LinearOpMode {
         Trajectory four = drive.trajectoryBuilder(three.end(), true)
                 .lineToSplineHeading(new Pose2d(34, -8, toRadians(0))).build();
         Trajectory five = drive.trajectoryBuilder(four.end(), true)
-                .lineToSplineHeading(new Pose2d(23, -3, toRadians(-90))).build();
+                .lineToSplineHeading(new Pose2d(21, -3, toRadians(-90))).build();
+        //Go cone stack #2
+        Trajectory six = drive.trajectoryBuilder(five.end()).lineToLinearHeading(new Pose2d(36.5, -9.8, Math.toRadians(0)))
+                .addTemporalMarker(0.9, () -> {
+                    fun.liftConeStack4(0.5);
+                    delay(.75);
+                    fun.clawOpen();
+                }).build();
+        Trajectory seven = drive.trajectoryBuilder(six.end(), false)
+                .lineToSplineHeading(new Pose2d(60, -7, Math.toRadians(0))).build();
 
         telemetry.update();
         telemetry.speak("NBA Nino Pequeno el mejor es verdad innit");
@@ -92,8 +101,9 @@ public class NOTFunOrEnjoyableAuto extends LinearOpMode {
         drive.followTrajectory(one);
         fun.lowerArmFrontSlightlyFromHigh(80);
         //Open Claw for preload
-        fun.clawOpen();
+        fun.clawDeliver();
         delay(0.25);
+        fun.clawClose();
         //Go to cone stack #1
         drive.followTrajectory(two);
         drive.followTrajectory(three);
@@ -107,6 +117,14 @@ public class NOTFunOrEnjoyableAuto extends LinearOpMode {
         //fun.lowerArmFrontSlightlyFromHigh(80);
         fun.clawDeliver();
         delay(0.25);
+        fun.clawClose();
+        delay(.25);
+        //Go to cone stack #2
+        drive.followTrajectory(six);
+        drive.followTrajectory(seven);
+        //Pick Up Cone Stack #2
+        fun.clawClose();
+        delay(.25);
 
         // OpenCV Code
         double zone = ZoneDetectionPipeline.getZone();

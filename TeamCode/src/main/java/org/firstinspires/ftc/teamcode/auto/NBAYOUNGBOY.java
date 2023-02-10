@@ -70,7 +70,8 @@ public class NBAYOUNGBOY extends LinearOpMode {
                     fun.liftConeStack(0.5);
                     fun.clawOpen();
                 }).build();
-        Trajectory three = drive.trajectoryBuilder(two.end()).lineToSplineHeading(new Pose2d(59, -7, Math.toRadians(0))).build();
+        Trajectory three = drive.trajectoryBuilder(two.end()).
+                lineToSplineHeading(new Pose2d(59, -7, Math.toRadians(0))).build();
 
         // Deposit #1
         Trajectory four = drive.trajectoryBuilder(three.end(), true)

@@ -1,5 +1,5 @@
-package org.firstinspires.ftc.teamcode.auto;
-
+package org.firstinspires.ftc.teamcode.auto.old;
+//Hello Corporate Darbot Spies
 import static java.lang.Math.toRadians;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.auto.AutoFunctions;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.utility.BaseRobot;
 import org.firstinspires.ftc.teamcode.utility.Fields;
@@ -19,7 +20,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Autonomous
-public class NOTFunOrEnjoyableAuto extends LinearOpMode {
+public class oldimprisonedyoungboy extends LinearOpMode {
     // robot with drive
     BaseRobot robot = new BaseRobot();
     // OpenCV
@@ -70,25 +71,66 @@ public class NOTFunOrEnjoyableAuto extends LinearOpMode {
                     fun.liftConeStack(0.5);
                     fun.clawOpen();
                 }).build();
-        Trajectory three = drive.trajectoryBuilder(two.end()).lineToSplineHeading(new Pose2d(60, -7, Math.toRadians(0))).build();
+        Trajectory three = drive.trajectoryBuilder(two.end()).
+                lineToSplineHeading(new Pose2d(59, -7, Math.toRadians(0))).build();
 
         // Deposit #1
         Trajectory four = drive.trajectoryBuilder(three.end(), true)
-                .lineToSplineHeading(new Pose2d(34, -8, toRadians(0))).build();
-        Trajectory five = drive.trajectoryBuilder(four.end(), true)
-                .lineToSplineHeading(new Pose2d(21, -3, toRadians(-90))).build();
-        //Go cone stack #2
-        Trajectory six = drive.trajectoryBuilder(five.end()).lineToLinearHeading(new Pose2d(36.5, -9.8, Math.toRadians(0)))
-                .addTemporalMarker(0.9, () -> {
-                    fun.liftConeStack4(0.5);
-                    delay(.75);
+                .splineToSplineHeading(new Pose2d(23, -3, toRadians(-60)), toRadians(150)).build();
+
+        // Cone Stack #2
+        Trajectory five = drive.trajectoryBuilder(four.end(), false)
+                .splineToSplineHeading(new Pose2d(61.25, -7, Math.toRadians(0)), toRadians(0))
+                .addTemporalMarker(0.2, () -> {
+                    fun.liftConeStack4(1);
+                })
+                /*
+                .addTemporalMarker(1.5, () -> {
                     fun.clawOpen();
-                }).build();
-        Trajectory seven = drive.trajectoryBuilder(six.end(), false)
-                .lineToSplineHeading(new Pose2d(60, -7, Math.toRadians(0))).build();
+                })
+                 */
+                .build();
+
+        // Deposit #2
+        Trajectory seven = drive.trajectoryBuilder(five.end(), true)
+                // splineToSpline before
+                .splineToLinearHeading(new Pose2d(29.5, 0.5, toRadians(-60)), toRadians(150)).build();
+
+        //Cone Stack #3
+        Trajectory eight = drive.trajectoryBuilder(seven.end(), false)
+                .splineToSplineHeading(new Pose2d(36.5, -5, Math.toRadians(0)), toRadians(0))
+                .addTemporalMarker(0.2, () -> {
+                    fun.liftConeStack3(1);
+                })
+                /*
+                .addTemporalMarker(2, () -> {
+                    fun.clawOpen();
+                })
+                 */
+                .build();
+        Trajectory nine = drive.trajectoryBuilder(eight.end()).lineToSplineHeading(new Pose2d(61.5, -7, Math.toRadians(0))).build();
+
+        //Deposit #3
+        Trajectory ten = drive.trajectoryBuilder(nine.end(), true)
+                .splineToSplineHeading(new Pose2d(29.5, 0.5, toRadians(-60)), toRadians(150)).build();
+
+        // Park Zone #1
+        Trajectory eleven = drive.trajectoryBuilder(ten.end(), false)
+                .splineToLinearHeading(new Pose2d(12, -12, Math.toRadians(-90)), toRadians(-300))
+                .build();
+
+        // Park Zone #2
+        Trajectory twelve = drive.trajectoryBuilder(ten.end(), false)
+                .lineToLinearHeading(new Pose2d(36, -12, toRadians(90)))
+                .build();
+
+        // Park Zone #3
+        Trajectory thirteen = drive.trajectoryBuilder(ten.end(), false)
+                .splineToSplineHeading(new Pose2d(60, -12, Math.toRadians(90)), toRadians(5))
+                .build();
 
         telemetry.update();
-        telemetry.speak("NBA Nino Pequeno el mejor es verdad innit");
+        telemetry.speak("NBA Nino Pequeno");
         telemetry.addLine("READY! 🤡");
 
         waitForStart();
@@ -101,30 +143,40 @@ public class NOTFunOrEnjoyableAuto extends LinearOpMode {
         drive.followTrajectory(one);
         fun.lowerArmFrontSlightlyFromHigh(80);
         //Open Claw for preload
-        fun.clawDeliver();
+        fun.clawOpen();
         delay(0.25);
-        fun.clawClose();
         //Go to cone stack #1
         drive.followTrajectory(two);
         drive.followTrajectory(three);
         //Pick Up Cone Stack #1
         fun.clawClose();
         delay(0.25);
-        fun.liftBackHigh(.8, 0.3);
         //Set lift to Position for deposit #2
+        fun.liftBackHigh(.8, 0.3);
+        //Drive to deposit #1
         drive.followTrajectory(four);
-        drive.followTrajectory(five);
-        //fun.lowerArmFrontSlightlyFromHigh(80);
+        //Set arm pos for deposit
+        fun.lowerArmBackSlightlyFromHigh(-120);
+        //Drop cone
         fun.clawDeliver();
         delay(0.25);
+        drive.followTrajectory(five);
         fun.clawClose();
-        delay(.25);
-        //Go to cone stack #2
-        drive.followTrajectory(six);
+        delay(0.25);
+        fun.liftBackHigh(.8, 0.3);
+        //drive.followTrajectory(six);
         drive.followTrajectory(seven);
-        //Pick Up Cone Stack #2
+        fun.lowerArmBackSlightlyFromHigh(-120);
+        fun.clawDeliver();
+        delay(0.25);
+        drive.followTrajectory(eight);
+        drive.followTrajectory(nine);
         fun.clawClose();
         delay(.25);
+        fun.liftBackHigh();
+        drive.followTrajectory(ten);
+        delay(.25);
+        fun.clawDeliver();
 
         // OpenCV Code
         double zone = ZoneDetectionPipeline.getZone();
@@ -136,7 +188,6 @@ public class NOTFunOrEnjoyableAuto extends LinearOpMode {
 
 
         fun.resetAll();
-        /*
         if (zone == 1) {
             // Zone 1
             drive.followTrajectory(eleven);
@@ -147,7 +198,7 @@ public class NOTFunOrEnjoyableAuto extends LinearOpMode {
         } else {
             // Zone 2
             drive.followTrajectory(twelve);
-        }*/
+        }
     }
 
     public void delay(double t) {

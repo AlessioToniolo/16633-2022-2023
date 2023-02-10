@@ -143,6 +143,5 @@ public class AutoFunctions {
     public void resetAll() {
         sliderRunTo(Fields.sliderGround);
         armRunTo(Fields.armGround);
-        clawOpen();
     }
 }

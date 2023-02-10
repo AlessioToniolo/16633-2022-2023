@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.auto;
-//Hello Corporate Darbot Spies
+
 import static java.lang.Math.toRadians;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -19,7 +19,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Autonomous
-public class NBAYOUNGBOY extends LinearOpMode {
+public class IanGaffneyXAlessioToniolo extends LinearOpMode {
     // robot with drive
     BaseRobot robot = new BaseRobot();
     // OpenCV
@@ -60,143 +60,146 @@ public class NBAYOUNGBOY extends LinearOpMode {
 
         // Go to junction (PRELOAD)
         Trajectory one = drive.trajectoryBuilder(startPose).splineTo(new Vector2d(27, -2), Math.toRadians(120))
-                .addTemporalMarker(1.3, () -> {
+                // 1.3
+                .addTemporalMarker(.8, () -> {
                     fun.liftFrontHigh(1);
                 }).build();
-
         // Go cone stack #1
         Trajectory two = drive.trajectoryBuilder(one.end()).lineToLinearHeading(new Pose2d(36.5, -9.8, Math.toRadians(0)))
                 .addTemporalMarker(0.9, () -> {
                     fun.liftConeStack(0.5);
                     fun.clawOpen();
                 }).build();
-        Trajectory three = drive.trajectoryBuilder(two.end()).
-                lineToSplineHeading(new Pose2d(59, -7, Math.toRadians(0))).build();
-
+        Trajectory three = drive.trajectoryBuilder(two.end()).lineToSplineHeading(new Pose2d(60, -7, Math.toRadians(0))).build();
         // Deposit #1
         Trajectory four = drive.trajectoryBuilder(three.end(), true)
-                .splineToSplineHeading(new Pose2d(23, -3, toRadians(-60)), toRadians(150)).build();
-
-        // Cone Stack #2
-        Trajectory five = drive.trajectoryBuilder(four.end(), false)
-                .splineToSplineHeading(new Pose2d(61.25, -7, Math.toRadians(0)), toRadians(0))
+                .lineToSplineHeading(new Pose2d(34, -8, toRadians(0))).build();
+        Trajectory five = drive.trajectoryBuilder(four.end(), true)
+                .lineToSplineHeading(new Pose2d(20, -2, toRadians(-90))).build();
+        //Go cone stack #2
+        Trajectory six = drive.trajectoryBuilder(five.end()).lineToLinearHeading(new Pose2d(36.5, -7, Math.toRadians(0)))
                 .addTemporalMarker(0.2, () -> {
-                    fun.liftConeStack4(1);
+                    fun.liftConeStack4(0.5);
                 })
-                /*
-                .addTemporalMarker(1.5, () -> {
+                .addTemporalMarker(1.75, () -> {
                     fun.clawOpen();
                 })
-                 */
                 .build();
-
+        Trajectory seven = drive.trajectoryBuilder(six.end(), false)
+                .lineToSplineHeading(new Pose2d(60, -7, Math.toRadians(0))).build();
         // Deposit #2
-        Trajectory seven = drive.trajectoryBuilder(five.end(), true)
-                // splineToSpline before
-                .splineToLinearHeading(new Pose2d(29.5, 0.5, toRadians(-60)), toRadians(150)).build();
-
-        //Cone Stack #3
-        Trajectory eight = drive.trajectoryBuilder(seven.end(), false)
-                .splineToSplineHeading(new Pose2d(36.5, -5, Math.toRadians(0)), toRadians(0))
+        Trajectory eight = drive.trajectoryBuilder(seven.end(), true)
+                .lineToSplineHeading(new Pose2d(34, -8, toRadians(0))).build();
+        Trajectory nine = drive.trajectoryBuilder(eight.end(), true)
+                .lineToSplineHeading(new Pose2d(20, -2, toRadians(-90))).build();
+        // Go cone stack #3
+        Trajectory ten = drive.trajectoryBuilder(nine.end()).lineToLinearHeading(new Pose2d(36.5, -7, Math.toRadians(0)))
                 .addTemporalMarker(0.2, () -> {
-                    fun.liftConeStack3(1);
+                    fun.liftConeStack3(0.5);
                 })
-                /*
-                .addTemporalMarker(2, () -> {
+                .addTemporalMarker(1.75, () -> {
                     fun.clawOpen();
                 })
-                 */
                 .build();
-        Trajectory nine = drive.trajectoryBuilder(eight.end()).lineToSplineHeading(new Pose2d(61.5, -7, Math.toRadians(0))).build();
-
-        //Deposit #3
-        Trajectory ten = drive.trajectoryBuilder(nine.end(), true)
-                .splineToSplineHeading(new Pose2d(29.5, 0.5, toRadians(-60)), toRadians(150)).build();
-
-        // Park Zone #1
         Trajectory eleven = drive.trajectoryBuilder(ten.end(), false)
-                .splineToLinearHeading(new Pose2d(12, -12, Math.toRadians(-90)), toRadians(-300))
-                .build();
+                .lineToSplineHeading(new Pose2d(60, -7, Math.toRadians(0))).build();
+        // Deposit #3
+        Trajectory twelve = drive.trajectoryBuilder(eleven.end(), true)
+                .lineToSplineHeading(new Pose2d(34, -8, toRadians(0))).build();
+        Trajectory thirteen = drive.trajectoryBuilder(twelve.end(), true)
+                .lineToSplineHeading(new Pose2d(20, -2, toRadians(-90))).build();
 
-        // Park Zone #2
-        Trajectory twelve = drive.trajectoryBuilder(ten.end(), false)
-                .lineToLinearHeading(new Pose2d(36, -12, toRadians(90)))
-                .build();
-
-        // Park Zone #3
-        Trajectory thirteen = drive.trajectoryBuilder(ten.end(), false)
-                .splineToSplineHeading(new Pose2d(60, -12, Math.toRadians(90)), toRadians(5))
-                .build();
+        // PARKING ZONES
+        Trajectory zoneOne = drive.trajectoryBuilder(thirteen.end(), false)
+                .addTemporalMarker(1, () -> {
+                    fun.resetAll();
+                })
+                .lineToSplineHeading(new Pose2d(12, -12, Math.toRadians(90))).build();
+        Trajectory zoneTwo = drive.trajectoryBuilder(thirteen.end(), false)
+                .addTemporalMarker(1, () -> {
+                    fun.resetAll();
+                })
+                .lineToSplineHeading(new Pose2d(36, -12, toRadians(90))).build();
+        Trajectory zoneThree = drive.trajectoryBuilder(thirteen.end(), false)
+                .addTemporalMarker(1, () -> {
+                    fun.resetAll();
+                })
+                .lineToSplineHeading(new Pose2d(60, -12, Math.toRadians(90))).build();
 
         telemetry.update();
-        telemetry.speak("NBA Nino Pequeno");
+        telemetry.speak("NBA Nino Pequeno el mejor es verdad innit");
         telemetry.addLine("READY! 🤡");
 
         waitForStart();
         if (isStopRequested()) return;
 
-        // Start Code
-        //Raise Arm to deposit position
+        // Raise Arm to deposit position
         fun.hoverForward(0.5);
-        //Go to first deposit position
+        // PRELOAD
         drive.followTrajectory(one);
         fun.lowerArmFrontSlightlyFromHigh(80);
-        //Open Claw for preload
-        fun.clawOpen();
+        fun.clawDeliver();
         delay(0.25);
-        //Go to cone stack #1
+        fun.clawClose();
+        // CONE STACK #1
         drive.followTrajectory(two);
         drive.followTrajectory(three);
-        //Pick Up Cone Stack #1
         fun.clawClose();
         delay(0.25);
-        //Set lift to Position for deposit #2
         fun.liftBackHigh(.8, 0.3);
-        //Drive to deposit #1
+        // DEPOSIT #1
         drive.followTrajectory(four);
-        //Set arm pos for deposit
-        fun.lowerArmBackSlightlyFromHigh(-120);
-        //Drop cone
+        drive.followTrajectory(five);
+        fun.lowerArmBackSlightlyFromHigh(-80);
         fun.clawDeliver();
         delay(0.25);
-        drive.followTrajectory(five);
+        fun.clawClose();
+        // CONE STACK #2
+        drive.followTrajectory(six);
+        drive.followTrajectory(seven);
         fun.clawClose();
         delay(0.25);
         fun.liftBackHigh(.8, 0.3);
-        //drive.followTrajectory(six);
-        drive.followTrajectory(seven);
-        fun.lowerArmBackSlightlyFromHigh(-120);
-        fun.clawDeliver();
-        delay(0.25);
+        // DEPOSIT #2
         drive.followTrajectory(eight);
         drive.followTrajectory(nine);
-        fun.clawClose();
-        delay(.25);
-        fun.liftBackHigh();
-        drive.followTrajectory(ten);
-        delay(.25);
+        fun.lowerArmBackSlightlyFromHigh(-80);
         fun.clawDeliver();
+        delay(0.25);
+        fun.clawClose();
+        // CONE STACK #3
+        drive.followTrajectory(ten);
+        drive.followTrajectory(eleven);
+        fun.clawClose();
+        delay(0.25);
+        fun.liftBackHigh(.8, 0.3);
+        // DEPOSIT #3
+        drive.followTrajectory(twelve);
+        drive.followTrajectory(thirteen);
+        fun.lowerArmBackSlightlyFromHigh(-80);
+        fun.clawDeliver();
+        delay(0.25);
+        fun.clawClose();
 
         // OpenCV Code
         double zone = ZoneDetectionPipeline.getZone();
         camera.stopStreaming();
         camera.closeCameraDevice();
-
         telemetry.addLine("" + zone);
         telemetry.update();
 
-
-        fun.resetAll();
         if (zone == 1) {
             // Zone 1
-            drive.followTrajectory(eleven);
-            drive.turn(toRadians(180));
+            drive.followTrajectory(zoneOne);
+            fun.clawOpen();
         } else if (zone == 3) {
             // Zone 3
-            drive.followTrajectory(thirteen);
+            drive.followTrajectory(zoneThree);
+            fun.clawOpen();
         } else {
             // Zone 2
-            drive.followTrajectory(twelve);
+            drive.followTrajectory(zoneTwo);
+            fun.clawOpen();
         }
     }
 

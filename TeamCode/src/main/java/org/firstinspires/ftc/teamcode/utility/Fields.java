@@ -30,6 +30,9 @@ public class Fields {
     public static double armSpeed = .5;
     public static double sliderSpeed = 1;
 
+    public static int sliderStackUp = 1752;
+    public static int armStackUp=100;
+
 
     /**________________________________REFERENCE AND ENCODER SLIDER VARIABLES__________________________**/
     public static final int referenceSliderGround =0;

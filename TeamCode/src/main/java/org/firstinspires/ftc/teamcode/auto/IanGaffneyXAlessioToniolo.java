@@ -59,7 +59,7 @@ public class IanGaffneyXAlessioToniolo extends LinearOpMode {
         drive.setPoseEstimate(startPose);
 
         // Go to junction (PRELOAD)
-        Trajectory one = drive.trajectoryBuilder(startPose).splineTo(new Vector2d(27, -2), Math.toRadians(120))
+        Trajectory one = drive.trajectoryBuilder(startPose).splineTo(new Vector2d(26.5, -2), Math.toRadians(120))
                 // 1.3
                 .addTemporalMarker(.8, () -> {
                     fun.liftFrontHigh(1);
@@ -70,7 +70,7 @@ public class IanGaffneyXAlessioToniolo extends LinearOpMode {
                     fun.liftConeStack(0.5);
                     fun.clawOpen();
                 }).build();
-        Trajectory three = drive.trajectoryBuilder(two.end()).lineToSplineHeading(new Pose2d(60, -7, Math.toRadians(0))).build();
+        Trajectory three = drive.trajectoryBuilder(two.end()).lineToSplineHeading(new Pose2d(60.5, -7, Math.toRadians(0))).build();
         // Deposit #1
         Trajectory four = drive.trajectoryBuilder(three.end(), true)
                 .lineToSplineHeading(new Pose2d(34, -8, toRadians(0))).build();
@@ -86,12 +86,12 @@ public class IanGaffneyXAlessioToniolo extends LinearOpMode {
                 })
                 .build();
         Trajectory seven = drive.trajectoryBuilder(six.end(), false)
-                .lineToSplineHeading(new Pose2d(60, -7, Math.toRadians(0))).build();
+                .lineToSplineHeading(new Pose2d(60.5, -7, Math.toRadians(0))).build();
         // Deposit #2
         Trajectory eight = drive.trajectoryBuilder(seven.end(), true)
                 .lineToSplineHeading(new Pose2d(34, -8, toRadians(0))).build();
         Trajectory nine = drive.trajectoryBuilder(eight.end(), true)
-                .lineToSplineHeading(new Pose2d(20, -2, toRadians(-90))).build();
+                .lineToSplineHeading(new Pose2d(19, -2, toRadians(-90))).build();
         // Go cone stack #3
         Trajectory ten = drive.trajectoryBuilder(nine.end()).lineToLinearHeading(new Pose2d(36.5, -7, Math.toRadians(0)))
                 .addTemporalMarker(0.2, () -> {
@@ -102,29 +102,29 @@ public class IanGaffneyXAlessioToniolo extends LinearOpMode {
                 })
                 .build();
         Trajectory eleven = drive.trajectoryBuilder(ten.end(), false)
-                .lineToSplineHeading(new Pose2d(60, -7, Math.toRadians(0))).build();
+                .lineToSplineHeading(new Pose2d(60.5, -7, Math.toRadians(0))).build();
         // Deposit #3
         Trajectory twelve = drive.trajectoryBuilder(eleven.end(), true)
                 .lineToSplineHeading(new Pose2d(34, -8, toRadians(0))).build();
         Trajectory thirteen = drive.trajectoryBuilder(twelve.end(), true)
-                .lineToSplineHeading(new Pose2d(20, -2, toRadians(-90))).build();
-
+                .lineToSplineHeading(new Pose2d(19, -2.25, toRadians(-90))).build();
+        Trajectory goMiddle = drive.trajectoryBuilder(thirteen.end(), false).lineTo(new Vector2d(19, -6)).build();
         // PARKING ZONES
         Trajectory zoneOne = drive.trajectoryBuilder(thirteen.end(), false)
                 .addTemporalMarker(1, () -> {
                     fun.resetAll();
                 })
-                .lineToSplineHeading(new Pose2d(12, -12, Math.toRadians(90))).build();
+                .lineToSplineHeading(new Pose2d(10, -12, Math.toRadians(90))).build();
         Trajectory zoneTwo = drive.trajectoryBuilder(thirteen.end(), false)
                 .addTemporalMarker(1, () -> {
                     fun.resetAll();
                 })
-                .lineToSplineHeading(new Pose2d(36, -12, toRadians(90))).build();
+                .lineToSplineHeading(new Pose2d(35, -12, toRadians(90))).build();
         Trajectory zoneThree = drive.trajectoryBuilder(thirteen.end(), false)
                 .addTemporalMarker(1, () -> {
                     fun.resetAll();
                 })
-                .lineToSplineHeading(new Pose2d(60, -12, Math.toRadians(90))).build();
+                .lineTo(new Vector2d(55.5, -10)).build();
 
         telemetry.update();
         telemetry.speak("NBA Nino Pequeno el mejor es verdad innit");
@@ -132,6 +132,7 @@ public class IanGaffneyXAlessioToniolo extends LinearOpMode {
 
         waitForStart();
         if (isStopRequested()) return;
+        double zone = ZoneDetectionPipeline.getZone();
 
         // Raise Arm to deposit position
         fun.hoverForward(0.5);
@@ -146,11 +147,11 @@ public class IanGaffneyXAlessioToniolo extends LinearOpMode {
         drive.followTrajectory(three);
         fun.clawClose();
         delay(0.25);
-        fun.liftBackHigh(.8, 0.3);
+        fun.liftBackHigh(.7, 0.3);
         // DEPOSIT #1
         drive.followTrajectory(four);
         drive.followTrajectory(five);
-        fun.lowerArmBackSlightlyFromHigh(-80);
+        fun.lowerArmBackSlightlyFromHigh(-90);
         fun.clawDeliver();
         delay(0.25);
         fun.clawClose();
@@ -159,11 +160,11 @@ public class IanGaffneyXAlessioToniolo extends LinearOpMode {
         drive.followTrajectory(seven);
         fun.clawClose();
         delay(0.25);
-        fun.liftBackHigh(.8, 0.3);
+        fun.liftBackHigh(.7, 0.3);
         // DEPOSIT #2
         drive.followTrajectory(eight);
         drive.followTrajectory(nine);
-        fun.lowerArmBackSlightlyFromHigh(-80);
+        fun.lowerArmBackSlightlyFromHigh(-90);
         fun.clawDeliver();
         delay(0.25);
         fun.clawClose();
@@ -172,17 +173,18 @@ public class IanGaffneyXAlessioToniolo extends LinearOpMode {
         drive.followTrajectory(eleven);
         fun.clawClose();
         delay(0.25);
-        fun.liftBackHigh(.8, 0.3);
+        fun.liftBackHigh(.7, 0.3);
         // DEPOSIT #3
         drive.followTrajectory(twelve);
         drive.followTrajectory(thirteen);
-        fun.lowerArmBackSlightlyFromHigh(-80);
+        fun.lowerArmBackSlightlyFromHigh(-90);
         fun.clawDeliver();
-        delay(0.25);
+        delay(0.4);
         fun.clawClose();
+        drive.followTrajectory(goMiddle);
 
         // OpenCV Code
-        double zone = ZoneDetectionPipeline.getZone();
+
         camera.stopStreaming();
         camera.closeCameraDevice();
         telemetry.addLine("" + zone);
@@ -201,6 +203,7 @@ public class IanGaffneyXAlessioToniolo extends LinearOpMode {
             drive.followTrajectory(zoneTwo);
             fun.clawOpen();
         }
+        delay(1);
     }
 
     public void delay(double t) {

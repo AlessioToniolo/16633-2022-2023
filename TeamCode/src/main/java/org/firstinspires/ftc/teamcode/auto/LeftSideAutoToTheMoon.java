@@ -135,7 +135,7 @@ public class LeftSideAutoToTheMoon extends LinearOpMode {
                     fun.liftFrontHigh(1);
                 }).build();
         //Preload Pos
-        Trajectory two = drive.trajectoryBuilder(one.end(), false).lineTo(new Vector2d(41.5 -5.5)).build();
+        Trajectory two = drive.trajectoryBuilder(one.end(), false).lineTo(new Vector2d(42.5 -5.5)).build();
         //Deposit #1 Intermediate Pos
         Trajectory three = drive.trajectoryBuilder(two.end()).lineToLinearHeading(new Pose2d(29, -8, Math.toRadians(180)))
                 .addTemporalMarker(0.9, () -> {
@@ -149,7 +149,7 @@ public class LeftSideAutoToTheMoon extends LinearOpMode {
         Trajectory four = drive.trajectoryBuilder(three.end()).lineTo(new Vector2d(3, -8)).build();
         //Deposit #1 Pos
         Trajectory fourpointfive=drive.trajectoryBuilder(four.end(), true).lineTo(new Vector2d(29, -8)).build();
-        Trajectory five = drive.trajectoryBuilder(fourpointfive.end()).lineToLinearHeading(new Pose2d(40, -2, Math.toRadians(-90))).build();
+        Trajectory five = drive.trajectoryBuilder(fourpointfive.end()).lineToLinearHeading(new Pose2d(42, -2, Math.toRadians(-90))).build();
         //Pickup #2 Intermediate Pos, Temporal Marker to reset slide and open claw for the pickup
         Trajectory six = drive.trajectoryBuilder(five.end()).lineToLinearHeading(new Pose2d(29, -8, Math.toRadians(180)))
                 .addTemporalMarker(0.9, () -> {

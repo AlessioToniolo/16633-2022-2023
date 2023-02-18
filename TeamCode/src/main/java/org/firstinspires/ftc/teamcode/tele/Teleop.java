@@ -201,7 +201,6 @@ public class Teleop extends LinearOpMode {
 
         checkDRightandLeft();
 
-        checkRightTrigger();
 
         checkGuide();
 
@@ -335,7 +334,7 @@ public class Teleop extends LinearOpMode {
 
     }
     public void checkClaw(){
-        if(gamepad2.a && gamepad2.a != prevA2){
+        if((gamepad2.a && gamepad2.a != prevA2) || (gamepad1.a && gamepad1.a != prevA)){
             if(closed) {
                 closed = false;
                 if (armTargetPos > 500) {
@@ -359,6 +358,16 @@ public class Teleop extends LinearOpMode {
 
         }
         prevA2 = gamepad2.a;
+        prevA = gamepad1.a;
+
+        if((gamepad2.right_trigger > 0 && (gamepad2.right_trigger > 0)!= prevRTrigger2)){
+            if(!closed){
+                closed = true;
+                robot.rightClaw.setPosition(Fields.rightClawCapstone);
+                robot.leftClaw.setPosition(Fields.leftClawCapstone);
+            }
+        }
+        prevRBumper2 = gamepad2.right_trigger>0;
         /**___________________TELEMETRY_________________**/
         lineBreak();
         pen.setColor(ColorfulTelemetry.Orange).setBold(true).addLine("CLAW INFO").reset();
@@ -367,10 +376,10 @@ public class Teleop extends LinearOpMode {
         pen.addLine("Closed: " + closed);
     }
     public void recenterIMU(){
-        if(gamepad1.a && gamepad1.a != prevA){
+        if(gamepad1.b && gamepad1.b != prevB){
             changeDegree = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
         }
-        prevA = gamepad1.a;
+        prevB = gamepad1.b;
     }
     public void checkDDownandUp(){
         //move arm and slider state down by one
@@ -523,17 +532,7 @@ public class Teleop extends LinearOpMode {
         prevLBumper2=gamepad2.left_bumper;
 
     }
-    public void checkRightTrigger(){
-        //right trigger sets state to beacon level
-        if(gamepad2.right_trigger > 0 && gamepad2.right_trigger>0 != prevRTrigger2){
-            sliderTargetPos = Fields.sliderBeacon;
-            armTargetPos = Fields.armBeacon;
-            sliderState = Fields.referenceSliderGround;
-            armState = Fields.referenceArmGround;
 
-        }
-        prevRTrigger2 = gamepad2.right_trigger>0;
-    }
     public void checkGuide(){
         if(gamepad2.guide && gamepad2.guide != prevGuide2){
             sliderTargetPos=Fields.sliderStackUp;

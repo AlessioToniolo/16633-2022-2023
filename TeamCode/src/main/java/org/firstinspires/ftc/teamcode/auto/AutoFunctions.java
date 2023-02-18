@@ -44,7 +44,16 @@ public class AutoFunctions {
         sliderRunTo(Fields.sliderBackwardsHigh, sliderPower);
         armRunTo(Fields.armBackwardsHigh, armPower);
     }
-
+    public void liftFrontMid(double sliderPower, double armPower)
+    {
+        sliderRunTo(Fields.sliderForwardMid, sliderPower);
+        armRunTo(Fields.armForwardMid, sliderPower);
+    }
+    public void liftFrontMid()
+    {
+        sliderRunTo(Fields.sliderForwardMid);
+        armRunTo(Fields.armForwardMid);
+    }
 
 
     public void liftConeStack() {

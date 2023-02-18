@@ -5,6 +5,7 @@ import static java.lang.Math.toRadians;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -19,7 +20,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Autonomous
-public class IanGaffneyXAlessioTonioloYValuesToChina extends LinearOpMode {
+public class BLAURHEUAHUGHEAHIMVOMITING extends LinearOpMode {
     // robot with drive
     BaseRobot robot = new BaseRobot();
     // OpenCV
@@ -55,11 +56,11 @@ public class IanGaffneyXAlessioTonioloYValuesToChina extends LinearOpMode {
         fun.clawClose();
 
         // Build Trajectories
-        Pose2d startPose = new Pose2d(35, -72+13.5, Math.toRadians(90));
+        Pose2d startPose = new Pose2d(0, 0, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
 
         // Go to junction (PRELOAD)
-        Trajectory one = drive.trajectoryBuilder(startPose).splineTo(new Vector2d(26.5, -5), Math.toRadians(120))
+        /*Trajectory one = drive.trajectoryBuilder(startPose).splineTo(new Vector2d(26.5, -5), Math.toRadians(120))
                 // 1.3
                 .addTemporalMarker(.8, () -> {
                     fun.liftFrontHigh(1);
@@ -108,32 +109,26 @@ public class IanGaffneyXAlessioTonioloYValuesToChina extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(34, -8, toRadians(0))).build();
         Trajectory thirteen = drive.trajectoryBuilder(twelve.end(), true)
                 .lineToSplineHeading(new Pose2d(19, -5, toRadians(-90))).build();
-        Trajectory goMiddle = drive.trajectoryBuilder(thirteen.end(), false).lineTo(new Vector2d(19, -9)).build();
+        Trajectory goMiddle = drive.trajectoryBuilder(thirteen.end(), false).lineTo(new Vector2d(19, -9)).build();*/
+        Trajectory one = drive.trajectoryBuilder(startPose).lineToLinearHeading(new Pose2d(.5, 39, toRadians(0))).build();
+        Trajectory two = drive.trajectoryBuilder(one.end()).lineToLinearHeading(new Pose2d(-2, 39, Math.toRadians(90))).build();
+        Trajectory three = drive.trajectoryBuilder(two.end()).lineTo(new Vector2d(-2, 26)).build();
         // PARKING ZONES
-        Trajectory zoneOne = drive.trajectoryBuilder(thirteen.end(), false)
-                .addTemporalMarker(1, () -> {
-                    fun.resetAll();
-                })
-                .lineToSplineHeading(new Pose2d(10, -9, Math.toRadians(80))).build();
-        Trajectory zoneTwo = drive.trajectoryBuilder(thirteen.end(), false)
-                .addTemporalMarker(1, () -> {
-                    fun.resetAll();
-                })
-                .lineToSplineHeading(new Pose2d(34, -12, toRadians(90))).build();
-        Trajectory zoneThree = drive.trajectoryBuilder(thirteen.end(), false)
-                .addTemporalMarker(1, () -> {
-                    fun.resetAll();
-                })
-                .lineTo(new Vector2d(55.5, -10)).build();
+        Trajectory zoneOne = drive.trajectoryBuilder(three.end(), false)
+                .lineToSplineHeading(new Pose2d(-24, 26, Math.toRadians(90))).build();
+        /*Trajectory zoneTwo = drive.trajectoryBuilder(three.end(), false)
+                .lineToSplineHeading(new Pose2d(34, -12, toRadians(90))).build();*/
+        Trajectory zoneThree = drive.trajectoryBuilder(three.end(), false)
+                .lineTo(new Vector2d(25, 26)).build();
 
         telemetry.update();
-        telemetry.speak("NBA Nino Pequeno el mejor es verdad innit");
+        telemetry.speak("BLAUERUALEURDSKAERUARUEUAUJUARURAJIIJIAUUAUAUA");
         telemetry.addLine("READY! 🤡");
 
         waitForStart();
         if (isStopRequested()) return;
         double zone = ZoneDetectionPipeline.getZone();
-
+        /*
         // Raise Arm to deposit position
         fun.hoverForward(0.5);
         // PRELOAD
@@ -181,8 +176,28 @@ public class IanGaffneyXAlessioTonioloYValuesToChina extends LinearOpMode {
         fun.lowerArmBackSlightlyFromHigh(-105);
         fun.clawDeliver();
         delay(0.4);
+        fun.clawClose();*/
+        //Preload
+        fun.liftFrontMid();
+        delay(.25);
+        drive.followTrajectory(one);
+
+        delay(1);
+        fun.lowerArmBackSlightlyFromHigh(80);
+        delay(1);
+        fun.clawDeliver();
+        delay(1);
         fun.clawClose();
-        drive.followTrajectory(goMiddle);
+        delay(1);
+        fun.lowerArmBackSlightlyFromHigh(-70);
+        drive.followTrajectory(two);
+        delay(1);
+        drive.followTrajectory(three);
+        delay(1);
+        fun.resetAll();
+        delay(1);
+
+        //drive.followTrajectory(goMiddle);
 
         // OpenCV Code
 
@@ -201,7 +216,7 @@ public class IanGaffneyXAlessioTonioloYValuesToChina extends LinearOpMode {
             fun.clawOpen();
         } else {
             // Zone 2
-            drive.followTrajectory(zoneTwo);
+            //drive.followTrajectory(zoneTwo);
             fun.clawOpen();
         }
         delay(5);

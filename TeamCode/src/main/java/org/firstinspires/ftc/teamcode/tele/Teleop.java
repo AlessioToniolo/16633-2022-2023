@@ -197,12 +197,12 @@ public class Teleop extends LinearOpMode {
             checkXB();
             checkBumpers();
         }
-        //checkDDownandUp();
+        checkDDownandUp();
 
         checkDRightandLeft();
 
 
-        checkGuide();
+        checkLeftTrigger();
 
         //checkResetEncoderPosition();
 
@@ -535,13 +535,14 @@ public class Teleop extends LinearOpMode {
 
     }
 
-    public void checkGuide(){
-        if(gamepad2.guide && gamepad2.guide != prevGuide2){
+    public void checkLeftTrigger(){
+        if(gamepad2.left_trigger>0 && gamepad2.left_trigger>0 != prevLTrigger){
             sliderTargetPos=Fields.sliderStackUp;
             armTargetPos = Fields.armStackUp;
             sliderRunTo((int)sliderTargetPos, Fields.sliderSpeed);
             delay(.5);
         }
+        prevLTrigger= gamepad2.left_trigger > 0;
     }
     public void doTelemetry() {
         pen.update();

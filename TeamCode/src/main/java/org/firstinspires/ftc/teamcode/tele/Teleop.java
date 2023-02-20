@@ -197,7 +197,7 @@ public class Teleop extends LinearOpMode {
             checkXB();
             checkBumpers();
         }
-        checkDDownandUp();
+        //checkDDownandUp();
 
         checkDRightandLeft();
 
@@ -382,14 +382,15 @@ public class Teleop extends LinearOpMode {
         prevB = gamepad1.b;
     }
     public void checkDDownandUp(){
+
         //move arm and slider state down by one
-        if (gamepad2.dpad_down && gamepad2.dpad_down != prevDDown2) {
+        if (closed&&gamepad2.dpad_down && gamepad2.dpad_down != prevDDown2) {
             sliderState--;
             armState--;
         }
         prevDDown2 = gamepad2.dpad_down;
         //move arm and slider state up by one
-        if (gamepad2.dpad_up && gamepad2.dpad_up != prevDUp2) {
+        if ((closed || sliderState==0) && gamepad2.dpad_up && gamepad2.dpad_up != prevDUp2) {
             sliderState++;
             armState++;
         }
@@ -415,6 +416,7 @@ public class Teleop extends LinearOpMode {
             updateArmStates();
             updateSliderStates();
         }
+
 
         /**___________________________TELEMETRY__________________**/
         lineBreak();

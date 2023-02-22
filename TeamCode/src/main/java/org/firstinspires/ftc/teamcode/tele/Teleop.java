@@ -39,7 +39,7 @@ public class Teleop extends LinearOpMode {
 
     //booleans for coneStack guessing algorithm
      int coneStackPos = -1;//-1 is not in use, 0 is out of bounds for looping purposes 1 is 1 cone 2 is 2 cones and so on and so forth until 5 cones where it will then loop around to 1
-    int lastConeStackPos = 1;//records the last conestack position used
+    int lastConeStackPos = 3;//records the last conestack position used
     boolean isGuessing = false;
 
 
@@ -120,7 +120,7 @@ public class Teleop extends LinearOpMode {
         pen.update();
 
         waitForStart();
-        //odoLoop();
+        odoLoop();
 
         // TODO RR
         //robot.drive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(0)));
@@ -207,7 +207,7 @@ public class Teleop extends LinearOpMode {
         //checkResetEncoderPosition();
 
         //motor functionality
-        armRunTo((int)armTargetPos, Fields.armSpeed);
+        armRunTo((int)armTargetPos);
         sliderRunTo((int)sliderTargetPos, Fields.sliderSpeed+ sliderSpeedModifier);
     }
 //    public void checkResetEncoderPosition(){
@@ -354,6 +354,14 @@ public class Teleop extends LinearOpMode {
                 closed = true;
                 robot.rightClaw.setPosition(Fields.rightClawClose);
                 robot.leftClaw.setPosition(Fields.leftClawClose);
+                try {
+                    Thread.sleep(100);
+
+                }
+                catch(InterruptedException e){
+
+                }
+                armTargetPos=80;
             }
 
         }
@@ -365,6 +373,7 @@ public class Teleop extends LinearOpMode {
                 closed = true;
                 robot.rightClaw.setPosition(Fields.rightClawCapstone);
                 robot.leftClaw.setPosition(Fields.leftClawCapstone);
+
             }
         }
         prevRBumper2 = gamepad2.right_trigger>0;
@@ -557,7 +566,8 @@ public class Teleop extends LinearOpMode {
     }
     //helper functions
     public void armRunTo(int position){
-        armRunTo(position, Fields.armSpeed);
+        if(position == Fields.armBackwardsHigh) armRunTo(position, Fields.highArmSpeed);
+        else armRunTo(position, Fields.armSpeed);
     }
     public void armRunTo(int position, double power){
         armTargetPos=position;

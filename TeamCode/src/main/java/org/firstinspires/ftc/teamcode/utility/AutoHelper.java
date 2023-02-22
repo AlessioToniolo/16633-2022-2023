@@ -20,7 +20,7 @@ public class AutoHelper {
     public void liftHighGoal(boolean depositBackwards) {
         if(depositBackwards){
             sliderRunTo(Fields.sliderBackwardsHigh);
-            armRunTo(Fields.armBackwardsHigh);
+            armRunTo(Fields.autoArmBackwardsHigh);
         } else {
             sliderRunTo(Fields.sliderForwardHigh);
             armRunTo(Fields.armForwardHigh);
@@ -30,7 +30,7 @@ public class AutoHelper {
     public void liftHighGoal(boolean depositBackwards, double power) {
         if(depositBackwards){
             sliderRunTo(Fields.sliderBackwardsHigh, power);
-            armRunTo(Fields.armBackwardsHigh, power);
+            armRunTo(Fields.autoArmBackwardsHigh, power);
         } else {
             sliderRunTo(Fields.sliderForwardHigh, power);
             armRunTo(Fields.armForwardHigh, power);
@@ -40,7 +40,7 @@ public class AutoHelper {
     public void fastLiftHigh(boolean depositBackwards) {
         if(depositBackwards){
             sliderRunTo(Fields.sliderBackwardsHigh);
-            armRunTo(Fields.armBackwardsHigh);
+            armRunTo(Fields.autoArmBackwardsHigh);
         } else {
             sliderRunTo(Fields.sliderForwardHigh);
             armRunTo(Fields.armForwardHigh);
@@ -49,7 +49,7 @@ public class AutoHelper {
     public void fastLiftHigh(boolean depositBackwards, double power) {
         if(depositBackwards){
             sliderRunTo(Fields.sliderBackwardsHigh-75, power);
-            armRunTo(Fields.armBackwardsHigh, power);
+            armRunTo(Fields.autoArmBackwardsHigh, power);
         } else {
             sliderRunTo(Fields.sliderForwardHigh-70, power);
             armRunTo(Fields.armForwardHigh, power);
@@ -58,7 +58,7 @@ public class AutoHelper {
     public void fastLiftHigher(boolean depositBackwards) {
         if(depositBackwards){
             sliderRunTo(Fields.sliderBackwardsHigh+50);
-            armRunTo(Fields.armBackwardsHigh);
+            armRunTo(Fields.autoArmBackwardsHigh);
         } else {
             sliderRunTo(Fields.sliderForwardHigh);
             armRunTo(Fields.armForwardHigh);
@@ -67,7 +67,7 @@ public class AutoHelper {
     public void fastLiftHigher(boolean depositBackwards, double power) {
         if(depositBackwards){
             sliderRunTo(Fields.sliderBackwardsHigh+50, power);
-            armRunTo(Fields.armBackwardsHigh, power);
+            armRunTo(Fields.autoArmBackwardsHigh, power);
         } else {
             sliderRunTo(Fields.sliderForwardHigh+50, power);
             armRunTo(Fields.armForwardHigh, power);
@@ -76,7 +76,7 @@ public class AutoHelper {
     public void fastLiftLower(boolean depositBackwards) {
         if(depositBackwards){
             sliderRunTo(Fields.sliderBackwardsHigh-150);
-            armRunTo(Fields.armBackwardsHigh);
+            armRunTo(Fields.autoArmBackwardsHigh);
         } else {
             sliderRunTo(Fields.sliderForwardHigh-200);
             armRunTo(Fields.armForwardHigh);
@@ -85,7 +85,7 @@ public class AutoHelper {
     public void fastLiftLower(boolean depositBackwards, double power) {
         if(depositBackwards){
             sliderRunTo(Fields.sliderBackwardsHigh-150, power);
-            armRunTo(Fields.armBackwardsHigh, power);
+            armRunTo(Fields.autoArmBackwardsHigh, power);
         } else {
             sliderRunTo(Fields.sliderForwardHigh-140, power);
             armRunTo(Fields.armForwardHigh, power);
@@ -143,7 +143,7 @@ public class AutoHelper {
         delay(.5);
     }
     public void lowerChainBar(double power, int difference) {
-        armRunTo(Fields.armBackwardsHigh+difference, power);
+        armRunTo(Fields.autoArmBackwardsHigh+difference, power);
         //sliderRunTo(Fields.sliderBackwardsHigh+difference);
     }
 

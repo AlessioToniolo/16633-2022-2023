@@ -30,6 +30,8 @@ public class Fields {
     public static double armSpeed = .5;
     public static double sliderSpeed = 1;
 
+    public static double highArmSpeed = .425;
+
     public static int sliderStackUp = 1752;
     public static int armStackUp=100;
 
@@ -73,7 +75,8 @@ public class Fields {
     public static int armForwardLow=657;//updated 1/16
     public static int armForwardMid=657;//updated 1/16
     public static int armForwardHigh = 809;//updated 1/31
-    public static  int armBackwardsHigh = 1548;//updated 1/31
+    public static  int armBackwardsHigh = 1600;//updated 2/22
+    public static final int autoArmBackwardsHigh = 1548;
     public static int armBackwardsMid = 1574;//updated 1/17
     public static int armBackwardsLow = 1484;//updated 1/16
 

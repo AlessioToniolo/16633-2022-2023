@@ -32,17 +32,17 @@ public class AutoFunctions {
 
     public void liftBackHigh() {
         sliderRunTo(Fields.sliderBackwardsHigh);
-        armRunTo(Fields.armBackwardsHigh);
+        armRunTo(Fields.autoArmBackwardsHigh);
     }
 
     public void liftBackHigh(double power) {
         sliderRunTo(Fields.sliderBackwardsHigh, power);
-        armRunTo(Fields.armBackwardsHigh, power);
+        armRunTo(Fields.autoArmBackwardsHigh, power);
     }
 
     public void liftBackHigh(double sliderPower, double armPower) {
         sliderRunTo(Fields.sliderBackwardsHigh, sliderPower);
-        armRunTo(Fields.armBackwardsHigh, armPower);
+        armRunTo(Fields.autoArmBackwardsHigh, armPower);
     }
     public void liftFrontMid(double sliderPower, double armPower)
     {
@@ -106,7 +106,7 @@ public class AutoFunctions {
     }
 
     public void lowerArmBackSlightlyFromHigh(int difference) {
-        armRunTo(Fields.armBackwardsHigh - difference);
+        armRunTo(Fields.autoArmBackwardsHigh - difference);
     }
 
     // TODO claw functions

@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.utility.AutoFunctions;
 import org.firstinspires.ftc.teamcode.utility.BaseRobot;
 import org.firstinspires.ftc.teamcode.utility.Fields;
 import org.firstinspires.ftc.teamcode.utility.pipelines.ZoneDetectionPipeline;
@@ -139,7 +140,7 @@ public class IanGaffneyXAlessioTonioloYValuesToChina extends LinearOpMode {
         // PRELOAD
         drive.followTrajectory(one);
         fun.lowerArmFrontSlightlyFromHigh(115);
-        delay(.2);
+        delay(.4);
         fun.clawDeliver();
         delay(0.25);
         fun.clawClose();

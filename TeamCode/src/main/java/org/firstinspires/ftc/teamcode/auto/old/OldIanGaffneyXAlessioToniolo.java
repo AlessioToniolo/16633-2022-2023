@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.auto.old;
 
 import static java.lang.Math.toRadians;
 
@@ -6,12 +6,13 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.utility.AutoFunctions;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.utility.BaseRobot;
 import org.firstinspires.ftc.teamcode.utility.Fields;
 import org.firstinspires.ftc.teamcode.utility.pipelines.ZoneDetectionPipeline;
@@ -20,7 +21,8 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Autonomous
-public class BLAURHEUAHUGHEAHIMVOMITING extends LinearOpMode {
+@Disabled
+public class OldIanGaffneyXAlessioToniolo extends LinearOpMode {
     // robot with drive
     BaseRobot robot = new BaseRobot();
     // OpenCV
@@ -56,11 +58,11 @@ public class BLAURHEUAHUGHEAHIMVOMITING extends LinearOpMode {
         fun.clawClose();
 
         // Build Trajectories
-        Pose2d startPose = new Pose2d(0, 0, Math.toRadians(90));
+        Pose2d startPose = new Pose2d(35, -72+13.5, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
 
         // Go to junction (PRELOAD)
-        /*Trajectory one = drive.trajectoryBuilder(startPose).splineTo(new Vector2d(26.5, -5), Math.toRadians(120))
+        Trajectory one = drive.trajectoryBuilder(startPose).splineTo(new Vector2d(26.5, -2), Math.toRadians(120))
                 // 1.3
                 .addTemporalMarker(.8, () -> {
                     fun.liftFrontHigh(1);
@@ -76,7 +78,7 @@ public class BLAURHEUAHUGHEAHIMVOMITING extends LinearOpMode {
         Trajectory four = drive.trajectoryBuilder(three.end(), true)
                 .lineToSplineHeading(new Pose2d(34, -8, toRadians(0))).build();
         Trajectory five = drive.trajectoryBuilder(four.end(), true)
-                .lineToSplineHeading(new Pose2d(20, -5, toRadians(-90))).build();
+                .lineToSplineHeading(new Pose2d(20, -2, toRadians(-90))).build();
         //Go cone stack #2
         Trajectory six = drive.trajectoryBuilder(five.end()).lineToLinearHeading(new Pose2d(36.5, -7, Math.toRadians(0)))
                 .addTemporalMarker(0.2, () -> {
@@ -92,7 +94,7 @@ public class BLAURHEUAHUGHEAHIMVOMITING extends LinearOpMode {
         Trajectory eight = drive.trajectoryBuilder(seven.end(), true)
                 .lineToSplineHeading(new Pose2d(34, -8, toRadians(0))).build();
         Trajectory nine = drive.trajectoryBuilder(eight.end(), true)
-                .lineToSplineHeading(new Pose2d(19.5, -4.5, toRadians(-90))).build();
+                .lineToSplineHeading(new Pose2d(19, -2, toRadians(-90))).build();
         // Go cone stack #3
         Trajectory ten = drive.trajectoryBuilder(nine.end()).lineToLinearHeading(new Pose2d(36.5, -7, Math.toRadians(0)))
                 .addTemporalMarker(0.2, () -> {
@@ -108,33 +110,38 @@ public class BLAURHEUAHUGHEAHIMVOMITING extends LinearOpMode {
         Trajectory twelve = drive.trajectoryBuilder(eleven.end(), true)
                 .lineToSplineHeading(new Pose2d(34, -8, toRadians(0))).build();
         Trajectory thirteen = drive.trajectoryBuilder(twelve.end(), true)
-                .lineToSplineHeading(new Pose2d(19, -5, toRadians(-90))).build();
-        Trajectory goMiddle = drive.trajectoryBuilder(thirteen.end(), false).lineTo(new Vector2d(19, -9)).build();*/
-        Trajectory one = drive.trajectoryBuilder(startPose).lineToLinearHeading(new Pose2d(.5, 39, toRadians(0))).build();
-        Trajectory two = drive.trajectoryBuilder(one.end()).lineToLinearHeading(new Pose2d(-2, 39, Math.toRadians(90))).build();
-        Trajectory three = drive.trajectoryBuilder(two.end()).lineTo(new Vector2d(-2, 26)).build();
+                .lineToSplineHeading(new Pose2d(19, -2.25, toRadians(-90))).build();
+        Trajectory goMiddle = drive.trajectoryBuilder(thirteen.end(), false).lineTo(new Vector2d(19, -6)).build();
         // PARKING ZONES
-        Trajectory zoneOne = drive.trajectoryBuilder(three.end(), false)
-                .lineToSplineHeading(new Pose2d(-24, 26, Math.toRadians(90))).build();
-        /*Trajectory zoneTwo = drive.trajectoryBuilder(three.end(), false)
-                .lineToSplineHeading(new Pose2d(34, -12, toRadians(90))).build();*/
-        Trajectory zoneThree = drive.trajectoryBuilder(three.end(), false)
-                .lineTo(new Vector2d(25, 26)).build();
+        Trajectory zoneOne = drive.trajectoryBuilder(thirteen.end(), false)
+                .addTemporalMarker(1, () -> {
+                    fun.resetAll();
+                })
+                .lineToSplineHeading(new Pose2d(10, -12, Math.toRadians(90))).build();
+        Trajectory zoneTwo = drive.trajectoryBuilder(thirteen.end(), false)
+                .addTemporalMarker(1, () -> {
+                    fun.resetAll();
+                })
+                .lineToSplineHeading(new Pose2d(35, -12, toRadians(90))).build();
+        Trajectory zoneThree = drive.trajectoryBuilder(thirteen.end(), false)
+                .addTemporalMarker(1, () -> {
+                    fun.resetAll();
+                })
+                .lineTo(new Vector2d(55.5, -10)).build();
 
         telemetry.update();
-        telemetry.speak("BLAUERUALEURDSKAERUARUEUAUJUARURAJIIJIAUUAUAUA");
+        telemetry.speak("NBA Nino Pequeno el mejor es verdad innit");
         telemetry.addLine("READY! 🤡");
 
         waitForStart();
         if (isStopRequested()) return;
         double zone = ZoneDetectionPipeline.getZone();
-        /*
+
         // Raise Arm to deposit position
         fun.hoverForward(0.5);
         // PRELOAD
         drive.followTrajectory(one);
-        fun.lowerArmFrontSlightlyFromHigh(115);
-        delay(.2);
+        fun.lowerArmFrontSlightlyFromHigh(80);
         fun.clawDeliver();
         delay(0.25);
         fun.clawClose();
@@ -143,11 +150,11 @@ public class BLAURHEUAHUGHEAHIMVOMITING extends LinearOpMode {
         drive.followTrajectory(three);
         fun.clawClose();
         delay(0.25);
-        fun.liftBackHigh(.6, 0.3);
+        fun.liftBackHigh(.7, 0.3);
         // DEPOSIT #1
         drive.followTrajectory(four);
         drive.followTrajectory(five);
-        fun.lowerArmBackSlightlyFromHigh(-105);
+        fun.lowerArmBackSlightlyFromHigh(-90);
         fun.clawDeliver();
         delay(0.25);
         fun.clawClose();
@@ -156,11 +163,11 @@ public class BLAURHEUAHUGHEAHIMVOMITING extends LinearOpMode {
         drive.followTrajectory(seven);
         fun.clawClose();
         delay(0.25);
-        fun.liftBackHigh(.6, 0.3);
+        fun.liftBackHigh(.7, 0.3);
         // DEPOSIT #2
         drive.followTrajectory(eight);
         drive.followTrajectory(nine);
-        fun.lowerArmBackSlightlyFromHigh(-105);
+        fun.lowerArmBackSlightlyFromHigh(-90);
         fun.clawDeliver();
         delay(0.25);
         fun.clawClose();
@@ -169,35 +176,15 @@ public class BLAURHEUAHUGHEAHIMVOMITING extends LinearOpMode {
         drive.followTrajectory(eleven);
         fun.clawClose();
         delay(0.25);
-        fun.liftBackHigh(.6, 0.3);
+        fun.liftBackHigh(.7, 0.3);
         // DEPOSIT #3
         drive.followTrajectory(twelve);
         drive.followTrajectory(thirteen);
-        fun.lowerArmBackSlightlyFromHigh(-105);
+        fun.lowerArmBackSlightlyFromHigh(-90);
         fun.clawDeliver();
         delay(0.4);
-        fun.clawClose();*/
-        //Preload
-        fun.liftFrontMid();
-        delay(.25);
-        drive.followTrajectory(one);
-
-        delay(1);
-        fun.lowerArmBackSlightlyFromHigh(80);
-        delay(1);
-        fun.clawDeliver();
-        delay(1);
         fun.clawClose();
-        delay(1);
-        fun.lowerArmBackSlightlyFromHigh(-70);
-        drive.followTrajectory(two);
-        delay(1);
-        drive.followTrajectory(three);
-        delay(1);
-        fun.resetAll();
-        delay(1);
-
-        //drive.followTrajectory(goMiddle);
+        drive.followTrajectory(goMiddle);
 
         // OpenCV Code
 
@@ -216,10 +203,10 @@ public class BLAURHEUAHUGHEAHIMVOMITING extends LinearOpMode {
             fun.clawOpen();
         } else {
             // Zone 2
-            //drive.followTrajectory(zoneTwo);
+            drive.followTrajectory(zoneTwo);
             fun.clawOpen();
         }
-        delay(5);
+        delay(1);
     }
 
     public void delay(double t) {

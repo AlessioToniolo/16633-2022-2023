@@ -32,9 +32,7 @@ public class BaseRobot {
     public Servo v4bServo;
     public Servo airplaneShooter;
 
-    public CRServo rightOdoServo;
-    public CRServo leftOdoServo;
-    public CRServo middleOdoServo;
+
 
     // Local OpMode members
     HardwareMap hwMap;
@@ -86,8 +84,6 @@ public class BaseRobot {
 
         // Define and Initialize Motors.  Assign Names that match the setup on the RC Phone
         slider = hwMap.dcMotor.get("slider");
-        sideSlider = hwMap.dcMotor.get("sideSlider");
-        arm = hwMap.dcMotor.get("arm");
 
         leftClaw = hwMap.servo.get("leftclaw");
         rightClaw = hwMap.servo.get("rightclaw");
@@ -96,13 +92,7 @@ public class BaseRobot {
         v4bServo = hwMap.servo.get("v4bServo");
         airplaneShooter = hwMap.servo.get("airplaneShooter");
 
-        leftOdoServo = hwMap.crservo.get("leftOdoServo");
-        rightOdoServo = hwMap.crservo.get("rightOdoServo");
-        middleOdoServo = hwMap.crservo.get("middleOdoServo");
 
-        rightOdoServo.setDirection(Fields.rightOdoDirection);
-        leftOdoServo.setDirection(Fields.leftOdoDirection);
-        middleOdoServo.setDirection(Fields.middleOdoDirection);
 
         // Initialize IMU
         imu = hwMap.get(BNO055IMU.class, "imu");
@@ -122,25 +112,7 @@ public class BaseRobot {
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    // Auto robot functions
-    public void liftHighGoal(boolean depositBackwards) {
-        if(depositBackwards){
-            sliderRunTo(Fields.sliderBackwardsHigh);
-            armRunTo(Fields.armBackwardsHigh);
-        } else {
-            sliderRunTo(Fields.sliderForwardHigh);
-            armRunTo(Fields.armForwardHigh);
-        }
-        delay(0.5);
-        rightClaw.setPosition(Fields.rightClawDeliver);
-        leftClaw.setPosition(Fields.leftClawDeliver);
-    }
-    public void resetLift() {
-        armRunTo(Fields.armGround);
-        sliderRunTo(Fields.sliderGround);
-        leftClaw.setPosition(Fields.leftClawPickup);
-        rightClaw.setPosition(Fields.rightClawPickup);
-    }
+
     public void closeClaw() {
         rightClaw.setPosition(Fields.rightClawClose);
         leftClaw.setPosition(Fields.leftClawClose);
@@ -168,25 +140,11 @@ public class BaseRobot {
     }
 
 
-    //helper functions
-    private void armRunTo(int position){
-        armRunTo(position, 1);
-    }
-    private void armRunTo(int position, double power){
-        arm.setTargetPosition(position);
-        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setPower(power);
-    }
-    private void sliderRunTo(int position){
-        sliderRunTo(position, 1);
-    }
-    private void sliderRunTo(int position, double power){
-        slider.setTargetPosition(position);
+
+    public void sliderRunTo(double position, double power){
+        slider.setTargetPosition((int)position);
         slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slider.setPower(power);
-        sideSlider.setTargetPosition(position);
-        sideSlider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        sideSlider.setPower(power);
     }
     public void delay(double t) {
         runtime.reset();
@@ -315,36 +273,10 @@ public class BaseRobot {
     public double inchesToTicks(double inches) {
         return TICKS_PER_REV * WHEEL_RADIUS * 2 * Math.PI * inches;
     }
-    public void retractOdoPods(Telemetry telemetry){
-        Thread t = new Thread(new Runnable(){
-            @Override
-            public void run() {
-                runOdoPodsAsync(1, telemetry);
-            }
-        });
-        t.start();
-    }
-    public void lowerOdoPods(Telemetry telemetry){
-        Thread t = new Thread(new Runnable(){
-            @Override
-            public void run() {
-                runOdoPodsAsync(-1, telemetry);
-            }
-        });
-        t.start();
-    }
 
-    public void runOdoPodsAsync(int power, Telemetry telemetry){
-        rightOdoServo.setPower(power);
-        middleOdoServo.setPower(power);
-        leftOdoServo.setPower(power);
-        wait(Fields.odoRetractDelay, telemetry);
-        rightOdoServo.setPower(0);
-        leftOdoServo.setPower(0);
-        middleOdoServo.setPower(0);
-        telemetry.addLine("Motors Off");
-        telemetry.update();
-    }
+
+
+
 
 
 

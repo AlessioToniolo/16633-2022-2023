@@ -62,13 +62,10 @@ public class Teleop extends LinearOpMode {
     //MISC
     boolean prevGuide, prevGuide2 = false;
 
-    //slider vars
-    int sliderState = 0;
-    double armTargetPos = 0;
+
     double sliderTargetPos = 0;
-    //claw vars
-    double leftClawPos = 0;
-    double rightClawPos = 0;
+    double v4bPos = Fields.v4bIntake;
+
     volatile boolean closed = false;
     int clawPos = 0;//0 closed, 1 outtake, 2 intake
 
@@ -156,67 +153,43 @@ public class Teleop extends LinearOpMode {
             pen.addLine("Gamepad Degree: " + gamepadDegree);
 
             // TODO new servo stuff
-            if (gamepad1.x) {
-                robot.v4bIntake();
-            } else if (gamepad1.y) {
-                robot.v4bDeposit();
-            }
+
             if (gamepad1.dpad_left) {
                 robot.releaseAirplane();
             } else if (gamepad1.dpad_right) {
                 robot.closeAirplane();
             }
 
-            if(gamepad2.x && gamepad2.x != prevX2){
-                if(clawPos ==0){clawPos=1;robot.openClaw();}
-                else if(clawPos ==1){clawPos=2;robot.intakeClaw();}
-                else if(clawPos ==2){clawPos =0;robot.closeClaw();}
-            }
-            prevX2 = gamepad2.x;
-            //checkSlider();
-            //checkClaw();
+            checkClaw();
+            checkV4b();
+            checkSlider();
+
             recenterIMU();
             doTelemetry();
 
         }
     }
-    public void checkSlider(){
-        //manual Control
-        if(gamepad2.left_stick_button){
-            sliderTargetPos+=50*-gamepad2.left_stick_y;//if pressed up then will add between 0 and positive 10 if pressed down will dubsttract between 0 and 1
-            sliderSpeedModifier = .5;
+    public void checkClaw(){
+        if(gamepad2.x && gamepad2.x != prevX2){
+            if(clawPos ==0){clawPos=1;robot.openClaw();}
+            else if(clawPos ==1){clawPos=2;robot.intakeClaw();}
+            else if(clawPos ==2){clawPos =0;robot.closeClaw();}
         }
-        else {
-            sliderSpeedModifier=0;
-            sliderTargetPos += 10 * -gamepad2.left_stick_y;//if pressed up then will add between 0 and positive 10 if pressed down will dubsttract between 0 and 10
-            armTargetPos += 10 * -gamepad2.right_stick_y;//if pressed up then will add between 0 and positive 10 if pressed down will dubsttract between 0 and 10
-        }
-
-        //safety
-        if(armTargetPos < Fields.armMinimumTarget)armTargetPos = Fields.armMinimumTarget;
-        else if(armTargetPos > Fields.armMaximumTarget)armTargetPos = Fields.armMaximumTarget;
-
-        if(sliderTargetPos>Fields.sliderMaximumTarget) sliderTargetPos = Fields.sliderMaximumTarget;
-        else if(sliderTargetPos<Fields.sliderMinimumTarget) sliderTargetPos=Fields.sliderMinimumTarget;
-
-        checkY();
-        if(closed) {
-            checkXB();
-            checkBumpers();
-        }
-        checkDDownandUp();
-
-        //checkDRightandLeft();
-
-
-        checkLeftTrigger();
-
-        //checkResetEncoderPosition();
-
-        //motor functionality
-        armRunTo((int)armTargetPos);
-        sliderRunTo((int)sliderTargetPos, Fields.sliderSpeed+ sliderSpeedModifier);
+        prevX2 = gamepad2.x;
     }
+    public void checkV4b(){
+        v4bPos += gamepad2.right_stick_y*.001;
+        if(v4bPos >1)v4bPos=1;
+        else if(v4bPos<0)v4bPos=0;
+
+        robot.v4bServo.setPosition(v4bPos);
+    }
+    public void checkSlider(){
+        sliderTargetPos += gamepad2.left_stick_y*.01;
+        if(sliderTargetPos < Fields.sliderIntake)sliderTargetPos = Fields.sliderIntake;
+        robot.sliderRunTo(sliderTargetPos, Fields.sliderPower);
+    }
+
 
     public void fieldCentricDrive(){
         double leftStickX;
@@ -295,15 +268,6 @@ public class Teleop extends LinearOpMode {
         robot.drive.rightRear.setPower(rightRearPower);
     }
     public void checkSpeed(){
-        if(gamepad1.right_bumper&& gamepad1.right_bumper!=prevRBumper){//increases base speed
-            baseSpeed +=.1;
-        }
-        prevRBumper = gamepad1.right_bumper;
-
-        if(gamepad1.left_bumper&& gamepad1.left_bumper!=prevLBumper){//decreases base speed
-            baseSpeed -=.1;
-        }
-        prevLBumper = gamepad1.left_bumper;
 
         double triggerSpeedModifier = 1.0-gamepad1.left_trigger;//left trigger works like a brake
         if(triggerSpeedModifier ==0)triggerSpeedModifier=.1;
@@ -318,214 +282,22 @@ public class Teleop extends LinearOpMode {
         else if(speed<0)speed=0;
 
     }
-    public void checkClaw(){
-        if((gamepad2.a && gamepad2.a != prevA2) || (gamepad1.a && gamepad1.a != prevA)){
-            if(closed) {
-                closed = false;
-                if (armTargetPos > 500) {
-                    robot.rightClaw.setPosition(Fields.rightClawDeliver);
-                    robot.leftClaw.setPosition(Fields.leftClawDeliver);
-                }
-                else {
-                    //if we are releasing a cone and we are currently guessing the conestack position
-                    if(isGuessing){
-                        isGuessing =false;//then we know the guessing is over
-                    }
-                    robot.rightClaw.setPosition(Fields.rightClawPickup);
-                    robot.leftClaw.setPosition(Fields.leftClawPickup);
-                }
-            }
-            else{
-                closed = true;
-                robot.rightClaw.setPosition(Fields.rightClawClose);
-                robot.leftClaw.setPosition(Fields.leftClawClose);
-                try {
-                    Thread.sleep(100);
 
-                }
-                catch(InterruptedException e){
-
-                }
-                armTargetPos=80;
-            }
-
-        }
-        prevA2 = gamepad2.a;
-        prevA = gamepad1.a;
-
-        if((gamepad2.right_trigger > 0 && (gamepad2.right_trigger > 0)!= prevRTrigger2)){
-            if(!closed){
-                closed = true;
-                robot.rightClaw.setPosition(Fields.rightClawCapstone);
-                robot.leftClaw.setPosition(Fields.leftClawCapstone);
-
-            }
-        }
-        prevRBumper2 = gamepad2.right_trigger>0;
-        /**___________________TELEMETRY_________________**/
-        lineBreak();
-        pen.setColor(ColorfulTelemetry.Orange).setBold(true).addLine("CLAW INFO").reset();
-        pen.addLine("LEFT: Position:"+robot.leftClaw.getPosition()+"Port:"+robot.leftClaw.getPortNumber());
-        pen.addLine("RIGHT: Position:"+robot.rightClaw.getPosition()+"Port:"+robot.rightClaw.getPortNumber());
-        pen.addLine("Closed: " + closed);
-    }
     public void recenterIMU(){
         if(gamepad1.b && gamepad1.b != prevB){
             changeDegree = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
         }
         prevB = gamepad1.b;
     }
-    public void checkDDownandUp(){
-
-        //move arm and slider state down by one
-        if (closed&&gamepad2.dpad_down && gamepad2.dpad_down != prevDDown2) {
-            sliderState--;
-            armState--;
-        }
-        prevDDown2 = gamepad2.dpad_down;
-        //move arm and slider state up by one
-        if ((closed || sliderState==0) && gamepad2.dpad_up && gamepad2.dpad_up != prevDUp2) {
-            sliderState++;
-            armState++;
-        }
-        prevDUp2 = gamepad2.dpad_up;
-
-        //allows cycle to circle around
-        if(sliderState ==8)sliderState = 0;
-        else if(sliderState==-1)sliderState = 7;
-        if (armState == -1) armState = 7;
-        else if (armState == 8) armState = 0;
-
-        /**
-         * when updateArmState and updateSliderStates are called they will run the slider and arm to
-         * the position indicated by the sliderState and armState variables. Therefore these methods must only
-         * be called if the dpad up or dpad down button are pressed, else the drivers wouldnt be able to make fine
-         * adjustments because the arm and slider would be constantly being set to the arm & slider state position
-         */
-        if(gamepad2.dpad_up||gamepad2.dpad_down) {
-            if(armState==Fields.referenceArmConeStack){
-                isGuessing=true;
-            }
-            else isGuessing=false;
-            updateArmStates();
-            updateSliderStates();
-        }
 
 
-        /**___________________________TELEMETRY__________________**/
-        lineBreak();
-        pen.bold().setColor(ColorfulTelemetry.Green).addLine("Slider :" );
-        pen.reset().addLine("SliderTargetPos: "+sliderTargetPos + "Estimaed: " + robot.slider.getTargetPosition());
-        pen.addLine("SliderState: "+sliderStateStr);
-        lineBreak();
-        pen.setColor("White").bold().addLine("ARM :" );
-        pen.reset().addLine("armTargetPos: "+armTargetPos + "Estimated " + robot.arm.getTargetPosition());
-        pen.addLine("armState: "+armStateStr);
 
-    }
 
-    public void checkY(){
-        if(gamepad2.y && gamepad2.y != prevY2){
-            sliderState = Fields.referenceSliderGround;
-            sliderTargetPos=Fields.sliderGround;
-            armState = Fields.referenceArmGround;
-            armTargetPos=Fields.armGround;
-            sliderRunTo(Fields.sliderGround, 1);
-            armRunTo(Fields.armGround, Fields.armSpeed);
-            delay(1);
-            robot.leftClaw.setPosition(Fields.leftClawPickup);
-            robot.rightClaw.setPosition(Fields.rightClawPickup);
-            closed=false;
-            //updates the arm and slider String telemetry
-            updateSliderStates();
-            updateArmStates();
-        }
-        prevY2 = gamepad2.y;
-
-    }
-    public void checkXB(){
-        if(gamepad2.x&& gamepad2.x!=prevX2){
-            sliderState=Fields.referenceSliderBackwardsLow;
-            sliderTargetPos=Fields.sliderBackLow;
-            armState=Fields.referenceArmBackwardsLow;
-            armTargetPos=Fields.armBackwardsLow;
-            //updates the arm and slider String telemetry
-            updateSliderStates();
-            updateArmStates();
-        }
-        prevX2=gamepad2.x;
-        if(gamepad2.b&& gamepad2.b!=prevB2){
-            sliderState=Fields.referenceSliderBackwardsHigh;
-            sliderTargetPos=Fields.sliderBackwardsHigh;
-            armState=Fields.referenceArmBackwardsHigh;
-            armTargetPos=Fields.armBackwardsHigh;
-            //updates the arm and slider String telemetry
-            updateSliderStates();
-            updateArmStates();
-        }
-        prevB2=gamepad2.b;
-    }
-    public void checkBumpers(){
-        if(gamepad2.right_bumper && gamepad2.right_bumper!=prevRBumper2){
-            sliderState = Fields.referenceSliderBackwardsMid;
-            sliderTargetPos=Fields.sliderBackMid;
-            armState = Fields.referenceArmBackwardsMid;
-            armTargetPos = Fields.armBackwardsMid;
-            //updates the arm and slider String telemetry
-            updateSliderStates();
-            updateArmStates();
-        }
-        prevRBumper2=gamepad2.right_bumper;
-        if(gamepad2.left_bumper && gamepad2.left_bumper!=prevLBumper2){
-            sliderState = Fields.referenceSliderForwardLow;
-            sliderTargetPos=Fields.sliderForwardLow;
-            armState = Fields.referenceArmForwardLow;
-            armTargetPos = Fields.armForwardLow;
-            //updates the arm and slider String telemetry
-            updateSliderStates();
-            updateArmStates();
-        }
-        prevLBumper2=gamepad2.left_bumper;
-
-    }
-
-    public void checkLeftTrigger(){
-        if(gamepad2.left_trigger>0 && gamepad2.left_trigger>0 != prevLTrigger){
-            sliderTargetPos=Fields.sliderStackUp;
-            armTargetPos = Fields.armStackUp;
-            sliderRunTo((int)sliderTargetPos, Fields.sliderSpeed);
-            delay(.5);
-        }
-        prevLTrigger= gamepad2.left_trigger > 0;
-    }
     public void doTelemetry() {
         pen.update();
     }
 
-    //helper functions
-    public void armRunTo(int position){
-        if(position == Fields.armBackwardsHigh) armRunTo(position, Fields.highArmSpeed);
-        else armRunTo(position, Fields.armSpeed);
-    }
-    public void armRunTo(int position, double power){
-        armTargetPos=position;
-        robot.arm.setTargetPosition(position);
-        robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.arm.setPower(power);
-    }
-    public void sliderRunTo(int position){
-        sliderRunTo(position, Fields.sliderSpeed);
-    }
-    public void sliderRunTo(int position, double power){
 
-            sliderTargetPos = position;
-            robot.slider.setTargetPosition(position);
-            robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.slider.setPower(power);
-            robot.sideSlider.setTargetPosition(position);
-            robot.sideSlider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.sideSlider.setPower(power);
-    }
     public static double round(double in){
         return ((int)(in*1000))/1000.0;
     }
@@ -554,87 +326,7 @@ public class Teleop extends LinearOpMode {
         }
     }
 
-    public void updateSliderStates(){
-        String stateStr = "";
-        // to determine the sliderTarget pos
-        if (sliderState == Fields.referenceSliderGround) {
-            sliderTargetPos = Fields.sliderGround;
-            stateStr = "GROUND";
-        }
-        else if (sliderState == Fields.referenceSliderConeStack) {
-            sliderTargetPos = Fields.sliderConeStack;
-            stateStr = "CONE STACK";
-        }
-        else if (sliderState == Fields.referenceSliderForwardLow) {
-            sliderTargetPos = Fields.sliderForwardLow;
-            stateStr = "FORWARD LOW";
-        }
-        else if (sliderState == Fields.referenceSliderForwardMid) {
-            sliderTargetPos = Fields.sliderForwardMid;
-            stateStr="FORWARD MIDDLE";
-        }
-        else if (sliderState == Fields.referenceSliderForwardHigh) {
-            sliderTargetPos = Fields.sliderForwardHigh;
-            stateStr = "FORWARD HIGH";
-        }
-        else if (sliderState == Fields.referenceSliderBackwardsHigh) {
-            sliderTargetPos = Fields.sliderBackwardsHigh;
-            stateStr = "BACKWARD HIGH";
-        }
-        else if (sliderState == Fields.referenceArmBackwardsMid) {
-            sliderTargetPos = Fields.sliderBackMid;
-            stateStr="BACKWARD MIDDLE";
-        }else if (sliderState == Fields.referenceSliderBackwardsLow) {
-            sliderTargetPos = Fields.sliderBackLow;
-            stateStr = "BACKWARD LOW";
-        }
-        sliderStateStr=stateStr;
-    }
-    public void updateArmStates(){
-        //IMPORTANT: WE are only setting instance target positions here because every loop the slider and arm are set
-        // to these target positions and called to move to these positions in the checkSlider() function
-        String stateStr="";
-        if (armState == Fields.referenceArmGround) {
-            armTargetPos = Fields.armGround;
-            stateStr = "GROUND";
-        } else if (armState == Fields.referenceArmConeStack) {
-            armTargetPos = Fields.armConeStack;
-            stateStr = "CONE STACK";
-        } else if (armState == Fields.referenceArmForwardLow) {
-            armTargetPos = Fields.armForwardLow;
-            stateStr = "FORWARD LOW";
-        } else if (armState == Fields.referenceArmForwardMid) {
-            armTargetPos = Fields.armForwardMid;
-            stateStr = "FORWARD MIDDLE";
-        } else if (armState == Fields.referenceArmForwardsHigh) {
-            armTargetPos = Fields.armForwardHigh;
-            stateStr = "FORWARD HIGH";
-        } else if (armState == Fields.referenceArmBackwardsHigh) {
-            armTargetPos = Fields.armBackwardsHigh;
-            stateStr = "BACKWARD HIGH";
-        } else if (armState == Fields.referenceArmBackwardsMid) {
-            armTargetPos = Fields.armBackwardsMid;
-            stateStr = "BACKWARD MIDDLE";
-        }
-        else if (armState == Fields.referenceArmBackwardsLow) {
-            armTargetPos = Fields.armBackwardsLow;
-            stateStr = "BACKWARD LOW";
-        }
-        armStateStr=stateStr;
-    }
-    public void updateConeStackPos(){
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        if(coneStackPos != 1)armTargetPos = Fields.armConeStack;
-        if(coneStackPos==5)sliderTargetPos=Fields.coneStack5;
-        else if(coneStackPos ==4)sliderTargetPos = Fields.coneStack4;
-        else if(coneStackPos == 3)sliderTargetPos = Fields.coneStack3;
-        else if(coneStackPos == 2)sliderTargetPos = Fields.coneStack2;
-        else if(coneStackPos == 1){sliderTargetPos = Fields.coneStack1;armTargetPos=Fields.armGround;}
-    }
+
 
     /**
      * Helper Methods for telemetry

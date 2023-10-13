@@ -19,6 +19,8 @@ public class ServoTester extends LinearOpMode {
 
     double sliderPosition = Fields.sliderIntake;
 
+    double climberPosition = robot.climber.getCurrentPosition();
+
     //static FINALS
     public static final double speed = .1;
 
@@ -50,13 +52,18 @@ public class ServoTester extends LinearOpMode {
             robot.v4bServo.setPosition(servoPosition);
             robot.sliderRunTo(sliderPosition, Fields.sliderPower);
 
+            climberPosition += gamepad2.right_trigger-gamepad2.left_trigger;
+            robot.climberRunTo(climberPosition, 1);
+
             pen.addLine("Right Servo = G1 leftX");
             pen.addLine("Left Servo = G1 rightX");
             pen.addLine("v4b = G2 rightY");
             pen.addLine("Slider = G2 leftY");
+            pen.addLine("Arm = G2 Triggers");
             pen.addLine("V4b: " + servoPosition);
             pen.addLine("TArget Slider: " + sliderPosition);
-
+            pen.addLine("CLIMBER Target Pos" + climberPosition);
+            pen.addLine("CLIMBER POS" + robot.climber.getCurrentPosition());
             pen.addLine("Slider: " + robot.slider.getCurrentPosition());
             pen.addLine("LEFT ClAW: " + leftServoPosition);
             pen.addLine("RIGHT CLAW: " + rightServoPosition);

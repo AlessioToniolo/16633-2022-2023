@@ -23,6 +23,8 @@ public class BaseRobot {
     public DcMotor slider;
     public DcMotor sideSlider;
 
+    public DcMotor climber;
+
     // Virtual Four Bar Motor;
     public DcMotor arm;
     public Servo leftClaw;
@@ -92,6 +94,8 @@ public class BaseRobot {
         v4bServo = hwMap.servo.get("v4bServo");
         airplaneShooter = hwMap.servo.get("airplaneShooter");
 
+        climber = hwMap.dcMotor.get("climber");
+
 
 
         // Initialize IMU
@@ -136,7 +140,11 @@ public class BaseRobot {
         v4bServo.setPosition(Fields.v4bIntake);
     }
 
-
+    public void climberRunTo(double position, double power){
+        climber.setTargetPosition((int)position);
+        climber.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        climber.setPower(power);
+    }
 
     public void sliderRunTo(double position, double power){
         slider.setTargetPosition((int)position);

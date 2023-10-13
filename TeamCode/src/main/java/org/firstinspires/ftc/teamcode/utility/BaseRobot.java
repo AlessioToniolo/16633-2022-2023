@@ -103,13 +103,10 @@ public class BaseRobot {
         imu.initialize(imuParameters);
 
         // Enable Slider & V4B for Arm Run Code
+        slider.setDirection(DcMotorSimple.Direction.REVERSE);
         slider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        sideSlider.setDirection(DcMotorSimple.Direction.REVERSE);
-        sideSlider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        sideSlider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
 
 

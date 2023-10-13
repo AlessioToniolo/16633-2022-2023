@@ -27,7 +27,7 @@ public class Fields {
 
     /**_____________________SLIDER VARIABLES_______________________**/
 
-    public static double sliderPower = .5;
+    public static double sliderPower = 1;
     public static double sliderOuttake = 0;
     public static double sliderIntake = 0;
 

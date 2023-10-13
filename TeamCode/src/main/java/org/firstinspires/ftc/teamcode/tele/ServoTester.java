@@ -40,11 +40,11 @@ public class ServoTester extends LinearOpMode {
             robot.leftClaw.setPosition(leftServoPosition);
             robot.rightClaw.setPosition(rightServoPosition);
 
-            servoPosition += gamepad2.right_stick_y*.001;
+            servoPosition -= gamepad2.right_stick_y*.001;
             if(servoPosition >1)servoPosition=1;
             else if(servoPosition<0)servoPosition=0;
 
-            sliderPosition += gamepad2.left_stick_y*.01;
+            sliderPosition -= gamepad2.left_stick_y;
             if(sliderPosition < Fields.sliderIntake)sliderPosition = Fields.sliderIntake;
 
             robot.v4bServo.setPosition(servoPosition);
@@ -55,7 +55,9 @@ public class ServoTester extends LinearOpMode {
             pen.addLine("v4b = G2 rightY");
             pen.addLine("Slider = G2 leftY");
             pen.addLine("V4b: " + servoPosition);
-            pen.addLine("Slider: " + sliderPosition);
+            pen.addLine("TArget Slider: " + sliderPosition);
+
+            pen.addLine("Slider: " + robot.slider.getCurrentPosition());
             pen.addLine("LEFT ClAW: " + leftServoPosition);
             pen.addLine("RIGHT CLAW: " + rightServoPosition);
             pen.update();

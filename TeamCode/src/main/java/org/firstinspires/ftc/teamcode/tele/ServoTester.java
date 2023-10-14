@@ -19,7 +19,7 @@ public class ServoTester extends LinearOpMode {
 
     double sliderPosition = Fields.sliderIntake;
 
-    double climberPosition = robot.climber.getCurrentPosition();
+    double climberPosition;
 
     //static FINALS
     public static final double speed = .1;
@@ -30,6 +30,7 @@ public class ServoTester extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
+        climberPosition = robot.climber.getCurrentPosition();
         waitForStart();
         pen.setColor("white").setUnderLine(true);
         while(!isStopRequested() && opModeIsActive()){
@@ -42,19 +43,23 @@ public class ServoTester extends LinearOpMode {
             robot.leftClaw.setPosition(leftServoPosition);
             robot.rightClaw.setPosition(rightServoPosition);
 
-            servoPosition -= gamepad2.right_stick_y*.001;
+            servoPosition -= gamepad2.right_stick_y*.01;
             if(servoPosition >1)servoPosition=1;
             else if(servoPosition<0)servoPosition=0;
 
-            sliderPosition -= gamepad2.left_stick_y;
+            if(Math.abs(gamepad2.left_stick_y) > .3){
+                sliderPosition -= gamepad2.left_stick_y*2;
+            }
             if(sliderPosition < Fields.sliderIntake)sliderPosition = Fields.sliderIntake;
 
             robot.v4bServo.setPosition(servoPosition);
             robot.sliderRunTo(sliderPosition, Fields.sliderPower);
-
-            climberPosition += gamepad2.right_trigger-gamepad2.left_trigger;
+            if(Math.abs(gamepad2.right_trigger-gamepad2.left_trigger)>.1){
+                climberPosition += (gamepad2.right_trigger-gamepad2.left_trigger)*10;
+            }
             robot.climberRunTo(climberPosition, 1);
 
+            pen.addLine("gamepad2" + gamepad2.left_stick_y);
             pen.addLine("Right Servo = G1 leftX");
             pen.addLine("Left Servo = G1 rightX");
             pen.addLine("v4b = G2 rightY");

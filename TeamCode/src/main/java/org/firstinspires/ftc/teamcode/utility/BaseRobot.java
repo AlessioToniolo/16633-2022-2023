@@ -21,12 +21,10 @@ public class BaseRobot {
 
     // Linear Slider Motor
     public DcMotor slider;
-    public DcMotor sideSlider;
 
     public DcMotor climber;
 
     // Virtual Four Bar Motor;
-    public DcMotor arm;
     public Servo leftClaw;
     public Servo rightClaw;
 
@@ -79,7 +77,7 @@ public class BaseRobot {
         hwMap = ahwMap;
 
         // Initialize RoadRunner Sample Mecanum Drive
-        drive = new SampleMecanumDrive(hwMap);
+        //drive = new SampleMecanumDrive(hwMap);
 
         // Initialize color sensor
         //distanceSensor = hwMap.get(RevColorSensorV3.class, "color");
@@ -110,6 +108,8 @@ public class BaseRobot {
         slider.setDirection(DcMotorSimple.Direction.REVERSE);
         slider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        climber.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        climber.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
 

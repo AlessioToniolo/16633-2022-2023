@@ -31,6 +31,8 @@ public class Fields {
     public static double sliderOuttake = 0;
     public static double sliderIntake = 0;
 
+    /**____________V4b Variables_________**/
+
     /**_________________________AUTO VISION VARIABLES_______________________**/
     //variables for rectangle to searchIn
 
@@ -40,6 +42,6 @@ public class Fields {
     public static double airplaneRelease = 0.6;
     public static double airplaneClosed = 0.4;
     public static double v4bIntake = 0;
-    public static double v4bDeposit = 0.95;
+    public static double v4bDeposit = 0.55;
 
 }

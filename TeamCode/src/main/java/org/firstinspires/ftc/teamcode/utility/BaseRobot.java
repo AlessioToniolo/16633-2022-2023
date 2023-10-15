@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.utility;
 
+import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -22,7 +24,10 @@ public class BaseRobot {
     // Linear Slider Motor
     public DcMotor slider;
 
-    public DcMotor climber;
+    public Motor climber1;
+    public Motor climber2;
+
+    public MotorGroup climber;
 
     // Virtual Four Bar Motor;
     public Servo leftClaw;
@@ -92,8 +97,9 @@ public class BaseRobot {
         v4bServo = hwMap.servo.get("v4bServo");
         airplaneShooter = hwMap.servo.get("airplaneShooter");
 
-        climber = hwMap.dcMotor.get("climber");
-
+        climber1 = new Motor(hwMap, "climber", Motor.GoBILDA.RPM_312);
+        climber2 = new Motor(hwMap, "climber2", Motor.GoBILDA.RPM_312);
+        climber = new MotorGroup(climber1, climber2);
 
 
         // Initialize IMU
@@ -108,8 +114,9 @@ public class BaseRobot {
         slider.setDirection(DcMotorSimple.Direction.REVERSE);
         slider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        climber.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        climber.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        climber.setRunMode(Motor.RunMode.PositionControl);
+        climber.setRunMode(Motor.RunMode.PositionControl);
+        climber.resetEncoder();
 
     }
 
@@ -142,8 +149,8 @@ public class BaseRobot {
 
     public void climberRunTo(double position, double power){
         climber.setTargetPosition((int)position);
-        climber.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        climber.setPower(power);
+        climber.setRunMode(Motor.RunMode.PositionControl);
+        climber.set(power);
     }
 
     public void sliderRunTo(double position, double power){

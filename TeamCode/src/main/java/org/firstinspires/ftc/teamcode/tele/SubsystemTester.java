@@ -6,10 +6,8 @@ import org.firstinspires.ftc.teamcode.utility.BaseRobot;
 import org.firstinspires.ftc.teamcode.utility.ColorfulTelemetry;
 import org.firstinspires.ftc.teamcode.utility.Fields;
 
-import java.lang.reflect.Field;
-
 @TeleOp
-public class ServoTester extends LinearOpMode {
+public class SubsystemTester extends LinearOpMode {
     BaseRobot robot = new BaseRobot();
     ColorfulTelemetry pen  = new ColorfulTelemetry(telemetry);
     double rightServoPosition = Fields.rightClawClose;

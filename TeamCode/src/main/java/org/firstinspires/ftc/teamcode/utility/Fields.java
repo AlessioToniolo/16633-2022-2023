@@ -33,6 +33,11 @@ public class Fields {
 
     /**____________V4b Variables_________**/
 
+    public static double maxV4bPos = 1;
+    public static double v4bIntake = 0;
+    public static double v4bDeposit = 0.55;
+    public static double minV4bPos = 0;
+
     /**_________________________AUTO VISION VARIABLES_______________________**/
     //variables for rectangle to searchIn
 
@@ -41,7 +46,6 @@ public class Fields {
     // TODO new servo positions
     public static double airplaneRelease = 0.6;
     public static double airplaneClosed = 0.4;
-    public static double v4bIntake = 0;
-    public static double v4bDeposit = 0.55;
+
 
 }

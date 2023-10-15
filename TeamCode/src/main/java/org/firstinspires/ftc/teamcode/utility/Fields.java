@@ -16,26 +16,25 @@ public class Fields {
     //the left and right corrsepond to the robots perspective of front and back
     public static double leftClawClose = .927;
     public static double leftClawPickup = .823;
-    public static double leftClawDeliver = .894;
-    public static double leftClawCapstone = .875;
+    public static double leftClawDeliver = .835;
 
 
     public static double rightClawPickup = .51;
-    public static double rightClawDeliver = .399;
+    public static double rightClawDeliver = .44;
     public static double rightClawClose = .356;
-    public static double rightClawCapstone = .38;
 
     /**_____________________SLIDER VARIABLES_______________________**/
 
     public static double sliderPower = 1;
-    public static double sliderOuttake = 0;
+    public static double sliderOuttake = 2512;
     public static double sliderIntake = 0;
 
     /**____________V4b Variables_________**/
 
     public static double maxV4bPos = 1;
-    public static double v4bIntake = 0;
-    public static double v4bDeposit = 0.55;
+    public static double v4bIntake = 0.55;
+    public static double v4bDeposit = .789;
+    public static double v4bMid = .34;
     public static double minV4bPos = 0;
 
     /**_________________________AUTO VISION VARIABLES_______________________**/
@@ -44,7 +43,7 @@ public class Fields {
 
 
     // TODO new servo positions
-    public static double airplaneRelease = 0.6;
+    public static double airplaneRelease = 0.7;
     public static double airplaneClosed = 0.4;
 
 

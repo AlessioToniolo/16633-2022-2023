@@ -155,6 +155,7 @@ public class Teleop extends LinearOpMode {
             checkV4b();
             checkSlider();
             checkClimber();
+            checkButtonPresets();
 
             recenterIMU();
             doTelemetry();
@@ -162,54 +163,56 @@ public class Teleop extends LinearOpMode {
         }
     }
     public void checkClaw(){
-        if(gamepad2.x && gamepad2.x != prevX2){
+        if(gamepad2.a && gamepad2.a != prevA2){
             if(clawPos ==0){clawPos=1;robot.openClaw();}
             else if(clawPos ==1){clawPos=2;robot.intakeClaw();}
             else if(clawPos ==2){clawPos =0;robot.closeClaw();}
         }
-        prevX2 = gamepad2.x;
+        prevA2 = gamepad2.a;
     }
     public void checkV4b(){
-        v4bPos += gamepad2.right_stick_y*.001;
+        v4bPos += gamepad2.right_stick_y*.05;
         if(v4bPos >Fields.maxV4bPos)v4bPos=1;
         else if(v4bPos<0)v4bPos=0;
 
         robot.v4bServo.setPosition(v4bPos);
     }
     public void checkSlider(){
-        sliderTargetPos += gamepad2.left_stick_y*.01;
+        sliderTargetPos += gamepad2.left_stick_y*10;
         if(sliderTargetPos < Fields.sliderIntake)sliderTargetPos = Fields.sliderIntake;
         robot.sliderRunTo(sliderTargetPos, Fields.sliderPower);
 
     }
     public void checkButtonPresets(){
         if(gamepad2.y && gamepad2.y != prevY2){
-            //reset v4b
-            v4bPos = Fields.v4bIntake;
-            //reset slider
             sliderTargetPos = Fields.sliderIntake;
-            //reset claw
-            robot.openClaw();
-            clawPos = 1;
+            v4bPos = Fields.v4bIntake;
+            clawPos=1;
+            robot.goToIntake();
         }
         prevY2 = gamepad2.y;
         if(gamepad2.x && gamepad2.x != prevX2){
-            //reset v4b
-            v4bPos = Fields.v4bDeposit;
-            //reset slider
+
             sliderTargetPos = Fields.sliderOuttake;
-            //reset claw
-            robot.closeClaw();
-            clawPos = 2;
+            v4bPos = Fields.v4bDeposit;
+
+
+            robot.goToOuttake();
         }
         prevX2 = gamepad2.x;
         if(gamepad2.b && gamepad2.b != prevB2){
             robot.releaseAirplane();
         }
         prevB2 = gamepad2.b;
+        if(gamepad2.a && gamepad2.a != prevA2){
+            if(clawPos ==0){clawPos=1;robot.openClaw();}
+            else if(clawPos ==1){clawPos=2;robot.intakeClaw();}
+            else if(clawPos ==2){clawPos =0;robot.closeClaw();}
+        }
+        prevA2 = gamepad2.a;
     }
     public void checkClimber(){
-        if(Math.abs(gamepad2.right_trigger-gamepad2.left_trigger)>.1){
+        if(Math.abs(gamepad2.right_trigger-gamepad2.left_trigger)>.2){
             climberTargetPos += (gamepad2.right_trigger-gamepad2.left_trigger)*10;
         }
         robot.climberRunTo(climberTargetPos, 1);
@@ -322,7 +325,7 @@ public class Teleop extends LinearOpMode {
         pen.addLine("V4b: " + v4bPos);
         pen.addLine("TArget Slider: " + sliderTargetPos);
         pen.addLine("CLIMBER Target Pos" + climberTargetPos);
-        pen.addLine("CLIMBER POS" + robot.climber.getCurrentPosition());
+        pen.addLine("CLIMBER POS" + robot.getClimberPos());
         pen.addLine("Slider Pos: " + robot.slider.getCurrentPosition());
         pen.addLine(" ClAW pos: " + clawPos);
         pen.update();

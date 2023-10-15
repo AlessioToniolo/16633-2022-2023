@@ -24,9 +24,10 @@ public class BaseRobot {
     // Linear Slider Motor
     public DcMotor slider;
 
-    public Motor climber1;
-    public Motor climber2;
-
+    //public Motor climber1;
+//    public Motor climber2;
+    public DcMotor climber1;
+    public DcMotor climber2;
     public MotorGroup climber;
 
     // Virtual Four Bar Motor;
@@ -82,7 +83,7 @@ public class BaseRobot {
         hwMap = ahwMap;
 
         // Initialize RoadRunner Sample Mecanum Drive
-        //drive = new SampleMecanumDrive(hwMap);
+        drive = new SampleMecanumDrive(hwMap);
 
         // Initialize color sensor
         //distanceSensor = hwMap.get(RevColorSensorV3.class, "color");
@@ -96,10 +97,21 @@ public class BaseRobot {
         // TODO new servos
         v4bServo = hwMap.servo.get("v4bServo");
         airplaneShooter = hwMap.servo.get("airplaneShooter");
+//        climber1 = new Motor(hwMap, "climber");
+//        climber1.getCurrentPosition();
+//        climber2 = new Motor(hwMap, "climber2");
+//        climber2.getCurrentPosition();
+//       climber = new MotorGroup(climber1, climber2);
 
-        climber1 = new Motor(hwMap, "climber", Motor.GoBILDA.RPM_312);
-        climber2 = new Motor(hwMap, "climber2", Motor.GoBILDA.RPM_312);
-        climber = new MotorGroup(climber1, climber2);
+        climber1 = hwMap.dcMotor.get("climber");
+        climber2 = hwMap.dcMotor.get("climber2");
+        climber1.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        climber1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        climber1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        climber1.setTargetPosition((int)0);
+        climber2.setTargetPosition((int)0);
+
 
 
         // Initialize IMU
@@ -113,12 +125,12 @@ public class BaseRobot {
         // Enable Slider & V4B for Arm Run Code
         slider.setDirection(DcMotorSimple.Direction.REVERSE);
         slider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slider.setTargetPosition(0);
         slider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        climber.setRunMode(Motor.RunMode.PositionControl);
-        climber.setRunMode(Motor.RunMode.PositionControl);
-        climber.resetEncoder();
+
 
     }
+
 
 
     public void closeClaw() {
@@ -146,12 +158,45 @@ public class BaseRobot {
     public void v4bIntake() {
         v4bServo.setPosition(Fields.v4bIntake);
     }
+    public void climberReset(){
+        climber1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        climber2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-    public void climberRunTo(double position, double power){
-        climber.setTargetPosition((int)position);
-        climber.setRunMode(Motor.RunMode.PositionControl);
-        climber.set(power);
     }
+    public String getClimberPos(){
+        return "c1: " + climber1.getCurrentPosition() + "c2:" +climber2.getCurrentPosition();
+    }
+    public void climberRunTo(double position, double power){
+//        climber.setTargetPosition((int)position);
+//        climber.setRunMode(Motor.RunMode.PositionControl);
+//        climber.set(power);
+        climber1.setTargetPosition((int)position);
+        climber1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        climber1.setPower(power);
+        climber2.setTargetPosition((int)position);
+        climber2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        climber2.setPower(power);
+    }
+   public void goToOuttake(){
+        v4bServo.setPosition(Fields.v4bMid);
+        delay(.5);
+        sliderRunTo(Fields.sliderOuttake, 1);
+        delay(1);
+       v4bServo.setPosition(Fields.v4bDeposit);
+
+   }
+    public void goToIntake(){
+        closeClaw();
+        v4bServo.setPosition(Fields.v4bMid);
+        delay(.5);
+        sliderRunTo(0, 1);
+        delay(1);
+        v4bServo.setPosition(Fields.v4bIntake);
+        delay(1);
+        openClaw();
+    }
+
+
 
     public void sliderRunTo(double position, double power){
         slider.setTargetPosition((int)position);

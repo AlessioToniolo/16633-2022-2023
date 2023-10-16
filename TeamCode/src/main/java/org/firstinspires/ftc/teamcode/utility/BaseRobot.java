@@ -166,17 +166,15 @@ public class BaseRobot {
     public String getClimberPos(){
         return "c1: " + climber1.getCurrentPosition() + "c2:" +climber2.getCurrentPosition();
     }
-    public void climberRunTo(double position, double power){
-//        climber.setTargetPosition((int)position);
-//        climber.setRunMode(Motor.RunMode.PositionControl);
-//        climber.set(power);
-        climber1.setTargetPosition((int)position);
+    public void climberRunTo(double leftClimberPos, double rightClimberPos){
+        climber1.setTargetPosition((int)leftClimberPos);
         climber1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        climber1.setPower(power);
-        climber2.setTargetPosition((int)position);
+        climber1.setPower(1);
+        climber2.setTargetPosition((int)rightClimberPos);
         climber2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        climber2.setPower(power);
+        climber2.setPower(1);
     }
+
    public void goToOuttake(){
         v4bServo.setPosition(Fields.v4bMid);
         delay(.5);

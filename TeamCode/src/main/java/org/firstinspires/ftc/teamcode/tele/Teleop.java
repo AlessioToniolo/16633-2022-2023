@@ -64,7 +64,8 @@ public class Teleop extends LinearOpMode {
 
 
     double sliderTargetPos = 0;
-    double climberTargetPos = 0;
+    double rightClimber = 0;
+    double leftClimber = 0;
     double v4bPos = Fields.v4bIntake;
 
     int clawPos = 0;//0 closed, 1 outtake, 2 intake
@@ -213,9 +214,22 @@ public class Teleop extends LinearOpMode {
     }
     public void checkClimber(){
         if(Math.abs(gamepad2.right_trigger-gamepad2.left_trigger)>.2){
-            climberTargetPos += (gamepad2.right_trigger-gamepad2.left_trigger)*10;
+            //reset the left and right positions to the maximum of the two position
+            if(leftClimber != rightClimber){
+                leftClimber = Math.max(leftClimber, rightClimber);
+            }
+
+            leftClimber += (gamepad2.right_trigger-gamepad2.left_trigger)*10;
+            rightClimber = leftClimber;
         }
-        robot.climberRunTo(climberTargetPos, 1);
+        if(Math.abs(gamepad2.left_stick_x) > .05 && Math.abs(gamepad2.left_stick_y)<.05){
+            leftClimber += gamepad2.left_stick_x*10;
+        }
+        if(Math.abs(gamepad2.right_stick_x)>.05 && Math.abs(gamepad2.right_stick_y) < .05){
+            rightClimber += gamepad2.right_stick_x * 10;
+        }
+        robot.climberRunTo(leftClimber, rightClimber);
+
     }
 
 
@@ -324,7 +338,7 @@ public class Teleop extends LinearOpMode {
     public void doTelemetry() {
         pen.addLine("V4b: " + v4bPos);
         pen.addLine("TArget Slider: " + sliderTargetPos);
-        pen.addLine("CLIMBER Target Pos" + climberTargetPos);
+        pen.addLine("Left Climber" + leftClimber + "Right Climber: "+rightClimber);
         pen.addLine("CLIMBER POS" + robot.getClimberPos());
         pen.addLine("Slider Pos: " + robot.slider.getCurrentPosition());
         pen.addLine(" ClAW pos: " + clawPos);

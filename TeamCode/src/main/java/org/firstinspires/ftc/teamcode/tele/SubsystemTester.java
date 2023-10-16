@@ -60,7 +60,7 @@ public class SubsystemTester extends LinearOpMode {
             if(Math.abs(gamepad2.right_trigger-gamepad2.left_trigger)>.2){
                 climberPosition += (gamepad2.right_trigger-gamepad2.left_trigger)*10;
             }
-            robot.climberRunTo(-climberPosition, 1);
+            robot.climberRunTo(climberPosition, climberPosition);
 
             if(gamepad2.y && gamepad2.y != prevY2){
                 sliderPosition = Fields.sliderIntake;

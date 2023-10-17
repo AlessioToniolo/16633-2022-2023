@@ -253,41 +253,90 @@ public class BaseRobot {
         drive.rightRear.setPower(0);**/
     }
 
-    public void turn(double inch, double power) {
-        double leftFrontTarget, rightFrontTarget, leftRearTarget, rightRearTarget;
+    public void pointTurnDegrees(double speed,
+                                 double deg,
+                                 double timeoutS) {
+
+        int newLeftFrontTarget;
+        int newRightFrontTarget;
+        int newLeftRearTarget;
+        int newRightRearTarget;
+
+        // Reverse inches
+        deg = deg * (90.0 / 270.0);
 
         drive.leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        drive.rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drive.leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        drive.rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drive.rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         drive.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        drive.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         drive.leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        drive.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         drive.rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        leftFrontTarget = drive.leftFront.getCurrentPosition() + inchesToTicks(inch);
-        rightFrontTarget = drive.rightFront.getCurrentPosition() - inchesToTicks(inch);
-        leftRearTarget = drive.leftRear.getCurrentPosition() + inchesToTicks(inch);
-        rightRearTarget = drive.rightRear.getCurrentPosition() - inchesToTicks(inch);
+        // Set to Limit of DRIVE_SPEED
+        if (Math.abs(speed) > DRIVE_SPEED) {
+            speed = DRIVE_SPEED; //
+        }
 
+        // Ensure that the opmode is still active
+        //if (opModeIsActive()) {
+        if (true) {       // Swapped out to include in MaristBaseRobot
 
-        drive.leftFront.setTargetPosition((int) leftFrontTarget);
-        drive.rightFront.setTargetPosition((int) rightFrontTarget);
-        drive.leftRear.setTargetPosition((int) leftRearTarget);
-        drive.rightRear.setTargetPosition((int) rightRearTarget);
+            // Determine new target position, and pass to motor controller
+            newLeftFrontTarget = drive.leftFront.getCurrentPosition() + (int)(deg * COUNTS_PER_DEGREE);
+            newRightFrontTarget = drive.rightFront.getCurrentPosition() - (int)(deg * COUNTS_PER_DEGREE);
+            newLeftRearTarget =drive.leftRear.getCurrentPosition() + (int)(deg * COUNTS_PER_DEGREE);
+            newRightRearTarget = drive.rightRear.getCurrentPosition() - (int)(deg * COUNTS_PER_DEGREE);
 
-        // Turn On RUN_TO_POSITION
-        drive.leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        drive.rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        drive.leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        drive.rightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            //
+            drive.leftFront.setTargetPosition(-newLeftFrontTarget);
+            drive.rightFront.setTargetPosition(-newRightFrontTarget);
+            drive.leftRear.setTargetPosition(-newLeftRearTarget);
+            drive.rightRear.setTargetPosition(-newRightRearTarget);
 
-        drive.leftFront.setPower(power);
-        drive.rightFront.setPower(power);
-        drive.leftRear.setPower(power);
-        drive.rightRear.setPower(power);
+            // Turn On RUN_TO_POSITION
+            drive. leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            drive.rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            drive.leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            drive.rightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            period.reset();
+            drive.leftFront.setPower(Math.abs(speed));
+            drive.rightFront.setPower(Math.abs(speed));
+            drive.leftRear.setPower(Math.abs(speed));
+            drive.rightRear.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while ((period.seconds() < timeoutS) &&
+                    (drive.leftFront.isBusy() && drive.rightFront.isBusy() && drive.leftRear.isBusy() && drive.rightRear.isBusy() )) {
+                // Wait for Sequence to complete
+            }
+
+            // Stop all motion;
+            drive.leftFront.setPower(0);
+            drive.rightFront.setPower(0);
+            drive.leftRear.setPower(0);
+            drive.rightRear.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            drive.leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            drive.rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            drive.leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            drive.rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+            //  sleep(250);   // optional pause after each move
+        }
+
     }
+
 
     public void strafe(double inch, double power) {
         double leftFrontTarget, rightFrontTarget, leftRearTarget, rightRearTarget;

@@ -33,10 +33,15 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import java.util.List;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.teamcode.utility.BaseRobot;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
@@ -57,7 +62,7 @@ public class TeamPropPipeline extends LinearOpMode {
      * {@link #tfod} is the variable to store our instance of the TensorFlow Object Detection processor.
      */
     private TfodProcessor tfod;
-    private String TFOD_MODEL_ASSET = "CenterStage.tflite";
+    private String TFOD_MODEL_ASSET = "centerstage.tflite";
     /**
      * {@link #visionPortal} is the variable to store our instance of the vision portal.
      */
@@ -66,11 +71,13 @@ public class TeamPropPipeline extends LinearOpMode {
     private int zone = 0;
     private int ZONE1EDGE = 130;
     private int ZONE2EDGE = 530;
+    public BaseRobot robot = new BaseRobot();
+    public ElapsedTime runtime = new ElapsedTime();
 
     @Override
-    public void runOpMode() {
-
+    public void runOpMode() throws InterruptedException {
         initTfod();
+        robot.init(hardwareMap);
 
         // Wait for the DS start button to be touched.
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
@@ -79,28 +86,40 @@ public class TeamPropPipeline extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            while (opModeIsActive()) {
                 zone = detectZone();
                 telemetry.addLine("Zone:" + zone);
                 telemetryTfod();
+            visionPortal.close();
+                robot.closeClaw();
 
                 // Push telemetry to the Driver Station.
                 telemetry.update();
 
-                // Save CPU resources; can resume streaming when needed.
-                if (gamepad1.dpad_down) {
-                    visionPortal.stopStreaming();
-                } else if (gamepad1.dpad_up) {
-                    visionPortal.resumeStreaming();
+
+                robot.forward(5, .5);
+                delay(1);
+                robot.pointTurnDegrees(1,90, 5);
+                delay(1);
+                robot.openClaw();
+                delay(1);
+                robot.forward(-5,.5);
+
+
+
+            if(zone==1){
+                }
+                else if(zone ==2){
+
+                }else{
+
                 }
 
-                // Share the CPU.
-                sleep(20);
-            }
+
+
+
         }
 
-        // Save more CPU resources when camera is no longer needed.
-        visionPortal.close();
+
 
     }   // end runOpMode()
 
@@ -211,6 +230,11 @@ public class TeamPropPipeline extends LinearOpMode {
         else return 3;
 
 
+    }
+    public void delay(double t) {
+        runtime.reset();
+        while (runtime.seconds() < t) {
+        }
     }
 
 }   // end class

@@ -69,7 +69,7 @@ public class TeamPropPipeline extends LinearOpMode {
     private VisionPortal visionPortal;
 
     private int zone = 0;
-    private int ZONE1EDGE = 130;
+    private int ZONE1EDGE = 200;
     private int ZONE2EDGE = 530;
     public BaseRobot robot = new BaseRobot();
     public ElapsedTime runtime = new ElapsedTime();
@@ -89,35 +89,42 @@ public class TeamPropPipeline extends LinearOpMode {
                 zone = detectZone();
                 telemetry.addLine("Zone:" + zone);
                 telemetryTfod();
-            visionPortal.close();
                 robot.closeClaw();
 
                 // Push telemetry to the Driver Station.
                 telemetry.update();
 
 
-                robot.forward(5, .5);
+
+//                robot.openClaw();
+//                delay(1);
+//                robot.forward(-5,.5);
+
+            delay(1);
+
+            robot.forward(24, .5, 5, telemetry);
+
+
+            if(zone==1)
+             robot.pointTurnDegrees(1,-55, 5, telemetry);
                 delay(1);
-                robot.pointTurnDegrees(1,90, 5);
+            }
+            else if(zone ==2){
+
+
+            }else{
+                robot.pointTurnDegrees(1, 55, 5, telemetry);
                 delay(1);
-                robot.openClaw();
-                delay(1);
-                robot.forward(-5,.5);
 
-
-
-            if(zone==1){
-                }
-                else if(zone ==2){
-
-                }else{
-
-                }
+            }
+            robot.openClaw();
+        visionPortal.close();
 
 
 
 
-        }
+
+
 
 
 

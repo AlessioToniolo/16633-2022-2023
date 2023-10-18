@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.utility;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -58,7 +60,7 @@ public class BaseRobot {
 
     //Mr Michaud BAse RObot Encoder values
     // For Encoder Functions
-    private double     COUNTS_PER_MOTOR_REV          = 1440 ;    // eg: TETRIX Motor Encoder
+    private double     COUNTS_PER_MOTOR_REV          = 10455 ;    // eg: TETRIX Motor Encoder
     private final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
     private double     WHEEL_DIAMETER_INCHES         = 4.0 ;     // For figuring circumference
     private double     COUNTS_PER_INCH               = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
@@ -67,7 +69,7 @@ public class BaseRobot {
     private double     DRIVE_SPEED                   = 0.6;
     private double     TURN_SPEED                    = 0.5;
 
-    public final double TICKS_PER_REV = 537.6;
+    public final double TICKS_PER_REV = 3.4;
     public final double MAX_RPM = 312;
     public double WHEEL_RADIUS = 1.88976; // in
     public double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
@@ -208,8 +210,9 @@ public class BaseRobot {
     }
 
     // Old AUTO
-    public void forward(double inch, double power) {
+    public void forward(double inch, double power, double timeoutS, Telemetry telemetry) {
         double leftFrontTarget, rightFrontTarget, leftRearTarget, rightRearTarget;
+        period.reset();
 
         drive.leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drive.rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -242,20 +245,25 @@ public class BaseRobot {
         drive.rightFront.setPower(power);
         drive.leftRear.setPower(power);
         drive.rightRear.setPower(power);
-        /**while ((drive.leftFront.isBusy() && drive.rightFront.isBusy() && drive.leftRear.isBusy() && drive.rightRear.isBusy() )) {
+        while ((period.seconds() < timeoutS) &&(drive.leftFront.isBusy() && drive.rightFront.isBusy() && drive.leftRear.isBusy() && drive.rightRear.isBusy() )) {
             // Wait for Sequence to complete
-        }**/
+//            telemetry.addLine("LEFtFront" + drive.leftFront.getTargetPosition() + " " + drive.leftFront.getCurrentPosition() + " " + drive.leftFront.isBusy());
+//            telemetry.addLine("leftRear" + drive.leftRear.getTargetPosition() + " " + drive.leftRear.getCurrentPosition() + " " + drive.leftRear.isBusy());
+//            telemetry.addLine("rightFront" + drive.rightFront.getTargetPosition() + " " + drive.rightFront.getCurrentPosition() + " " + drive.rightFront.isBusy());
+//            telemetry.addLine("rightRear" + drive.rightRear.getTargetPosition() + " " + drive.rightRear.getCurrentPosition() + " " + drive.rightRear.isBusy());
+//        telemetry.update();
+        }
 
         // Stop all motion;
-        /**drive.leftFront.setPower(0);
+        drive.leftFront.setPower(0);
         drive.rightFront.setPower(0);
         drive.leftRear.setPower(0);
-        drive.rightRear.setPower(0);**/
+        drive.rightRear.setPower(0);
     }
 
     public void pointTurnDegrees(double speed,
                                  double deg,
-                                 double timeoutS) {
+                                 double timeoutS, Telemetry telemetry) {
 
         int newLeftFrontTarget;
         int newRightFrontTarget;
@@ -274,6 +282,11 @@ public class BaseRobot {
         drive.leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         drive.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         drive.rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        telemetry.addLine("LEFtFront" + drive.leftFront.getTargetPosition() + " " + drive.leftFront.getCurrentPosition() + " " + drive.leftFront.isBusy());
+        telemetry.addLine("leftRear" + drive.leftRear.getTargetPosition() + " " + drive.leftRear.getCurrentPosition() + " " + drive.leftRear.isBusy());
+        telemetry.addLine("rightFront" + drive.rightFront.getTargetPosition() + " " + drive.rightFront.getCurrentPosition() + " " + drive.rightFront.isBusy());
+        telemetry.addLine("rightRear" + drive.rightRear.getTargetPosition() + " " + drive.rightRear.getCurrentPosition() + " " + drive.rightRear.isBusy());
+        telemetry.update();
 
         // Set to Limit of DRIVE_SPEED
         if (Math.abs(speed) > DRIVE_SPEED) {
@@ -291,10 +304,10 @@ public class BaseRobot {
             newRightRearTarget = drive.rightRear.getCurrentPosition() - (int)(deg * COUNTS_PER_DEGREE);
 
             //
-            drive.leftFront.setTargetPosition(-newLeftFrontTarget);
-            drive.rightFront.setTargetPosition(-newRightFrontTarget);
-            drive.leftRear.setTargetPosition(-newLeftRearTarget);
-            drive.rightRear.setTargetPosition(-newRightRearTarget);
+            drive.leftFront.setTargetPosition(newLeftFrontTarget);
+            drive.rightFront.setTargetPosition(newRightFrontTarget);
+            drive.leftRear.setTargetPosition(newLeftRearTarget);
+            drive.rightRear.setTargetPosition(newRightRearTarget);
 
             // Turn On RUN_TO_POSITION
             drive. leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -317,6 +330,11 @@ public class BaseRobot {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while ((period.seconds() < timeoutS) &&
                     (drive.leftFront.isBusy() && drive.rightFront.isBusy() && drive.leftRear.isBusy() && drive.rightRear.isBusy() )) {
+                //telemetry.addLine("LEFtFront" + drive.leftFront.getTargetPosition() + " " + drive.leftFront.getCurrentPosition() + " " + drive.leftFront.isBusy());
+//                telemetry.addLine("leftRear" + drive.leftRear.getTargetPosition() + " " + drive.leftRear.getCurrentPosition() + " " + drive.leftRear.isBusy());
+//                telemetry.addLine("rightFront" + drive.rightFront.getTargetPosition() + " " + drive.rightFront.getCurrentPosition() + " " + drive.rightFront.isBusy());
+//                telemetry.addLine("rightRear" + drive.rightRear.getTargetPosition() + " " + drive.rightRear.getCurrentPosition() + " " + drive.rightRear.isBusy());
+//                telemetry.update();
                 // Wait for Sequence to complete
             }
 
@@ -338,9 +356,9 @@ public class BaseRobot {
     }
 
 
-    public void strafe(double inch, double power) {
+    public void strafe(double inch, double power, double timeoutS) {
         double leftFrontTarget, rightFrontTarget, leftRearTarget, rightRearTarget;
-
+        period.reset();
         drive.leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drive.rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drive.leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -372,6 +390,21 @@ public class BaseRobot {
         drive.rightFront.setPower(power);
         drive.leftRear.setPower(power);
         drive.rightRear.setPower(power);
+        while ((period.seconds() < timeoutS) &&
+                (drive.leftFront.isBusy() && drive.rightFront.isBusy() && drive.leftRear.isBusy() && drive.rightRear.isBusy() )) {
+            // Wait for Sequence to complete
+        }
+        // Stop all motion;
+        drive.leftFront.setPower(0);
+        drive.rightFront.setPower(0);
+        drive.leftRear.setPower(0);
+        drive.rightRear.setPower(0);
+
+        // Turn off RUN_TO_POSITION
+        drive.leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        drive.rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        drive.leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        drive.rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public double inchesToTicks(double inches) {

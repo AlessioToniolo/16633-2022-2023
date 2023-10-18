@@ -86,14 +86,13 @@ public class TeamPropPipeline extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-                zone = detectZone();
-                telemetry.addLine("Zone:" + zone);
-                telemetryTfod();
-                robot.closeClaw();
+            zone = detectZone();
+            telemetry.addLine("Zone:" + zone);
+            telemetryTfod();
+            robot.closeClaw();
 
-                // Push telemetry to the Driver Station.
-                telemetry.update();
-
+            // Push telemetry to the Driver Station.
+            telemetry.update();
 
 
 //                robot.openClaw();
@@ -105,18 +104,18 @@ public class TeamPropPipeline extends LinearOpMode {
             robot.forward(24, .5, 5, telemetry);
 
 
-            if(zone==1)
-             robot.pointTurnDegrees(1,-55, 5, telemetry);
+            if (zone == 1) {
+                robot.pointTurnDegrees(1, -55, 5, telemetry);
                 delay(1);
-            }
-            else if(zone ==2){
+            } else if (zone == 2) {
 
 
-            }else{
+            } else {
                 robot.pointTurnDegrees(1, 55, 5, telemetry);
                 delay(1);
 
             }
+        }
             robot.openClaw();
         visionPortal.close();
 

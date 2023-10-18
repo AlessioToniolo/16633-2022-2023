@@ -97,22 +97,24 @@ public class TeamPropPipeline extends LinearOpMode {
 
 //                robot.openClaw();
 //                delay(1);
-//                robot.forward(-5,.5);
-
-            delay(1);
-
-            robot.forward(24, .5, 5, telemetry);
+//                robot.forward(-5,.5)
 
 
             if (zone == 1) {
                 robot.pointTurnDegrees(1, -55, 5, telemetry);
                 delay(1);
+                robot.forward(24, .5, 5, telemetry);
             } else if (zone == 2) {
-
-
+                robot.pointTurnDegrees(1, -55, 5, telemetry);
+                delay(1);
+                robot.forward(28, .5, 5, telemetry);
+                delay(0.5);
+                robot.openClaw();
+                robot.forward(-5, -.5, 5, telemetry);
             } else {
                 robot.pointTurnDegrees(1, 55, 5, telemetry);
                 delay(1);
+                robot.forward(24, .5, 5, telemetry);
 
             }
         }

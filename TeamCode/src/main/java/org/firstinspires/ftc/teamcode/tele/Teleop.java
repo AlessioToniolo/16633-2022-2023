@@ -179,7 +179,7 @@ public class Teleop extends LinearOpMode {
         robot.v4bServo.setPosition(v4bPos);
     }
     public void checkSlider(){
-        sliderTargetPos += gamepad2.left_stick_y*10;
+        sliderTargetPos += (gamepad2.left_stick_y*-1)*10;
         if(sliderTargetPos < Fields.sliderIntake)sliderTargetPos = Fields.sliderIntake;
         robot.sliderRunTo(sliderTargetPos, Fields.sliderPower);
 

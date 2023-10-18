@@ -245,13 +245,12 @@ public class BaseRobot {
         drive.rightFront.setPower(power);
         drive.leftRear.setPower(power);
         drive.rightRear.setPower(power);
-        while ((period.seconds() < timeoutS) &&(drive.leftFront.isBusy() && drive.rightFront.isBusy() && drive.leftRear.isBusy() && drive.rightRear.isBusy() )) {
+        while ((period.seconds() < timeoutS) && (drive.leftFront.isBusy() && drive.rightFront.isBusy() && drive.leftRear.isBusy() && drive.rightRear.isBusy() )) {
             // Wait for Sequence to complete
-//            telemetry.addLine("LEFtFront" + drive.leftFront.getTargetPosition() + " " + drive.leftFront.getCurrentPosition() + " " + drive.leftFront.isBusy());
-//            telemetry.addLine("leftRear" + drive.leftRear.getTargetPosition() + " " + drive.leftRear.getCurrentPosition() + " " + drive.leftRear.isBusy());
-//            telemetry.addLine("rightFront" + drive.rightFront.getTargetPosition() + " " + drive.rightFront.getCurrentPosition() + " " + drive.rightFront.isBusy());
-//            telemetry.addLine("rightRear" + drive.rightRear.getTargetPosition() + " " + drive.rightRear.getCurrentPosition() + " " + drive.rightRear.isBusy());
-//        telemetry.update();
+            telemetry.addLine("LEFtFront" + drive.leftFront.getTargetPosition() + " " + drive.leftFront.getCurrentPosition() + " " + drive.leftFront.isBusy());
+            telemetry.addLine("leftRear" + drive.leftRear.getTargetPosition() + " " + drive.leftRear.getCurrentPosition() + " " + drive.leftRear.isBusy());
+            telemetry.addLine("rightFront" + drive.rightFront.getTargetPosition() + " " + drive.rightFront.getCurrentPosition() + " " + drive.rightFront.isBusy());
+            telemetry.addLine("rightRear" + drive.rightRear.getTargetPosition() + " " + drive.rightRear.getCurrentPosition() + " " + drive.rightRear.isBusy());
         }
 
         // Stop all motion;
@@ -317,8 +316,8 @@ public class BaseRobot {
 
             // reset the timeout time and start motion.
             period.reset();
-            drive.leftFront.setPower(Math.abs(speed));
-            drive.rightFront.setPower(Math.abs(speed));
+            drive.leftFront.setPower(speed);
+            drive.rightFront.setPower(speed);
             drive.leftRear.setPower(Math.abs(speed));
             drive.rightRear.setPower(Math.abs(speed));
 

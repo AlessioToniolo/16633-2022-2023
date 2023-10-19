@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.tele;
 
+import static org.firstinspires.ftc.teamcode.tele.Teleop.round;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -26,10 +28,10 @@ public class MotorTester extends OpMode {
         telemetry.addData("Warning: ", "Servo Moves on Initalization");
 
         // Set to Run without Encoder for Tele Operated
-        robot.drive.leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.drive.rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.drive.leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.drive.rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.drive.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.drive.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.drive.leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.drive.rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
 
@@ -86,11 +88,41 @@ public class MotorTester extends OpMode {
             robot.drive.leftRear.setPower(leftforward);
             robot.drive.rightRear.setPower(rightforward);
         }
+        if(Math.abs(gamepad2.right_stick_x) > .1 || Math.abs(gamepad2.left_stick_x) > .1 || Math.abs(gamepad2.left_stick_y)>.1){
+            double gamepadDegree;
+            gamepadDegree = Math.atan2(Math.toRadians(-gamepad2.left_stick_y),Math.toRadians(gamepad2.left_stick_x)); //normal way of doing it
+
+
+            //x and y are doubles in the range [-1,1] which are just the cos and sin of the angle you want to drive
+            double x = round(Math.cos(gamepadDegree))*speed;//find x and y using cos and sin and then multiply them by the speed
+            double y = round(Math.sin(gamepadDegree))*speed;
+            double leftRearPower = y - x + gamepad2.right_stick_x;
+            double leftFrontPower = y + x + gamepad2.right_stick_x;
+            double rightRearPower = y + x - gamepad2.right_stick_x;
+            double rightFrontPower = y - x - gamepad2.right_stick_x;
+
+            robot.drive.leftFront.setPower(leftFrontPower);
+            robot.drive.leftRear.setPower(leftRearPower);
+            robot.drive.rightFront.setPower(rightFrontPower);
+            robot.drive.rightRear.setPower(rightRearPower);
+        }
+        if(gamepad1.x){
+            robot.drive.leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.drive.rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.drive.leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.drive.rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+
         // Kinematics
         telemetry.addLine("LeftY:"+gamepad1.left_stick_y);
         telemetry.addLine("LeftX:"+gamepad1.left_stick_x);
         telemetry.addLine("RightY:"+gamepad1.right_stick_y);
         telemetry.addLine("RightX:"+gamepad1.right_stick_x);
+        telemetry.addLine("rightFront" + robot.drive.rightFront.getCurrentPosition());
+        telemetry.addLine("leftFront" + robot.drive.leftFront.getCurrentPosition());
+        telemetry.addLine("rightRear" + robot.drive.rightRear.getCurrentPosition());
+        telemetry.addLine("leftRear" + robot.drive.leftRear.getCurrentPosition());
+
         telemetry.update();
 
 

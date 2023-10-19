@@ -82,6 +82,8 @@ public class TeamPropPipeline extends LinearOpMode {
         // Wait for the DS start button to be touched.
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
         telemetry.addData(">", "Touch Play to start OpMode");
+        zone= detectZone();
+        telemetry.addLine("Zone:" + zone);
         telemetry.update();
         waitForStart();
 
@@ -89,15 +91,9 @@ public class TeamPropPipeline extends LinearOpMode {
             zone = detectZone();
             telemetry.addLine("Zone:" + zone);
             telemetryTfod();
+            telemetry.update();
             robot.closeClaw();
 
-            // Push telemetry to the Driver Station.
-            telemetry.update();
-
-
-//                robot.openClaw();
-//                delay(1);
-//                robot.forward(-5,.5)
 
 
             if (zone == 1) {
@@ -118,7 +114,7 @@ public class TeamPropPipeline extends LinearOpMode {
 
             }
         }
-            robot.openClaw();
+        robot.openClaw();
         visionPortal.close();
 
 

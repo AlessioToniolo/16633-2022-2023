@@ -247,17 +247,24 @@ public class BaseRobot {
         drive.rightRear.setPower(power);
         while ((period.seconds() < timeoutS) && (drive.leftFront.isBusy() && drive.rightFront.isBusy() && drive.leftRear.isBusy() && drive.rightRear.isBusy() )) {
             // Wait for Sequence to complete
-            telemetry.addLine("LEFtFront" + drive.leftFront.getTargetPosition() + " " + drive.leftFront.getCurrentPosition() + " " + drive.leftFront.isBusy());
+            telemetry.addLine("LeftFront" + drive.leftFront.getTargetPosition() + " " + drive.leftFront.getCurrentPosition() + " " + drive.leftFront.isBusy());
             telemetry.addLine("leftRear" + drive.leftRear.getTargetPosition() + " " + drive.leftRear.getCurrentPosition() + " " + drive.leftRear.isBusy());
             telemetry.addLine("rightFront" + drive.rightFront.getTargetPosition() + " " + drive.rightFront.getCurrentPosition() + " " + drive.rightFront.isBusy());
             telemetry.addLine("rightRear" + drive.rightRear.getTargetPosition() + " " + drive.rightRear.getCurrentPosition() + " " + drive.rightRear.isBusy());
+            telemetry.addLine("Time" + period.seconds());
+            telemetry.update();
         }
+
 
         // Stop all motion;
         drive.leftFront.setPower(0);
         drive.rightFront.setPower(0);
         drive.leftRear.setPower(0);
         drive.rightRear.setPower(0);
+        drive.leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        drive.rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        drive.leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        drive.rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void pointTurnDegrees(double speed,
@@ -281,11 +288,7 @@ public class BaseRobot {
         drive.leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         drive.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         drive.rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        telemetry.addLine("LEFtFront" + drive.leftFront.getTargetPosition() + " " + drive.leftFront.getCurrentPosition() + " " + drive.leftFront.isBusy());
-        telemetry.addLine("leftRear" + drive.leftRear.getTargetPosition() + " " + drive.leftRear.getCurrentPosition() + " " + drive.leftRear.isBusy());
-        telemetry.addLine("rightFront" + drive.rightFront.getTargetPosition() + " " + drive.rightFront.getCurrentPosition() + " " + drive.rightFront.isBusy());
-        telemetry.addLine("rightRear" + drive.rightRear.getTargetPosition() + " " + drive.rightRear.getCurrentPosition() + " " + drive.rightRear.isBusy());
-        telemetry.update();
+
 
         // Set to Limit of DRIVE_SPEED
         if (Math.abs(speed) > DRIVE_SPEED) {
@@ -329,11 +332,12 @@ public class BaseRobot {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while ((period.seconds() < timeoutS) &&
                     (drive.leftFront.isBusy() && drive.rightFront.isBusy() && drive.leftRear.isBusy() && drive.rightRear.isBusy() )) {
-                //telemetry.addLine("LEFtFront" + drive.leftFront.getTargetPosition() + " " + drive.leftFront.getCurrentPosition() + " " + drive.leftFront.isBusy());
-//                telemetry.addLine("leftRear" + drive.leftRear.getTargetPosition() + " " + drive.leftRear.getCurrentPosition() + " " + drive.leftRear.isBusy());
-//                telemetry.addLine("rightFront" + drive.rightFront.getTargetPosition() + " " + drive.rightFront.getCurrentPosition() + " " + drive.rightFront.isBusy());
-//                telemetry.addLine("rightRear" + drive.rightRear.getTargetPosition() + " " + drive.rightRear.getCurrentPosition() + " " + drive.rightRear.isBusy());
-//                telemetry.update();
+                telemetry.addLine("LEFtFront" + drive.leftFront.getTargetPosition() + " " + drive.leftFront.getCurrentPosition() + " " + drive.leftFront.isBusy());
+                telemetry.addLine("leftRear" + drive.leftRear.getTargetPosition() + " " + drive.leftRear.getCurrentPosition() + " " + drive.leftRear.isBusy());
+                telemetry.addLine("rightFront" + drive.rightFront.getTargetPosition() + " " + drive.rightFront.getCurrentPosition() + " " + drive.rightFront.isBusy());
+                telemetry.addLine("rightRear" + drive.rightRear.getTargetPosition() + " " + drive.rightRear.getCurrentPosition() + " " + drive.rightRear.isBusy());
+                telemetry.addLine("Period" + period.seconds());
+                telemetry.update();
                 // Wait for Sequence to complete
             }
 
@@ -392,6 +396,12 @@ public class BaseRobot {
         while ((period.seconds() < timeoutS) &&
                 (drive.leftFront.isBusy() && drive.rightFront.isBusy() && drive.leftRear.isBusy() && drive.rightRear.isBusy() )) {
             // Wait for Sequence to complete
+            telemetry.addLine("LEFtFront" + drive.leftFront.getTargetPosition() + " " + drive.leftFront.getCurrentPosition() + " " + drive.leftFront.isBusy());
+            telemetry.addLine("leftRear" + drive.leftRear.getTargetPosition() + " " + drive.leftRear.getCurrentPosition() + " " + drive.leftRear.isBusy());
+            telemetry.addLine("rightFront" + drive.rightFront.getTargetPosition() + " " + drive.rightFront.getCurrentPosition() + " " + drive.rightFront.isBusy());
+            telemetry.addLine("rightRear" + drive.rightRear.getTargetPosition() + " " + drive.rightRear.getCurrentPosition() + " " + drive.rightRear.isBusy());
+            telemetry.addLine("Time" + period.seconds());
+            telemetry.update();
         }
         // Stop all motion;
         drive.leftFront.setPower(0);

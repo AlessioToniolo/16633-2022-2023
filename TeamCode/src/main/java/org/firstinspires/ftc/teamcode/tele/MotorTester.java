@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.utility.BaseRobot;
 
-@Disabled
 @TeleOp
 public class MotorTester extends OpMode {
     // Use the class created to define a Robot's hardware
@@ -28,10 +27,10 @@ public class MotorTester extends OpMode {
         telemetry.addData("Warning: ", "Servo Moves on Initalization");
 
         // Set to Run without Encoder for Tele Operated
-        robot.drive.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.drive.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.drive.leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.drive.rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
 
@@ -59,34 +58,34 @@ public class MotorTester extends OpMode {
         {
             // if to the right
             leftrear = gamepad1.left_stick_x * speed;
-            robot.drive.leftRear.setPower(leftrear);//0 and3
+            robot.leftRear.setPower(leftrear);//0 and3
 
         }
         else if(gamepad1.left_stick_x < 0 )
         {
             // if to the left
             leftfront = gamepad1.left_stick_x * speed;
-            robot.drive.leftFront.setPower(leftfront);
+            robot.leftFront.setPower(leftfront);
 
         }
         else if(gamepad1.right_stick_x < 0 )
         {
             // if to the left
             rightfront = gamepad1.right_stick_x * speed;
-            robot.drive.rightFront.setPower(rightfront);
+            robot.rightFront.setPower(rightfront);
 
         }else if(gamepad1.right_stick_x > 0 )
         {
             // if to the left
             rightrear = gamepad1.right_stick_x * speed;
-            robot.drive.rightRear.setPower(rightrear);
+            robot.rightRear.setPower(rightrear);
 
         }
         else{
-            robot.drive.leftFront.setPower(leftforward);
-            robot.drive.rightFront.setPower(rightforward);
-            robot.drive.leftRear.setPower(leftforward);
-            robot.drive.rightRear.setPower(rightforward);
+            robot.leftFront.setPower(leftforward);
+            robot.rightFront.setPower(rightforward);
+            robot.leftRear.setPower(leftforward);
+            robot.rightRear.setPower(rightforward);
         }
         if(Math.abs(gamepad2.right_stick_x) > .1 || Math.abs(gamepad2.left_stick_x) > .1 || Math.abs(gamepad2.left_stick_y)>.1){
             double gamepadDegree;
@@ -101,16 +100,16 @@ public class MotorTester extends OpMode {
             double rightRearPower = y + x - gamepad2.right_stick_x;
             double rightFrontPower = y - x - gamepad2.right_stick_x;
 
-            robot.drive.leftFront.setPower(leftFrontPower);
-            robot.drive.leftRear.setPower(leftRearPower);
-            robot.drive.rightFront.setPower(rightFrontPower);
-            robot.drive.rightRear.setPower(rightRearPower);
+            robot.leftFront.setPower(leftFrontPower);
+            robot.leftRear.setPower(leftRearPower);
+            robot.rightFront.setPower(rightFrontPower);
+            robot.rightRear.setPower(rightRearPower);
         }
         if(gamepad1.x){
-            robot.drive.leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.drive.rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.drive.leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.drive.rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
 
         // Kinematics
@@ -118,10 +117,10 @@ public class MotorTester extends OpMode {
         telemetry.addLine("LeftX:"+gamepad1.left_stick_x);
         telemetry.addLine("RightY:"+gamepad1.right_stick_y);
         telemetry.addLine("RightX:"+gamepad1.right_stick_x);
-        telemetry.addLine("rightFront" + robot.drive.rightFront.getCurrentPosition());
-        telemetry.addLine("leftFront" + robot.drive.leftFront.getCurrentPosition());
-        telemetry.addLine("rightRear" + robot.drive.rightRear.getCurrentPosition());
-        telemetry.addLine("leftRear" + robot.drive.leftRear.getCurrentPosition());
+        telemetry.addLine("rightFront" + robot.rightFront.getCurrentPosition());
+        telemetry.addLine("leftFront" + robot.leftFront.getCurrentPosition());
+        telemetry.addLine("rightRear" + robot.rightRear.getCurrentPosition());
+        telemetry.addLine("leftRear" + robot.leftRear.getCurrentPosition());
 
         telemetry.update();
 

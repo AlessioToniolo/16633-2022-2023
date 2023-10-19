@@ -21,7 +21,7 @@ public class Fields {
 
     public static double rightClawPickup = .51;
     public static double rightClawDeliver = .44;
-    public static double rightClawClose = .356;
+    public static double rightClawClose = .431;
 
     /**_____________________SLIDER VARIABLES_______________________**/
 
@@ -34,7 +34,7 @@ public class Fields {
     public static double maxV4bPos = 1;
     public static double v4bIntake = 0.55;
     public static double v4bDeposit = .789;
-    public static double v4bMid = .34;
+    public static double v4bMid = .37;
     public static double minV4bPos = 0;
 
     /**_________________________AUTO VISION VARIABLES_______________________**/

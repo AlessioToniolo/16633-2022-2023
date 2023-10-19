@@ -54,8 +54,8 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
 
-@Autonomous(name="Meet1Auto", group="Vision")
-public class TeamPropPipeline extends LinearOpMode {
+@Autonomous(name="VisionTester", group="Vision")
+public class VisionTester extends LinearOpMode {
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
@@ -93,59 +93,8 @@ public class TeamPropPipeline extends LinearOpMode {
             telemetry.addLine("Zone:" + zone);
             telemetryTfod();
             telemetry.update();
-            robot.closeClaw();
-            robot.forward(32, .5, 5, telemetry);
-            delay(1);
-
-
-            if (zone == 1) {
-                robot.pointTurnDegrees(1, -90, 5, telemetry);
-                delay(1);
-                robot.openClaw();
-                delay(1);
-                robot.v4bServo.setPosition(Fields.v4bMid);
-                delay(1);
-                robot.forward(-5,.5, 5, telemetry);
-                delay(1);
-                robot.pointTurnDegrees(1, 90, 5, telemetry);
-                delay(1);
-            } else if (zone == 2) {
-
-                robot.openClaw();
-                delay(1);
-                robot.v4bServo.setPosition(Fields.v4bMid);
-                delay(1);
-                robot.forward(-24, .5, 5,telemetry);
-                delay(1);
-                //robot.pointTurnDegrees(90);
-                delay(1);
-
-            } else {
-                robot.pointTurnDegrees(.5, 90, 5, telemetry);
-                delay(1);
-                robot.forward(1, .5, 5, telemetry);
-                delay(1);
-                robot.openClaw();
-                delay(1);
-                robot.v4bServo.setPosition(Fields.v4bMid);
-                delay(1);
-                robot.forward(-5,.5, 5, telemetry);
-                delay(1);
-                robot.pointTurnDegrees(.5, -90, 5, telemetry);
-                delay(1);
-                robot.forward(-60,.5, 5, telemetry);
-                delay(1);
-            }
         }
         visionPortal.close();
-
-
-
-
-
-
-
-
 
     }   // end runOpMode()
 

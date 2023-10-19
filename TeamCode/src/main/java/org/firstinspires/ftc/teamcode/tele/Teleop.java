@@ -101,7 +101,6 @@ public class Teleop extends LinearOpMode {
         robot.init(hardwareMap);
         initializeImuParameters();
         initializeImu();
-        robot.drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // TODO new servo stuff
         //robot.v4bIntake();
@@ -219,14 +218,14 @@ public class Teleop extends LinearOpMode {
                 leftClimber = Math.max(leftClimber, rightClimber);
             }
 
-            leftClimber += (gamepad2.right_trigger-gamepad2.left_trigger)*10;
+            leftClimber += (gamepad2.right_trigger-gamepad2.left_trigger)*20;
             rightClimber = leftClimber;
         }
         if(Math.abs(gamepad2.left_stick_x) > .05 && Math.abs(gamepad2.left_stick_y)<.05){
-            leftClimber += gamepad2.left_stick_x*10;
+            leftClimber += gamepad2.left_stick_x*20;
         }
         if(Math.abs(gamepad2.right_stick_x)>.05 && Math.abs(gamepad2.right_stick_y) < .05){
-            rightClimber += gamepad2.right_stick_x * 10;
+            rightClimber += gamepad2.right_stick_x * 20;
         }
         robot.climberRunTo(leftClimber, rightClimber);
 
@@ -304,10 +303,10 @@ public class Teleop extends LinearOpMode {
 //        pen.addData("rightFront", rightFrontPower);
 //        pen.addLine("_______________________________________" );
 //        pen.addLine();
-        robot.drive.leftFront.setPower(leftFrontPower);
-        robot.drive.leftRear.setPower(leftRearPower);
-        robot.drive.rightFront.setPower(rightFrontPower);
-        robot.drive.rightRear.setPower(rightRearPower);
+        robot.leftFront.setPower(leftFrontPower);
+        robot.leftRear.setPower(leftRearPower);
+        robot.rightFront.setPower(rightFrontPower);
+        robot.rightRear.setPower(rightRearPower);
     }
     public void checkSpeed(){
 

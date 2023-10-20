@@ -41,6 +41,9 @@ public class BaseRobot {
     public Servo v4bServo;
     public Servo airplaneShooter;
 
+    // TODO NEW NEW NEW MEET 1 SERVO
+    public Servo grasper;
+
 
 
     // Local OpMode members
@@ -109,6 +112,8 @@ public class BaseRobot {
         leftClaw = hwMap.servo.get("leftclaw");
         rightClaw = hwMap.servo.get("rightclaw");
 
+        grasper = hwMap.servo.get("grasper");
+
         // TODO new servos
         v4bServo = hwMap.servo.get("v4bServo");
         airplaneShooter = hwMap.servo.get("airplaneShooter");
@@ -152,6 +157,19 @@ public class BaseRobot {
         rightClaw.setPosition(Fields.rightClawClose);
         leftClaw.setPosition(Fields.leftClawClose);
     }
+
+
+    // TODO new servo functions
+    public void openGrasper() {
+        grasper.setPosition(Fields.grasperOpen);
+    }
+    public void closeGrasper() {
+        grasper.setPosition(Fields.grasperClose);
+    }
+    public void intakeGrasper() {
+        grasper.setPosition(Fields.grasperIntake);
+    }
+
     public void openClaw(){
         rightClaw.setPosition(Fields.rightClawDeliver);
         leftClaw.setPosition(Fields.leftClawDeliver);
@@ -176,6 +194,12 @@ public class BaseRobot {
     public void climberReset(){
         climber1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         climber2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        climber1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        climber2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        climber1.setTargetPosition(0);
+        climber2.setTargetPosition(0);
+        climber1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        climber2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
     }
     public String getClimberPos(){

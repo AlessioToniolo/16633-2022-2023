@@ -6,6 +6,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class ColorfulTelemetry  {
    private Telemetry telemetry;
 
+
    //Constants
    public static final String Red  = "Red";
    public static final String Orange  = "Orange";

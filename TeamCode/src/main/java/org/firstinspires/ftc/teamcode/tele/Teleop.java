@@ -10,6 +10,7 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -49,6 +50,9 @@ public class Teleop extends LinearOpMode {
     boolean prevRTrigger, prevRTrigger2 = false;
     boolean prevLTrigger, prevLTrigger2 = false;
 
+    // TODO meet 1 new stuf
+    boolean prevGrasperA, prevGrasperA2 = false;
+
     //buttons
     boolean prevY, prevY2 = false;
     boolean prevX, prevX2 = false;
@@ -70,6 +74,8 @@ public class Teleop extends LinearOpMode {
 
     int clawPos = 0;//0 closed, 1 outtake, 2 intake
 
+    // TODO new stuff
+    int grasperPos = 0; // 0 closed, 1 outtake, 2 intake
 
     ElapsedTime runtime = new ElapsedTime();
 
@@ -151,7 +157,7 @@ public class Teleop extends LinearOpMode {
                 robot.closeAirplane();
             }
 
-            checkClaw();
+//            checkClaw();
             checkV4b();
             checkSlider();
             checkClimber();
@@ -162,6 +168,7 @@ public class Teleop extends LinearOpMode {
 
         }
     }
+    /*
     public void checkClaw(){
         if(gamepad2.a && gamepad2.a != prevA2){
             if(clawPos ==0){clawPos=1;robot.openClaw();}
@@ -170,6 +177,18 @@ public class Teleop extends LinearOpMode {
         }
         prevA2 = gamepad2.a;
     }
+
+     */
+
+    // todo new
+    public void checkGrasper() {
+        if (gamepad2.a && gamepad2.a != prevGrasperA2) {
+            if(grasperPos ==0){grasperPos=1;robot.openGrasper();}
+            else if(grasperPos ==1){grasperPos=2;robot.intakeGrasper();}
+            else if(grasperPos ==2){grasperPos =0;robot.closeGrasper();}
+        }
+    }
+
     public void checkV4b(){
         v4bPos += gamepad2.right_stick_y*.05;
         if(v4bPos >Fields.maxV4bPos)v4bPos=1;
@@ -187,7 +206,8 @@ public class Teleop extends LinearOpMode {
         if(gamepad2.y && gamepad2.y != prevY2){
             sliderTargetPos = Fields.sliderIntake;
             v4bPos = Fields.v4bIntake;
-            clawPos=1;
+            clawPos=2;
+            grasperPos=2;
             robot.goToIntake();
         }
         prevY2 = gamepad2.y;
@@ -197,6 +217,7 @@ public class Teleop extends LinearOpMode {
             v4bPos = Fields.v4bDeposit;
 
 
+
             robot.goToOuttake();
         }
         prevX2 = gamepad2.x;
@@ -204,12 +225,23 @@ public class Teleop extends LinearOpMode {
             robot.releaseAirplane();
         }
         prevB2 = gamepad2.b;
+
+        /*
         if(gamepad2.a && gamepad2.a != prevA2){
             if(clawPos ==0){clawPos=1;robot.openClaw();}
             else if(clawPos ==1){clawPos=2;robot.intakeClaw();}
             else if(clawPos ==2){clawPos =0;robot.closeClaw();}
         }
         prevA2 = gamepad2.a;
+
+         */
+
+        // TODo meet 1 new claw
+        if (gamepad2.a && gamepad2.a != prevGrasperA2){
+            if(grasperPos ==0){grasperPos=1;robot.openGrasper();}
+            else if(grasperPos ==1){grasperPos=2;robot.intakeGrasper();}
+            else if(grasperPos ==2){grasperPos =0;robot.closeGrasper();}
+        }
     }
     public void checkClimber(){
         if(Math.abs(gamepad2.right_trigger-gamepad2.left_trigger)>.2){
@@ -227,6 +259,12 @@ public class Teleop extends LinearOpMode {
         if(Math.abs(gamepad2.right_stick_x)>.05 && Math.abs(gamepad2.right_stick_y) < .05){
             rightClimber += gamepad2.right_stick_x * 20;
         }
+        if(gamepad2.dpad_up && gamepad2.dpad_up != prevDUp2){
+            robot.climberReset();
+            leftClimber = 0;
+            rightClimber = 0;
+        }
+        prevDUp2 = gamepad2.dpad_up;
         robot.climberRunTo(leftClimber, rightClimber);
 
     }
@@ -310,17 +348,23 @@ public class Teleop extends LinearOpMode {
     }
     public void checkSpeed(){
 
+        /** OLD
         double triggerSpeedModifier = 1.0-gamepad1.left_trigger;//left trigger works like a brake
         if(triggerSpeedModifier ==0)triggerSpeedModifier=.1;
         speed = triggerSpeedModifier*baseSpeed;
 
         if(gamepad1.left_stick_button)speed = 1;//set speed to 1
+         if(Math.abs(gamepad1.left_trigger)>.1){
+            speed = 1;
+        }
+
 
         if(gamepad1.right_stick_button||gamepad1.right_trigger>0)speed=.2;
 
 
         if(speed>1)speed=1;
         else if(speed<0)speed=0;
+    **/
 
     }
 

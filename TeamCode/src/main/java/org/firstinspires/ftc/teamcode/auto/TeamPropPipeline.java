@@ -101,13 +101,13 @@ public class TeamPropPipeline extends LinearOpMode {
             if (zone == 1) {
                 robot.pointTurnDegrees(1, -90, 5, telemetry);
                 delay(1);
+                robot.forward(2.5*Math.PI, 1, 5, telemetry);
+                delay(1);
                 robot.openClaw();
                 delay(1);
                 robot.v4bServo.setPosition(Fields.v4bMid);
                 delay(1);
-                robot.forward(-5,.5, 5, telemetry);
-                delay(1);
-                robot.pointTurnDegrees(1, 90, 5, telemetry);
+                robot.forward(-6,.5, 5, telemetry);
                 delay(1);
             } else if (zone == 2) {
 
@@ -115,7 +115,7 @@ public class TeamPropPipeline extends LinearOpMode {
                 delay(1);
                 robot.v4bServo.setPosition(Fields.v4bMid);
                 delay(1);
-                robot.forward(-24, .5, 5,telemetry);
+                robot.forward(-24.3, .5, 5,telemetry);
                 delay(1);
                 //robot.pointTurnDegrees(90);
                 delay(1);
@@ -131,10 +131,10 @@ public class TeamPropPipeline extends LinearOpMode {
                 delay(1);
                 robot.forward(-5,.5, 5, telemetry);
                 delay(1);
-                robot.pointTurnDegrees(.5, -90, 5, telemetry);
-                delay(1);
-                robot.forward(-60,.5, 5, telemetry);
-                delay(1);
+//                robot.pointTurnDegrees(.5, -90, 5, telemetry);
+//                delay(1);
+//                robot.forward(-60,.5, 5, telemetry);
+//                delay(1);
             }
         }
         visionPortal.close();

@@ -46,5 +46,8 @@ public class Fields {
     public static double airplaneRelease = 0.7;
     public static double airplaneClosed = 0.4;
 
-
+    // TODO meet 1 new claw positions
+    public static double grasperOpen = 1;
+    public static double grasperClose = 0;
+    public static double grasperIntake = 0.5;
 }

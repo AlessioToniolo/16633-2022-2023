@@ -149,6 +149,9 @@ public class BaseRobot {
         slider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
+
+        openGrasper();
+
     }
 
 

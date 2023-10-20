@@ -43,8 +43,9 @@ public class SubsystemTester extends LinearOpMode {
             else if(rightServoPosition<0)rightServoPosition=0;
             if(leftServoPosition > 1)leftServoPosition=1;
             else if(leftServoPosition < 0)leftServoPosition=0;
-            robot.leftClaw.setPosition(leftServoPosition);
-            robot.rightClaw.setPosition(rightServoPosition);
+//            robot.leftClaw.setPosition(leftServoPosition);
+//            robot.rightClaw.setPosition(rightServoPosition);
+            robot.grasper.setPosition(leftServoPosition);
 
             servoPosition -= gamepad2.right_stick_y*.05;
             if(servoPosition >1)servoPosition=1;
@@ -84,12 +85,12 @@ public class SubsystemTester extends LinearOpMode {
                 robot.releaseAirplane();
             }
             prevB2 = gamepad2.b;
-            if(gamepad2.a && gamepad2.a != prevA2){
-                if(clawPos ==0){clawPos=1;robot.openClaw();rightServoPosition=Fields.rightClawDeliver;leftServoPosition=Fields.leftClawDeliver;}
-                else if(clawPos ==1){clawPos=2;robot.intakeClaw();rightServoPosition=Fields.rightClawPickup;leftServoPosition=Fields.leftClawPickup;}
-                else if(clawPos ==2){clawPos =0;robot.closeClaw();rightServoPosition=Fields.rightClawClose;leftServoPosition=Fields.leftClawClose;}
-            }
-            prevA2 = gamepad2.a;
+//            if(gamepad2.a && gamepad2.a != prevA2){
+//                if(clawPos ==0){clawPos=1;robot.openClaw();rightServoPosition=Fields.rightClawDeliver;leftServoPosition=Fields.leftClawDeliver;}
+//                else if(clawPos ==1){clawPos=2;robot.intakeClaw();rightServoPosition=Fields.rightClawPickup;leftServoPosition=Fields.leftClawPickup;}
+//                else if(clawPos ==2){clawPos =0;robot.closeClaw();rightServoPosition=Fields.rightClawClose;leftServoPosition=Fields.leftClawClose;}
+//            }
+//            prevA2 = gamepad2.a;
 
             pen.addLine("gamepad2" + gamepad2.left_stick_y);
             pen.addLine("Right Servo = G1 leftX");

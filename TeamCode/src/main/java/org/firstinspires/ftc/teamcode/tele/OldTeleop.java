@@ -29,7 +29,7 @@ import java.lang.reflect.Field;
 
 
 @TeleOp
-public class Teleop extends LinearOpMode {
+public class OldTeleop extends LinearOpMode {
 
     BaseRobot robot = new BaseRobot();
     boolean retracted = false;
@@ -162,6 +162,7 @@ public class Teleop extends LinearOpMode {
             checkSlider();
             checkClimber();
             checkButtonPresets();
+            checkGrasper();
 
             recenterIMU();
             doTelemetry();
@@ -187,6 +188,7 @@ public class Teleop extends LinearOpMode {
             else if(grasperPos ==1){grasperPos=2;robot.intakeGrasper();}
             else if(grasperPos ==2){grasperPos =0;robot.closeGrasper();}
         }
+        prevGrasperA2 = gamepad2.a;
     }
 
     public void checkV4b(){
@@ -237,11 +239,11 @@ public class Teleop extends LinearOpMode {
          */
 
         // TODo meet 1 new claw
-        if (gamepad2.a && gamepad2.a != prevGrasperA2){
-            if(grasperPos ==0){grasperPos=1;robot.openGrasper();}
-            else if(grasperPos ==1){grasperPos=2;robot.intakeGrasper();}
-            else if(grasperPos ==2){grasperPos =0;robot.closeGrasper();}
-        }
+//        if (gamepad2.a && gamepad2.a != prevGrasperA2){
+//            if(grasperPos ==0){grasperPos=1;robot.openGrasper();}
+//            else if(grasperPos ==1){grasperPos=2;robot.intakeGrasper();}
+//            else if(grasperPos ==2){grasperPos =0;robot.closeGrasper();}
+//        }
     }
     public void checkClimber(){
         if(Math.abs(gamepad2.right_trigger-gamepad2.left_trigger)>.2){

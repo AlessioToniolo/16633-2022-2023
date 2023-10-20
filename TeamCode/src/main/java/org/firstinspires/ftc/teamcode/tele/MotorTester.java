@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.tele;
 
-import static org.firstinspires.ftc.teamcode.tele.Teleop.round;
+import static org.firstinspires.ftc.teamcode.tele.OldTeleop.round;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;

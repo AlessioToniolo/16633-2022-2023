@@ -173,9 +173,9 @@ public class GrasperTeleop extends LinearOpMode {
     // todo new
     public void checkGrasper() {
         if (gamepad2.a && gamepad2.a != prevGrasperA2) {
-            if(grasperPos ==0){grasperPos=1;robot.openGrasper();}
-            else if(grasperPos ==1){grasperPos=2;robot.intakeGrasper();}
-            else if(grasperPos ==2){grasperPos =0;robot.closeGrasper();}
+            if(grasperPos ==0){grasperPos=2;robot.openGrasper();}
+            //else if(grasperPos ==1){grasperPos=2;robot.intakeGrasper();}
+            else {grasperPos =0;robot.closeGrasper();}
         }
         prevGrasperA2 = gamepad2.a;
     }
@@ -217,22 +217,15 @@ public class GrasperTeleop extends LinearOpMode {
         }
         prevB2 = gamepad2.b;
 
-        /*
-        if(gamepad2.a && gamepad2.a != prevA2){
-            if(clawPos ==0){clawPos=1;robot.openClaw();}
-            else if(clawPos ==1){clawPos=2;robot.intakeClaw();}
-            else if(clawPos ==2){clawPos =0;robot.closeClaw();}
-        }
-        prevA2 = gamepad2.a;
 
-         */
 
         // TODo meet 1 new claw
-       if (gamepad2.a && gamepad2.a != prevGrasperA2){
-            if(grasperPos ==0){grasperPos=1;robot.openGrasper();}
-            else if(grasperPos ==1){grasperPos=2;robot.intakeGrasper();}
-            else if(grasperPos ==2){grasperPos =0;robot.closeGrasper();}
+        if (gamepad2.a && gamepad2.a != prevGrasperA2) {
+            if(grasperPos ==0){grasperPos=2;robot.openGrasper();}
+            //else if(grasperPos ==1){grasperPos=2;robot.intakeGrasper();}
+            else {grasperPos =0;robot.closeGrasper();}
         }
+        prevGrasperA2 = gamepad2.a;
     }
     public void checkClimber(){
         if(Math.abs(gamepad2.right_trigger-gamepad2.left_trigger)>.2){
@@ -339,7 +332,6 @@ public class GrasperTeleop extends LinearOpMode {
     }
     public void checkSpeed(){
 
-        /** OLD
         double triggerSpeedModifier = 1.0-gamepad1.left_trigger;//left trigger works like a brake
         if(triggerSpeedModifier ==0)triggerSpeedModifier=.1;
         speed = triggerSpeedModifier*baseSpeed;
@@ -355,7 +347,7 @@ public class GrasperTeleop extends LinearOpMode {
 
         if(speed>1)speed=1;
         else if(speed<0)speed=0;
-    **/
+
 
     }
 

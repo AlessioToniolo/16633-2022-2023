@@ -103,6 +103,14 @@ public class BaseRobot {
         rightFront.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         leftRear.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightRear.setDirection(DcMotor.Direction.FORWARD);
+
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
+
         // Initialize color sensor
         //distanceSensor = hwMap.get(RevColorSensorV3.class, "color");
 
@@ -221,7 +229,7 @@ public class BaseRobot {
         v4bServo.setPosition(Fields.v4bMid);
         delay(.5);
         sliderRunTo(Fields.sliderOuttake, 1);
-        delay(1);
+        delay(1.3);
        v4bServo.setPosition(Fields.v4bDeposit);
 
    }

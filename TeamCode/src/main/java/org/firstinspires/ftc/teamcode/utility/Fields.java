@@ -32,9 +32,13 @@ public class Fields {
     /**____________V4b Variables_________**/
 
     public static double maxV4bPos = 1;
-    public static double v4bIntake = 0.55;
-    public static double v4bDeposit = .789;
-    public static double v4bMid = .37;
+//    public static double v4bIntake = 0.55;
+//    public static double v4bDeposit = .789;
+//    public static double v4bMid = .37;
+    public static double v4bIntake = 0.191;
+    public static double v4bDeposit = .45;
+    public static double v4bMid = .2079;
+
     public static double minV4bPos = 0;
 
     /**_________________________AUTO VISION VARIABLES_______________________**/
@@ -48,6 +52,6 @@ public class Fields {
 
     // TODO meet 1 new claw positions
     public static double grasperOpen = 0.2; // .4
-    public static double grasperClose = 0.325;
+    public static double grasperClose = 0.2;
     public static double grasperIntake = 0.325;
 }

@@ -33,7 +33,7 @@ public class SubsystemTester extends LinearOpMode {
         robot.init(hardwareMap);
         robot.climberReset();
         robot.v4bIntake();
-        robot.closeClaw();
+        robot.openGrasper(); //good luck🤑
         waitForStart();
         pen.setColor("white").setUnderLine(true);
         while(!isStopRequested() && opModeIsActive()){
@@ -43,8 +43,8 @@ public class SubsystemTester extends LinearOpMode {
             else if(rightServoPosition<0)rightServoPosition=0;
             if(leftServoPosition > 1)leftServoPosition=1;
             else if(leftServoPosition < 0)leftServoPosition=0;
-//            robot.leftClaw.setPosition(leftServoPosition);
-//            robot.rightClaw.setPosition(rightServoPosition);
+            robot.leftClaw.setPosition(leftServoPosition);
+            robot.rightClaw.setPosition(rightServoPosition);
             robot.grasper.setPosition(leftServoPosition);
 
             servoPosition -= gamepad2.right_stick_y*.05;
@@ -103,8 +103,7 @@ public class SubsystemTester extends LinearOpMode {
             pen.addLine("CLIMBER Target Pos" + robot.climber1.getTargetPosition());
             pen.addLine("CLIMBER 1POS" + robot.getClimberPos());
             pen.addLine("Slider: " + robot.slider.getCurrentPosition());
-            pen.addLine("LEFT ClAW: " + leftServoPosition);
-            pen.addLine("RIGHT CLAW: " + rightServoPosition);
+            pen.addLine("GRaspar: " + robot.grasper.getPosition());
             pen.update();
         }
     }

@@ -36,10 +36,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.utility.BaseRobot;
 import org.firstinspires.ftc.teamcode.utility.Fields;
@@ -69,7 +72,7 @@ public class TeamPropPipeline extends LinearOpMode {
      */
     private VisionPortal visionPortal;
 
-    private static final int zone = 3;
+    private int zone = 3;
     private int ZONE1EDGE = 200;
     private int ZONE2EDGE = 530;
     public BaseRobot robot = new BaseRobot();
@@ -82,15 +85,26 @@ public class TeamPropPipeline extends LinearOpMode {
         robot.init(hardwareMap);
 
         // Wait for the DS start button to be touched.
-        telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
-        telemetry.addData(">", "Touch Play to start OpMode");
-        //zone= detectZone();
+        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            telemetry.addData("Camera", "Waiting");
+            telemetry.update();
+            while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+                sleep(20);
+            }
+            telemetry.addData("Camera", "Ready");
+            telemetry.update();
+        }
+        visionPortal.getCameraControl(ExposureControl.class).setMode(ExposureControl.Mode.Manual);
+        visionPortal.getCameraControl(ExposureControl.class).setExposure((long)15, TimeUnit.MILLISECONDS);
+
+        visionPortal.getCameraControl(GainControl.class).setGain((int)3500);
+        zone= detectZone();
         telemetry.addLine("Zone:" + zone);
         telemetry.update();
         waitForStart();
 
         if (opModeIsActive()) {
-            //zone = detectZone();
+            zone = detectZone();
             telemetry.addLine("Zone:" + zone);
             telemetryTfod();
             telemetry.update();

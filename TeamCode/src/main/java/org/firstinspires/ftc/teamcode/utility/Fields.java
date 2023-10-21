@@ -46,7 +46,7 @@ public class Fields {
     /**_________________________AUTO VISION VARIABLES_______________________**/
     //variables for rectangle to searchIn
 
-public static double exposureValue = 30;
+public static double exposureValue = 15;
 public static double gainValue = 3500;
 
     // TODO new servo positions

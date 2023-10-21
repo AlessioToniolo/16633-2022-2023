@@ -89,11 +89,26 @@ public class VisionTester extends LinearOpMode {
         robot.init(hardwareMap);
 
         // Wait for the DS start button to be touched.
+        // Wait for the camera to be open
+        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            telemetry.addData("Camera", "Waiting");
+            telemetry.update();
+            while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+                sleep(20);
+            }
+            telemetry.addData("Camera", "Ready");
+            telemetry.update();
+        }
+        visionPortal.getCameraControl(ExposureControl.class).setMode(ExposureControl.Mode.Manual);
+        visionPortal.getCameraControl(ExposureControl.class).setExposure((long)Fields.exposureValue, TimeUnit.MILLISECONDS);
+
+        visionPortal.getCameraControl(GainControl.class).setGain((int)Fields.gainValue);
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
         telemetry.addData(">", "Touch Play to start OpMode");
         zone= detectZone();
         telemetry.addLine("Zone:" + zone);
         telemetry.update();
+
         waitForStart();
 
         if (opModeIsActive()) {
@@ -163,10 +178,7 @@ public class VisionTester extends LinearOpMode {
         // Build the Vision Portal, using the above settings.
         visionPortal = builder.build();
 
-        visionPortal.getCameraControl(ExposureControl.class).setMode(ExposureControl.Mode.Manual);
-        visionPortal.getCameraControl(ExposureControl.class).setExposure((long)Fields.exposureValue, TimeUnit.MILLISECONDS);
 
-        visionPortal.getCameraControl(GainControl.class).setGain((int)Fields.gainValue);
 
         // Set confidence threshold for TFOD recognitions, at any time.
         //tfod.setMinResultConfidence(0.75f);

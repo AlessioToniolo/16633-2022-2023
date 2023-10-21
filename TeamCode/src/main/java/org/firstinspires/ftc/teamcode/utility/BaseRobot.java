@@ -134,9 +134,11 @@ public class BaseRobot {
         climber1 = hwMap.dcMotor.get("climber");
         climber2 = hwMap.dcMotor.get("climber2");
         climber1.setDirection(DcMotorSimple.Direction.REVERSE);
+        climber1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        climber2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         climber1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        climber1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        climber2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         climber1.setTargetPosition((int)0);
         climber2.setTargetPosition((int)0);
 

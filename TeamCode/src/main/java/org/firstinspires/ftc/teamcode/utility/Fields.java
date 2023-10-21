@@ -39,12 +39,15 @@ public class Fields {
     public static double v4bDeposit = .45;
     public static double v4bMid = .2079;
 
+    public static double v4bUpMid = 0;
+
     public static double minV4bPos = 0;
 
     /**_________________________AUTO VISION VARIABLES_______________________**/
     //variables for rectangle to searchIn
 
-
+public static double exposureValue = 30;
+public static double gainValue = 3500;
 
     // TODO new servo positions
     public static double airplaneRelease = 0.7;
@@ -52,6 +55,6 @@ public class Fields {
 
     // TODO meet 1 new claw positions
     public static double grasperOpen = 0.2; // .4
-    public static double grasperClose = 0.2;
+    public static double grasperClose = 0.35;
     public static double grasperIntake = 0.325;
 }

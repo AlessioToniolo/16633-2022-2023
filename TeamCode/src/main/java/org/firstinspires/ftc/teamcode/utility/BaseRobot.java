@@ -226,7 +226,8 @@ public class BaseRobot {
     }
 
    public void goToOuttake(){
-        v4bServo.setPosition(Fields.v4bMid);
+        closeGrasper();
+        v4bServo.setPosition(Fields.v4bUpMid);
         delay(.5);
         sliderRunTo(Fields.sliderOuttake, 1);
         delay(1.3);
@@ -234,14 +235,14 @@ public class BaseRobot {
 
    }
     public void goToIntake(){
-        closeClaw();
+        closeGrasper();
         v4bServo.setPosition(Fields.v4bMid);
         delay(.5);
+
         sliderRunTo(0, 1);
         delay(1);
         v4bServo.setPosition(Fields.v4bIntake);
-        delay(1);
-        openClaw();
+        openGrasper();
     }
 
 

@@ -38,7 +38,7 @@ public class SubsystemTester extends LinearOpMode {
         pen.setColor("white").setUnderLine(true);
         while(!isStopRequested() && opModeIsActive()){
             rightServoPosition += gamepad1.left_stick_x*.001;
-            leftServoPosition += gamepad1.right_stick_x*.001;
+            leftServoPosition += gamepad1.right_stick_x*.01;
             if(rightServoPosition >1)rightServoPosition=1;
             else if(rightServoPosition<0)rightServoPosition=0;
             if(leftServoPosition > 1)leftServoPosition=1;
@@ -47,7 +47,10 @@ public class SubsystemTester extends LinearOpMode {
             robot.rightClaw.setPosition(rightServoPosition);
             robot.grasper.setPosition(leftServoPosition);
 
-            servoPosition -= gamepad2.right_stick_y*.05;
+            servoPosition -= gamepad2.right_stick_y*.01;
+            if(robot.slider.getCurrentPosition() < 10 && servoPosition < Fields.v4bIntake){
+                servoPosition=Fields.v4bIntake;
+            }
             if(servoPosition >1)servoPosition=1;
             else if(servoPosition<0)servoPosition=0;
 

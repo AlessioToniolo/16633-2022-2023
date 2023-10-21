@@ -35,11 +35,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.utility.BaseRobot;
 import org.firstinspires.ftc.teamcode.utility.Fields;
@@ -69,11 +73,15 @@ public class VisionTester extends LinearOpMode {
      */
     private VisionPortal visionPortal;
 
-    private int zone = 2;
+    private int zone = 0;
     private int ZONE1EDGE = 200;
     private int ZONE2EDGE = 530;
     public BaseRobot robot = new BaseRobot();
     public ElapsedTime runtime = new ElapsedTime();
+
+    public static final double exsposure = 10;
+    public static final double gain = 10;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -89,10 +97,15 @@ public class VisionTester extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            zone = detectZone();
-            telemetry.addLine("Zone:" + zone);
-            telemetryTfod();
-            telemetry.update();
+            while(opModeIsActive()) {
+                zone = detectZone();
+                telemetry.addLine("Zone:" + zone);
+                telemetry.addLine("Gain" + Fields.gainValue);
+                telemetry.addLine("Exposure" + Fields.exposureValue);
+                telemetryTfod();
+                telemetry.update();
+            }
+
         }
         visionPortal.close();
 
@@ -137,6 +150,7 @@ public class VisionTester extends LinearOpMode {
 
         // Set the stream format; MJPEG uses less bandwidth than default YUY2.
         //builder.setStreamFormat(VisionPortal.StreamFormat.YUY2);
+        //visionPortal.getCameraControl(ExposureControl.class).setExposure();
 
         // Choose whether or not LiveView stops if no processors are enabled.
         // If set "true", monitor shows solid orange screen if no processors enabled.
@@ -148,6 +162,11 @@ public class VisionTester extends LinearOpMode {
 
         // Build the Vision Portal, using the above settings.
         visionPortal = builder.build();
+
+        visionPortal.getCameraControl(ExposureControl.class).setMode(ExposureControl.Mode.Manual);
+        visionPortal.getCameraControl(ExposureControl.class).setExposure((long)Fields.exposureValue, TimeUnit.MILLISECONDS);
+
+        visionPortal.getCameraControl(GainControl.class).setGain((int)Fields.gainValue);
 
         // Set confidence threshold for TFOD recognitions, at any time.
         //tfod.setMinResultConfidence(0.75f);

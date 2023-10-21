@@ -61,10 +61,9 @@ public class GrasperTeleop extends LinearOpMode {
     double leftClimber = 0;
     double v4bPos = Fields.v4bIntake;
 
-    int clawPos = 0;//0 closed, 1 outtake, 2 intake
 
     // TODO new stuff
-    int grasperPos = 0; // 0 closed, 1 outtake, 2 intake
+    int grasperPos = 0; // 0 closed, 1 intake
 
     ElapsedTime runtime = new ElapsedTime();
 
@@ -196,8 +195,7 @@ public class GrasperTeleop extends LinearOpMode {
         if(gamepad2.y && gamepad2.y != prevY2){
             sliderTargetPos = Fields.sliderIntake;
             v4bPos = Fields.v4bIntake;
-            clawPos=2;
-            grasperPos=2;
+            grasperPos = 1;
             robot.goToIntake();
         }
         prevY2 = gamepad2.y;
@@ -205,9 +203,7 @@ public class GrasperTeleop extends LinearOpMode {
 
             sliderTargetPos = Fields.sliderOuttake;
             v4bPos = Fields.v4bDeposit;
-
-
-
+            grasperPos = 1;
             robot.goToOuttake();
         }
         prevX2 = gamepad2.x;
@@ -227,14 +223,14 @@ public class GrasperTeleop extends LinearOpMode {
                 leftClimber = Math.max(leftClimber, rightClimber);
             }
 
-            leftClimber += (gamepad2.right_trigger-gamepad2.left_trigger)*20;
+            leftClimber += (gamepad2.right_trigger-gamepad2.left_trigger)*80;
             rightClimber = leftClimber;
         }
         if(Math.abs(gamepad2.left_stick_x) > .05 && Math.abs(gamepad2.left_stick_y)<.05){
-            leftClimber += gamepad2.left_stick_x*20;
+            leftClimber += gamepad2.left_stick_x*80;
         }
         if(Math.abs(gamepad2.right_stick_x)>.05 && Math.abs(gamepad2.right_stick_y) < .05){
-            rightClimber += gamepad2.right_stick_x * 20;
+            rightClimber += gamepad2.right_stick_x * 80;
         }
         if(gamepad2.dpad_up && gamepad2.dpad_up != prevDUp2){
             robot.climberReset();
@@ -361,7 +357,7 @@ public class GrasperTeleop extends LinearOpMode {
         pen.addLine("Left Climber" + leftClimber + "Right Climber: "+rightClimber);
         pen.addLine("CLIMBER POS" + robot.getClimberPos());
         pen.addLine("Slider Pos: " + robot.slider.getCurrentPosition());
-        pen.addLine(" ClAW pos: " + clawPos);
+        pen.addLine("Speed: " + speed);
         pen.update();
     }
 

@@ -69,11 +69,12 @@ public class TeamPropPipeline extends LinearOpMode {
      */
     private VisionPortal visionPortal;
 
-    private int zone = 2;
+    private static final int zone = 3;
     private int ZONE1EDGE = 200;
     private int ZONE2EDGE = 530;
     public BaseRobot robot = new BaseRobot();
     public ElapsedTime runtime = new ElapsedTime();
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -83,17 +84,17 @@ public class TeamPropPipeline extends LinearOpMode {
         // Wait for the DS start button to be touched.
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
         telemetry.addData(">", "Touch Play to start OpMode");
-        zone= detectZone();
+        //zone= detectZone();
         telemetry.addLine("Zone:" + zone);
         telemetry.update();
         waitForStart();
 
         if (opModeIsActive()) {
-            zone = detectZone();
+            //zone = detectZone();
             telemetry.addLine("Zone:" + zone);
             telemetryTfod();
             telemetry.update();
-            robot.closeClaw();
+            robot.closeGrasper();
             robot.forward(32, .5, 5, telemetry);
             delay(1);
 
@@ -103,15 +104,17 @@ public class TeamPropPipeline extends LinearOpMode {
                 delay(1);
                 robot.forward(2.5*Math.PI, 1, 5, telemetry);
                 delay(1);
-                robot.openClaw();
+                robot.openGrasper();
                 delay(1);
                 robot.v4bServo.setPosition(Fields.v4bMid);
                 delay(1);
                 robot.forward(-6,.5, 5, telemetry);
                 delay(1);
             } else if (zone == 2) {
+                robot.forward(12, .5, 5, telemetry);
+                robot.forward(-8, .5, 5, telemetry);
 
-                robot.openClaw();
+                robot.openGrasper();
                 delay(1);
                 robot.v4bServo.setPosition(Fields.v4bMid);
                 delay(1);
@@ -123,9 +126,9 @@ public class TeamPropPipeline extends LinearOpMode {
             } else {
                 robot.pointTurnDegrees(.5, 90, 5, telemetry);
                 delay(1);
-                robot.forward(1, .5, 5, telemetry);
+                robot.forward(3, .5, 5, telemetry);
                 delay(1);
-                robot.openClaw();
+                robot.openGrasper();
                 delay(1);
                 robot.v4bServo.setPosition(Fields.v4bMid);
                 delay(1);

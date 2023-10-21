@@ -35,7 +35,7 @@ public class Fields {
 //    public static double v4bIntake = 0.55;
 //    public static double v4bDeposit = .789;
 //    public static double v4bMid = .37;
-    public static double v4bIntake = 0.221;
+    public static double v4bIntake = 0.21;
     public static double v4bDeposit = .45;
     public static double v4bMid = .2079;
 

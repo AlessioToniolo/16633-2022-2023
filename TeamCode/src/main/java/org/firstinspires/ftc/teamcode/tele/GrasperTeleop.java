@@ -181,7 +181,7 @@ public class GrasperTeleop extends LinearOpMode {
     public void checkV4b(){
         v4bPos += gamepad2.right_stick_y*.05;
         if(v4bPos >Fields.maxV4bPos)v4bPos=1;
-        if(v4bPos > Fields.v4bIntake)v4bPos = Fields.v4bIntake;
+        //if(v4bPos > Fields.v4bIntake)v4bPos = Fields.v4bIntake;
         else if(v4bPos<0)v4bPos=0;
 
         robot.v4bServo.setPosition(v4bPos);

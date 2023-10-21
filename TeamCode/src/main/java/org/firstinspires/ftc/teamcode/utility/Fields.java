@@ -35,7 +35,7 @@ public class Fields {
 //    public static double v4bIntake = 0.55;
 //    public static double v4bDeposit = .789;
 //    public static double v4bMid = .37;
-    public static double v4bIntake = 0.191;
+    public static double v4bIntake = 0.221;
     public static double v4bDeposit = .45;
     public static double v4bMid = .2079;
 
@@ -57,4 +57,9 @@ public static double gainValue = 3500;
     public static double grasperOpen = 0.2; // .4
     public static double grasperClose = 0.35;
     public static double grasperIntake = 0.325;
+
+    /**CLIMBER VRARS**?
+     *
+     */
+    public static double climberMin = -3200;
 }

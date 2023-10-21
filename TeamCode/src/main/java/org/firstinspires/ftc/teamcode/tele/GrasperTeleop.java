@@ -181,6 +181,7 @@ public class GrasperTeleop extends LinearOpMode {
     public void checkV4b(){
         v4bPos += gamepad2.right_stick_y*.05;
         if(v4bPos >Fields.maxV4bPos)v4bPos=1;
+        if(v4bPos > Fields.v4bIntake)v4bPos = Fields.v4bIntake;
         else if(v4bPos<0)v4bPos=0;
 
         robot.v4bServo.setPosition(v4bPos);
@@ -238,6 +239,13 @@ public class GrasperTeleop extends LinearOpMode {
             rightClimber = 0;
         }
         prevDUp2 = gamepad2.dpad_up;
+
+        if(leftClimber < Fields.climberMin){
+            leftClimber = Fields.climberMin;
+        }
+        if(rightClimber < Fields.climberMin){
+            rightClimber = Fields.climberMin;
+        }
         robot.climberRunTo(leftClimber, rightClimber);
 
     }
